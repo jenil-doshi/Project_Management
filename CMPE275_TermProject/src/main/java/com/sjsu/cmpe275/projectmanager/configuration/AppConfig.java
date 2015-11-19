@@ -17,27 +17,7 @@ import org.springframework.web.servlet.view.JstlView;
 @EnableWebMvc
 @ComponentScan(basePackages = "com.sjsu.cmpe275.projectmanager")
 public class AppConfig extends WebMvcConfigurerAdapter {
-	
-    @Override
-    public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
-    	configurer.favorPathExtension(false).
-    	favorParameter(true).
-        parameterName("type").
-        ignoreAcceptHeader(true).
-        useJaf(false).
-        defaultContentType(MediaType.APPLICATION_JSON).
-        mediaType("html", MediaType.TEXT_HTML).
-		mediaType("xml", MediaType.APPLICATION_XML).
-		mediaType("json", MediaType.APPLICATION_JSON);
-    }
-    
-    @Bean
-    public ViewResolver contentNegotiatingViewResolver(ContentNegotiationManager manager) {
-      ContentNegotiatingViewResolver resolver = new ContentNegotiatingViewResolver();
-      resolver.setContentNegotiationManager(manager);
-      return resolver;
-    }
-    
+
 	@Bean
 	public ViewResolver viewResolver() {
 		InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
@@ -48,4 +28,3 @@ public class AppConfig extends WebMvcConfigurerAdapter {
 		return viewResolver;
 	}
 }
-
