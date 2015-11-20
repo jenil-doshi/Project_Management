@@ -14,8 +14,8 @@ import com.sjsu.cmpe275.projectmanager.model.Project;
 public interface ProjectDao {
 
 	public boolean createProject(Project project);
-
-	public Project updateInvitationStatus(String status, int id,
-			String recipientId, int projectId);
+	public Project getProjectById(int Id);
+	public Project updateInvitationStatus(String status, int id, String recipientId, int projectId);
+	public Boolean deleteProject(Integer projectId);
 
 }

@@ -1,7 +1,10 @@
 package com.sjsu.cmpe275.projectmanager.controller;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -88,5 +91,24 @@ public class ProjectController {
 				projectId);
 		// System.out.println("User Accepted response");
 		//
+	}
+	
+	@RequestMapping(value = { "/delete/{userId}/{projectId}" }, method = RequestMethod.DELETE, 
+			produces = {"application/json", "application/xml" })
+	public @ResponseBody ResponseEntity<Project> deleteProject(@PathVariable("userId") int userId, @PathVariable("projectId") int projectId) {
+		Project p = projectService.getProjectById(projectId);
+		if(p == null)
+			return new ResponseEntity<Project>(HttpStatus.NOT_FOUND);
+		
+		projectService.deleteProjectById(projectId);
+		
+		/*if(p.getOwner().getUserId() == userId){
+			projectService.deleteProjectById(projectId);
+		}
+		else{
+			System.out.println("Project Can only be deleted by Owner");
+		}*/
+		
+		return new ResponseEntity<Project>(p, HttpStatus.OK);
 	}
 }

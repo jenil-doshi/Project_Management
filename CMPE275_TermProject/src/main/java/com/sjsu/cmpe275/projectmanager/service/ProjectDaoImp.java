@@ -39,5 +39,25 @@ public class ProjectDaoImp implements ProjectDao {
 		System.out.println("In DAO");
 		return null;
 	}
+	
+	@Override
+	public Project getProjectById(int Id) {
+		Project project = (Project) sessionFactory.getCurrentSession().get(Project.class, Id);
+		return project;
+	}
 
+	@Transactional
+	@Override
+	public Boolean deleteProject(Integer projectId) {
+		
+		boolean status = false;
+		try{
+			sessionFactory.getCurrentSession().delete(getProjectById(projectId));
+			status = true;
+			return status;
+		}
+		catch(Exception e){
+			throw new RuntimeException();
+		}
+	}
 }
