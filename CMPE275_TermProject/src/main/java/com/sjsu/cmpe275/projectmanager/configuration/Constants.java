@@ -16,5 +16,6 @@ public final class Constants {
 	public static String ONGOING = "ongoing";
 	public static String COMPLETED = "completed";
 	public static String CANCELLED = "cancelled";
+	public static String INVITATION_PENDING = "pending";
 
 }

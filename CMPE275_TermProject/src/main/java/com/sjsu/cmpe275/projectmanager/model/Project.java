@@ -1,10 +1,6 @@
 package com.sjsu.cmpe275.projectmanager.model;
 
-import java.io.Serializable;
-
 import javax.persistence.Column;
-
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -32,7 +28,6 @@ public class Project {
 	private String status;
 
 	@OneToOne
-	
 	@JoinColumn(name = "Owner",referencedColumnName="UID")
 	private User owner;
 

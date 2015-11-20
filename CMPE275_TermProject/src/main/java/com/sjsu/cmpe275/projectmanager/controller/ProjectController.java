@@ -1,7 +1,5 @@
 package com.sjsu.cmpe275.projectmanager.controller;
 
-import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.HttpStatus;
@@ -9,7 +7,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -33,17 +30,9 @@ public class ProjectController {
 	ProjectService projectService;
 
 	@RequestMapping(value = { "/create/{userId}" }, method = RequestMethod.POST, produces = "application/json")
-	public @ResponseBody ResponseEntity<Project> createProject(@PathVariable int userId,
-			@ModelAttribute Project project) {
-		// Project proj = null;
+	public @ResponseBody Project createProject(@PathVariable int userId, @ModelAttribute Project project) {
 		ModelAndView mv = new ModelAndView();
 		try {
-			// proj = new Project();
-
-			// proj.setPid(1);
-			// proj.setName("Sample Project");
-			// proj.setDescription("Project Description");
-			// proj.setStatus(Constants.PLANNING);
 			User user = new User();
 			user.setUserId(userId);
 			project.setOwner(user);
@@ -52,13 +41,14 @@ public class ProjectController {
 
 			if (projectService.createProject(userId, project)) {
 				mv.addObject("project", project);
-				return new ResponseEntity<Project>(project, HttpStatus.OK);
+				return project;
 			}
 
 		} catch (RuntimeException e) {
-			mv.addObject("project", null);
+			project = null;
+			mv.addObject("project", project);
 			e.printStackTrace();
-			return new ResponseEntity<Project>(project, HttpStatus.OK);
+			return project;
 
 		}
 		return null;
@@ -67,24 +57,45 @@ public class ProjectController {
 	// update Project
 
 	@RequestMapping(value = {
-			"/sendInvite/{id}/{recipientId}/{projectId}/{projectName}/{projectOwner}" }, method = RequestMethod.POST)
-	public String sendInvite(@PathVariable int id, @PathVariable String recipientId, @PathVariable int projectId,
-			@PathVariable String projectName, @PathVariable String projectOwner) {
+			"/sendInvite/{uid}/{recipientId}/{projectId}/{projectName}/{projectOwner}" }, method = RequestMethod.POST)
+	public ResponseEntity<String> sendInvite(@PathVariable int uid, @PathVariable String recipientId,
+			@PathVariable int projectId, @PathVariable String projectName, @PathVariable String projectOwner) {
 
-		if (utility.sendEmail(id, recipientId, projectId, projectName, projectOwner)) {
-			return "Success";
-		} else {
-			return "Fail";
+		try {
+			if (utility.sendEmail(uid, recipientId, projectId, projectName, projectOwner)) {
+				if (projectService.saveInvitationStatus(uid, projectId, Constants.INVITATION_PENDING)) {
+					return new ResponseEntity<String>("Success", HttpStatus.OK);
+				}
+				return new ResponseEntity<String>("Fail", HttpStatus.OK);
+			} else {
+				return new ResponseEntity<String>("Fail", HttpStatus.OK);
+			}
+		} catch (RuntimeException e) {
+			e.printStackTrace();
+			return new ResponseEntity<String>("Fail", HttpStatus.OK);
+		} catch (Exception e) {
+
+			System.out.println("Error occured while sending email");
+			e.printStackTrace();
+			return new ResponseEntity<String>("Fail", HttpStatus.OK);
 		}
 
 	}
 
 	@RequestMapping(value = {
-			"/invitationStatus/{status}/{id}/{recipientId}/{projectId}" }, method = RequestMethod.POST)
-	public void inviteStatus(@PathVariable String status, @PathVariable String recipientId, @PathVariable int id,
-			@PathVariable int projectId) {
+			"/invitationStatus/{status}/{uid}/{recipientId}/{projectId}" }, method = RequestMethod.GET)
+	public ResponseEntity<String> inviteStatus(@PathVariable String status, @PathVariable String recipientId,
+			@PathVariable int uid, @PathVariable int projectId) {
 
-		projectService.updateInvitationStatus(status, id, recipientId, projectId);
+		try {
+			if (projectService.saveInvitationStatus(uid, projectId, status)) {
+				return new ResponseEntity<String>("Success", HttpStatus.OK);
+			}
+			return new ResponseEntity<String>("Fail", HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<String>("Fail", HttpStatus.OK);
+		}
 
 	}
 

@@ -8,11 +8,13 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.sjsu.cmpe275.projectmanager.model.Project;
+import com.sjsu.cmpe275.projectmanager.model.User;
+import com.sjsu.cmpe275.projectmanager.model.UserProjectInfo;
 
 @Configuration
 @Repository("projectDao")
 @Component
-public class ProjectDaoImp implements ProjectDao {
+public class ProjectDaoImpl implements ProjectDao {
 
 	@Autowired
 	private SessionFactory sessionFactory;
@@ -24,6 +26,8 @@ public class ProjectDaoImp implements ProjectDao {
 		boolean status = false;
 		try {
 			sessionFactory.getCurrentSession().save(project);
+			User owner = (User) sessionFactory.getCurrentSession().get(User.class, project.getOwner().getUserId());
+			project.setOwner(owner);
 			status = true;
 			return status;
 		} catch (Exception e) {
@@ -34,9 +38,17 @@ public class ProjectDaoImp implements ProjectDao {
 	}
 
 	@Override
-	public Project updateInvitationStatus(String status, int id, String recipientId, int projectId) {
-		System.out.println("In DAO");
-		return null;
+	public boolean saveInvitationStatus(UserProjectInfo info) {
+		boolean status = false;
+		try {
+			sessionFactory.getCurrentSession().saveOrUpdate(info);
+			status = true;
+			return status;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException("A Runtime Exception Has occured");
+		}
+
 	}
 
 	@Override
@@ -58,4 +70,5 @@ public class ProjectDaoImp implements ProjectDao {
 			throw new RuntimeException();
 		}
 	}
+
 }
