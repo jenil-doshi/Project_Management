@@ -1,6 +1,10 @@
 package com.sjsu.cmpe275.projectmanager.model;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
+
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -15,17 +19,21 @@ public class Project {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private int id;
+	@Column(name = "PID")
+	private int pid;
 
-	@Column(name = "project_name")
+	@Column(name = "ProjectName")
 	private String name;
-	@Column(name = "project_description")
+
+	@Column(name = "ProjectDescription")
 	private String description;
-	@Column
+
+	@Column(name = "Status")
 	private String status;
 
 	@OneToOne
-	@JoinColumn(name = "userId")
+	
+	@JoinColumn(name = "Owner",referencedColumnName="UID")
 	private User owner;
 
 	/*
@@ -46,12 +54,12 @@ public class Project {
 		this.owner = owner;
 	}
 
-	public int getId() {
-		return id;
+	public int getPid() {
+		return pid;
 	}
 
-	public void setId(int id) {
-		this.id = id;
+	public void setPid(int pid) {
+		this.pid = pid;
 	}
 
 	public String getName() {

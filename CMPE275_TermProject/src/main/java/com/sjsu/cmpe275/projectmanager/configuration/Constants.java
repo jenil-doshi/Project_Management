@@ -9,8 +9,12 @@ public final class Constants {
 	public static String SMTP_HOST_VALUE = "smtp.gmail.com";
 	public static String PORT = "mail.smtp.port";
 	public static String PORT_VALUE = "587";
-	public static String EMAIL_SUBJECT ="Request to join project: ";
+	public static String EMAIL_SUBJECT = "Request to join project: ";
 	public static boolean TRUE = true;
 	public static boolean FALSE = false;
+	public static String PLANNING = "planning";
+	public static String ONGOING = "ongoing";
+	public static String COMPLETED = "completed";
+	public static String CANCELLED = "cancelled";
 
 }

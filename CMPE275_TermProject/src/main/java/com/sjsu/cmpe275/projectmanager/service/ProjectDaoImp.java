@@ -27,19 +27,18 @@ public class ProjectDaoImp implements ProjectDao {
 			status = true;
 			return status;
 		} catch (Exception e) {
-
+			e.printStackTrace();
 			throw new RuntimeException("A Runtime Exception Has occured");
 		}
 
 	}
 
 	@Override
-	public Project updateInvitationStatus(String status, int id,
-			String recipientId, int projectId) {
+	public Project updateInvitationStatus(String status, int id, String recipientId, int projectId) {
 		System.out.println("In DAO");
 		return null;
 	}
-	
+
 	@Override
 	public Project getProjectById(int Id) {
 		Project project = (Project) sessionFactory.getCurrentSession().get(Project.class, Id);
@@ -49,14 +48,13 @@ public class ProjectDaoImp implements ProjectDao {
 	@Transactional
 	@Override
 	public Boolean deleteProject(Integer projectId) {
-		
+
 		boolean status = false;
-		try{
+		try {
 			sessionFactory.getCurrentSession().delete(getProjectById(projectId));
 			status = true;
 			return status;
-		}
-		catch(Exception e){
+		} catch (Exception e) {
 			throw new RuntimeException();
 		}
 	}

@@ -1,5 +1,6 @@
 package com.sjsu.cmpe275.projectmanager.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -12,24 +13,31 @@ public class Task {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private int id;
+	@Column(name="TID")
+	private int tid;
 	
+	@Column(name="TaskName")
 	private String taskName;
 	
+	@Column(name="Title")
 	private String title;
 	
+	@Column(name="State")
 	private String taskState;
 	
+	@Column(name="EstimatedUnits")
 	private String estimate_time;
 	
+	@Column(name="ActualTime")
 	private String actual_time;
 
-	public int getId() {
-		return id;
+
+	public int getTid() {
+		return tid;
 	}
 
-	public void setId(int id) {
-		this.id = id;
+	public void setTid(int tid) {
+		this.tid = tid;
 	}
 
 	public String getTaskName() {
