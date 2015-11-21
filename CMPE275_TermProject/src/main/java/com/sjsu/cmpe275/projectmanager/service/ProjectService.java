@@ -5,6 +5,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.sjsu.cmpe275.projectmanager.dao.ProjectDao;
 import com.sjsu.cmpe275.projectmanager.model.Project;
 import com.sjsu.cmpe275.projectmanager.model.UserProjectInfo;
 
