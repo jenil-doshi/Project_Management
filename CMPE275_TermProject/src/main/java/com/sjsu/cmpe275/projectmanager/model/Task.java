@@ -5,6 +5,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -30,10 +33,34 @@ public class Task {
 	
 	@Column(name="ActualTime")
 	private String actual_time;
+	
+	@OneToOne
+	@JoinColumn(name="User", referencedColumnName = "UID")
+	private User assignee;
+	
+	@ManyToOne
+	@JoinColumn(name="Project",referencedColumnName = "PID")
+	private Project project;
 
 
 	public int getTid() {
 		return tid;
+	}
+
+	public User getAssignee() {
+		return assignee;
+	}
+
+	public void setAssignee(User assignee) {
+		this.assignee = assignee;
+	}
+
+	public Project getProject() {
+		return project;
+	}
+
+	public void setProject(Project project) {
+		this.project = project;
 	}
 
 	public void setTid(int tid) {
