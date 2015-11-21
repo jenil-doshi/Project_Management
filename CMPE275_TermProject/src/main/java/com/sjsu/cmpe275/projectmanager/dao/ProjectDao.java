@@ -1,11 +1,14 @@
 package com.sjsu.cmpe275.projectmanager.dao;
 
+import java.util.List;
+
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import com.sjsu.cmpe275.projectmanager.model.Project;
+import com.sjsu.cmpe275.projectmanager.model.User;
 import com.sjsu.cmpe275.projectmanager.model.UserProjectInfo;
 
 @Configuration
@@ -18,5 +21,8 @@ public interface ProjectDao {
 	public Project getProjectById(int Id);
 	public Boolean deleteProject(Integer projectId);
 	public boolean saveInvitationStatus(UserProjectInfo info);
+	public boolean getTasksForProject(int pid);
+	public List<User> getUsersList(int pid);
+
 
 }

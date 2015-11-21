@@ -1,5 +1,7 @@
 package com.sjsu.cmpe275.projectmanager.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.HttpStatus;
@@ -22,7 +24,7 @@ import com.sjsu.cmpe275.projectmanager.service.ProjectService;
 @ComponentScan(basePackages = "com.sjsu.cmpe275.projectmanager.service")
 @RequestMapping("/project")
 public class ProjectController {
-//test
+	// test
 	@Autowired
 	EmailUtility utility;
 
@@ -88,17 +90,40 @@ public class ProjectController {
 			@PathVariable int uid, @PathVariable int projectId) {
 
 		try {
+			if (status.equalsIgnoreCase(Constants.ACCEPT)) {
+				status = Constants.INVITATION_ACCEPT;
+			} else if (status.equalsIgnoreCase(Constants.REJECT)) {
+				status = Constants.INVITATION_REJECT;
+			}
 			if (projectService.saveInvitationStatus(uid, projectId, status)) {
 				return new ResponseEntity<String>("Success", HttpStatus.OK);
 			}
 			return new ResponseEntity<String>("Fail", HttpStatus.OK);
-		} catch (Exception e) {
+		} catch (RuntimeException e) {
 			e.printStackTrace();
 			return new ResponseEntity<String>("Fail", HttpStatus.OK);
 		}
 
 	}
 
+	@RequestMapping(value = "/start/{pid}", method = RequestMethod.POST)
+	// no need to check if uid is owner or not coz, UI will handle that using
+	// spring security roles
+	public @ResponseBody ResponseEntity<String> startProject(@PathVariable int pid) {
+		try {
+			if (projectService.getTasksForProject(pid)) {
+				return new ResponseEntity<String>("Can Start Project", HttpStatus.OK);
+			} else {
+				return new ResponseEntity<String>("Cannot Start Project", HttpStatus.OK);
+			}
+		} catch (RuntimeException e) {
+			e.printStackTrace();
+			return new ResponseEntity<String>("Fail", HttpStatus.OK);
+		}
+	}
+
+	// no need to check if uid is owner or not coz, UI will handle that using
+	// spring security roles
 	@RequestMapping(value = { "/delete/{userId}/{projectId}" }, method = RequestMethod.DELETE, produces = {
 			"application/json", "application/xml" })
 	public @ResponseBody ResponseEntity<Project> deleteProject(@PathVariable("userId") int userId,
@@ -116,5 +141,22 @@ public class ProjectController {
 		 */
 
 		return new ResponseEntity<Project>(p, HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/getUsersListForTask/{pid}", method = RequestMethod.GET)
+	public @ResponseBody List<User> getUsersListForTask(@PathVariable int pid) {
+
+		try {
+			List<User> userList = projectService.getUsersList(pid);
+			if (userList != null) {
+				return userList;
+			} else {
+				return null;
+			}
+		} catch (RuntimeException e) {
+			e.printStackTrace();
+			return null;
+		}
+
 	}
 }

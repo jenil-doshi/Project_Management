@@ -16,32 +16,31 @@ public class Task {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name="TID")
+	@Column(name = "TID")
 	private int tid;
-	
-	@Column(name="TaskName")
-	private String taskName;
-	
-	@Column(name="Title")
-	private String title;
-	
-	@Column(name="State")
-	private String taskState;
-	
-	@Column(name="EstimatedUnits")
-	private String estimate_time;
-	
-	@Column(name="ActualTime")
-	private String actual_time;
-	
-	@OneToOne
-	@JoinColumn(name="User", referencedColumnName = "UID")
-	private User assignee;
-	
-	@ManyToOne
-	@JoinColumn(name="Project",referencedColumnName = "PID")
-	private Project project;
 
+	@Column(name = "TaskName")
+	private String taskName;
+
+	@Column(name = "Description")
+	private String description;
+
+	@Column(name = "State")
+	private String taskState;
+
+	@Column(name = "EstimatedUnits")
+	private int estimated_time;
+
+	@Column(name = "ActualTime")
+	private String actual_time;
+
+	@OneToOne
+	@JoinColumn(name = "Assignee", referencedColumnName = "UID")
+	private User assignee;
+
+	@ManyToOne
+	@JoinColumn(name = "Project", referencedColumnName = "PID")
+	private Project project;
 
 	public int getTid() {
 		return tid;
@@ -75,12 +74,16 @@ public class Task {
 		this.taskName = taskName;
 	}
 
-	public String getTitle() {
-		return title;
+	public String getDescription() {
+		return description;
 	}
 
-	public void setTitle(String title) {
-		this.title = title;
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public void setEstimated_time(int estimated_time) {
+		this.estimated_time = estimated_time;
 	}
 
 	public String getTaskState() {
@@ -91,12 +94,12 @@ public class Task {
 		this.taskState = taskState;
 	}
 
-	public String getEstimate_time() {
-		return estimate_time;
+	public int getEstimated_time() {
+		return estimated_time;
 	}
 
-	public void setEstimate_time(String estimate_time) {
-		this.estimate_time = estimate_time;
+	public void setEstimate_time(int estimated_time) {
+		this.estimated_time = estimated_time;
 	}
 
 	public String getActual_time() {
@@ -106,6 +109,5 @@ public class Task {
 	public void setActual_time(String actual_time) {
 		this.actual_time = actual_time;
 	}
-	
-	
+
 }
