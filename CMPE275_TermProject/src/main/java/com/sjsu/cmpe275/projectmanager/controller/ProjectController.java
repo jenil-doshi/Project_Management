@@ -22,7 +22,7 @@ import com.sjsu.cmpe275.projectmanager.service.ProjectService;
 @ComponentScan(basePackages = "com.sjsu.cmpe275.projectmanager.service")
 @RequestMapping("/project")
 public class ProjectController {
-
+//test
 	@Autowired
 	EmailUtility utility;
 
