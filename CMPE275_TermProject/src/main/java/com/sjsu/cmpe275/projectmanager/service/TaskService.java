@@ -1,0 +1,30 @@
+package com.sjsu.cmpe275.projectmanager.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.sjsu.cmpe275.projectmanager.dao.TaskDao;
+import com.sjsu.cmpe275.projectmanager.model.Task;
+
+@Service
+@Transactional
+@ComponentScan(basePackages = "com.sjsu.cmpe275.projectmanager.service")
+public class TaskService {
+
+	@Autowired
+	TaskDao taskDao;
+
+	public boolean createTask(Task task) throws RuntimeException {
+		return taskDao.createTask(task);
+	}
+
+	public Task getTaskById(Integer id) {
+		return taskDao.getTaskById(id);
+	}
+	
+	public boolean updateTask(Task task) throws RuntimeException {
+		return taskDao.updateTask(task);
+	}
+}

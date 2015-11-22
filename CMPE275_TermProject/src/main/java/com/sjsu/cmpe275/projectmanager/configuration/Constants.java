@@ -20,12 +20,16 @@ public final class Constants {
 	public static String INVITATION_REJECT = "rejected";
 
 	/***** PROJECT STATES ********/
-	public static String PLANNING = "planning";
-	public static String ONGOING = "ongoing";
-	public static String COMPLETED = "completed";
-	public static String CANCELLED = "cancelled";
+	public static String PROJECT_PLANNING = "planning";
+	public static String PROJECT_ONGOING = "ongoing";
+	public static String PROJECT_COMPLETED = "completed";
+	public static String PROJECT_CANCELLED = "cancelled";
+	
 
 	/***** TASK STATES ********/
 	public static String TASK_ASSIGNED = "assigned";
-
+	public static String TASK_NEW = "new";
+	public static String TASK_STARTED = "started";
+	public static String TASK_FINISHED = "finished";
+	public static String TASK_CANCELLED = "cancelled";
 }

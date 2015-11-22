@@ -16,31 +16,32 @@ public class Task {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "TID")
+	@Column(name="TID")
 	private int tid;
-
-	@Column(name = "TaskName")
+	
+	@Column(name="TaskName")
 	private String taskName;
-
-	@Column(name = "Description")
+	
+	@Column(name="Description")
 	private String description;
-
-	@Column(name = "State")
+	
+	@Column(name="State")
 	private String taskState;
-
-	@Column(name = "EstimatedUnits")
-	private int estimated_time;
-
-	@Column(name = "ActualTime")
-	private String actual_time;
-
+	
+	@Column(name="EstimatedUnits")
+	private Integer estimated_time;
+	
+	@Column(name="ActualTime")
+	private Integer actual_time;
+	
 	@OneToOne
-	@JoinColumn(name = "Assignee", referencedColumnName = "UID")
+	@JoinColumn(name="Assignee", referencedColumnName = "UID")
 	private User assignee;
-
+	
 	@ManyToOne
-	@JoinColumn(name = "Project", referencedColumnName = "PID")
+	@JoinColumn(name="Project",referencedColumnName = "PID")
 	private Project project;
+
 
 	public int getTid() {
 		return tid;
@@ -78,12 +79,8 @@ public class Task {
 		return description;
 	}
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public void setEstimated_time(int estimated_time) {
-		this.estimated_time = estimated_time;
+	public void setDescription(String title) {
+		this.description = title;
 	}
 
 	public String getTaskState() {
@@ -94,20 +91,19 @@ public class Task {
 		this.taskState = taskState;
 	}
 
-	public int getEstimated_time() {
+	public Integer getEstimated_time() {
 		return estimated_time;
 	}
 
-	public void setEstimate_time(int estimated_time) {
+	public void setEstimate_time(Integer estimated_time) {
 		this.estimated_time = estimated_time;
 	}
 
-	public String getActual_time() {
+	public Integer getActual_time() {
 		return actual_time;
 	}
 
-	public void setActual_time(String actual_time) {
+	public void setActual_time(Integer actual_time) {
 		this.actual_time = actual_time;
 	}
-
 }

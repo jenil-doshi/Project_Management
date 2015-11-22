@@ -38,7 +38,7 @@ public class ProjectController {
 			User user = new User();
 			user.setUserId(userId);
 			project.setOwner(user);
-			project.setStatus(Constants.PLANNING);
+			project.setStatus(Constants.PROJECT_PLANNING);
 			mv.setViewName("project");
 
 			if (projectService.createProject(userId, project)) {
