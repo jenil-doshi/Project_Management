@@ -25,13 +25,7 @@ public class UserController {
 
     /**
      * Create a User by passing the following parameters
-     *
-     * @param firstname
-     * @param lastname
-     * @param email
-     * @param password
-     * @return
-     * @throws Exception
+     
      */
 
     @RequestMapping(value= {"/create"}, method = RequestMethod.POST, produces = "application/json")
@@ -63,24 +57,10 @@ public class UserController {
 
     /**
      * Get a user by Id in HTML format
-     *
-     * @param userId
-     * @param model
-     * @return
-     * @throws EntityNotFound
+    
      */
 
-//    @RequestMapping(value = "/{id}",
-//            method = RequestMethod.GET,
-//            produces = {"text/html"})
-//    public String getPersonHTML(@PathVariable(value = "id") int userId, ModelMap model) throws EntityNotFound {
-//    	User user = userService.getUser(userId);
-//        if (user == null) {
-//            throw new EntityNotFound("User Not Found.");
-//        }
-//        model.addAttribute("user", user);
-//        return "user";
-//    }
+
     @RequestMapping(value = "/{id}",
             method = RequestMethod.GET,
             produces = {"application/json"})
@@ -95,32 +75,9 @@ public class UserController {
         return new ResponseEntity<User>(user, HttpStatus.OK);
     }
 
-//    @RequestMapping(value = "/{id}",
-//            method = RequestMethod.GET,
-//            produces = {"application/json", "application/xml"})
-//    public ResponseEntity<User> getPerson(@PathVariable(value = "id") int userId) throws EntityNotFound {
-//        try {
-//        	User user = userService.getUser(userId);
-//            if (user != null)
-//                return new ResponseEntity<User>(user, HttpStatus.OK);
-//            else
-//                return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
-//        } catch (Exception e) {
-//            return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
-//        }
-//    }
 
     /**
-     * Update a user by id
-     *
-     * @param userId
-     * @param email
-     * @param firstname
-     * @param lastname
-     * @param password
-     
-     * @return User in JSON
-     * @throws Exception
+     * Update a user by id     
      */
 
     @RequestMapping(value = "/{id}", method = RequestMethod.POST, produces = "application/json")
