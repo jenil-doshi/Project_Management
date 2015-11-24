@@ -1,5 +1,6 @@
 package com.sjsu.cmpe275.projectmanager.service;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.sjsu.cmpe275.projectmanager.configuration.Constants;
 import com.sjsu.cmpe275.projectmanager.dao.ProjectDao;
 import com.sjsu.cmpe275.projectmanager.model.Project;
 import com.sjsu.cmpe275.projectmanager.model.User;
@@ -50,6 +52,16 @@ public class ProjectService {
 
 		return projectDao.getUsersList(pid);
 
+	}
+
+	public String setProjectStatus(Date startDate) {
+		String status;
+		if (startDate.before(new Date())) {
+			status = Constants.PROJECT_NEW;
+		} else {
+			status = Constants.PROJECT_PLANNING;
+		}
+		return status;
 	}
 
 }

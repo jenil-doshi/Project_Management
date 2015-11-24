@@ -31,14 +31,16 @@ public class ProjectController {
 	@Autowired
 	ProjectService projectService;
 
-	@RequestMapping(value = { "/create/{userId}" }, method = RequestMethod.POST, produces = "application/json")
+	@RequestMapping(value = { "/create/{userId}" }, headers="Accept=*/*",method = RequestMethod.POST, produces = { "application/json" })
 	public @ResponseBody Project createProject(@PathVariable int userId, @ModelAttribute Project project) {
 		ModelAndView mv = new ModelAndView();
 		try {
 			User user = new User();
 			user.setUserId(userId);
 			project.setOwner(user);
-			project.setStatus(Constants.PROJECT_PLANNING);
+			// to change from new to planning... handle the control from ui by
+			// invoking update state service every once a day.
+			project.setStatus(projectService.setProjectStatus(project.getStartDate()));
 			mv.setViewName("project");
 
 			if (projectService.createProject(userId, project)) {
@@ -122,10 +124,7 @@ public class ProjectController {
 		}
 	}
 
-	// no need to check if uid is owner or not coz, UI will handle that using
-	// spring security roles
-	@RequestMapping(value = { "/delete/{userId}/{projectId}" }, method = RequestMethod.DELETE, produces = {
-			"application/json", "application/xml" })
+	@RequestMapping(value = { "/delete/{userId}/{projectId}" }, method = RequestMethod.DELETE)
 	public @ResponseBody ResponseEntity<Project> deleteProject(@PathVariable("userId") int userId,
 			@PathVariable("projectId") int projectId) {
 		Project p = projectService.getProjectById(projectId);

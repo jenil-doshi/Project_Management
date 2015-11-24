@@ -20,11 +20,11 @@ public final class Constants {
 	public static String INVITATION_REJECT = "rejected";
 
 	/***** PROJECT STATES ********/
+	public static String PROJECT_NEW = "new";
 	public static String PROJECT_PLANNING = "planning";
 	public static String PROJECT_ONGOING = "ongoing";
 	public static String PROJECT_COMPLETED = "completed";
 	public static String PROJECT_CANCELLED = "cancelled";
-	
 
 	/***** TASK STATES ********/
 	public static String TASK_ASSIGNED = "assigned";
