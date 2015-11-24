@@ -31,8 +31,10 @@ public class ProjectController {
 	@Autowired
 	ProjectService projectService;
 
-	@RequestMapping(value = { "/create/{userId}" }, headers="Accept=*/*",method = RequestMethod.POST, produces = { "application/json" })
-	public @ResponseBody Project createProject(@PathVariable int userId, @ModelAttribute Project project) {
+	@RequestMapping(value = { "/create/{userId}" }, headers = "Accept=*/*", method = RequestMethod.POST, produces = { "application/json" })
+	public @ResponseBody
+	Project createProject(@PathVariable int userId,
+			@ModelAttribute Project project) {
 		ModelAndView mv = new ModelAndView();
 		try {
 			User user = new User();
@@ -40,7 +42,8 @@ public class ProjectController {
 			project.setOwner(user);
 			// to change from new to planning... handle the control from ui by
 			// invoking update state service every once a day.
-			project.setStatus(projectService.setProjectStatus(project.getStartDate()));
+			project.setStatus(projectService.setProjectStatus(project
+					.getStartDate()));
 			mv.setViewName("project");
 
 			if (projectService.createProject(userId, project)) {
@@ -60,14 +63,16 @@ public class ProjectController {
 
 	// update Project
 
-	@RequestMapping(value = {
-			"/sendInvite/{uid}/{recipientId}/{projectId}/{projectName}/{projectOwner}" }, method = RequestMethod.POST)
-	public ResponseEntity<String> sendInvite(@PathVariable int uid, @PathVariable String recipientId,
-			@PathVariable int projectId, @PathVariable String projectName, @PathVariable String projectOwner) {
+	@RequestMapping(value = { "/sendInvite/{uid}/{recipientId}/{projectId}/{projectName}/{projectOwner}" }, method = RequestMethod.POST)
+	public ResponseEntity<String> sendInvite(@PathVariable int uid,
+			@PathVariable String recipientId, @PathVariable int projectId,
+			@PathVariable String projectName, @PathVariable String projectOwner) {
 
 		try {
-			if (utility.sendEmail(uid, recipientId, projectId, projectName, projectOwner)) {
-				if (projectService.saveInvitationStatus(uid, projectId, Constants.INVITATION_PENDING)) {
+			if (utility.sendEmail(uid, recipientId, projectId, projectName,
+					projectOwner)) {
+				if (projectService.saveInvitationStatus(uid, projectId,
+						Constants.INVITATION_PENDING)) {
 					return new ResponseEntity<String>("Success", HttpStatus.OK);
 				}
 				return new ResponseEntity<String>("Fail", HttpStatus.OK);
@@ -86,10 +91,10 @@ public class ProjectController {
 
 	}
 
-	@RequestMapping(value = {
-			"/invitationStatus/{status}/{uid}/{recipientId}/{projectId}" }, method = RequestMethod.GET)
-	public ResponseEntity<String> inviteStatus(@PathVariable String status, @PathVariable String recipientId,
-			@PathVariable int uid, @PathVariable int projectId) {
+	@RequestMapping(value = { "/invitationStatus/{status}/{uid}/{recipientId}/{projectId}" }, method = RequestMethod.GET)
+	public ResponseEntity<String> inviteStatus(@PathVariable String status,
+			@PathVariable String recipientId, @PathVariable int uid,
+			@PathVariable int projectId) {
 
 		try {
 			if (status.equalsIgnoreCase(Constants.ACCEPT)) {
@@ -111,12 +116,15 @@ public class ProjectController {
 	@RequestMapping(value = "/start/{pid}", method = RequestMethod.POST)
 	// no need to check if uid is owner or not coz, UI will handle that using
 	// spring security roles
-	public @ResponseBody ResponseEntity<String> startProject(@PathVariable int pid) {
+	public @ResponseBody
+	ResponseEntity<String> startProject(@PathVariable int pid) {
 		try {
 			if (projectService.getTasksForProject(pid)) {
-				return new ResponseEntity<String>("Can Start Project", HttpStatus.OK);
+				return new ResponseEntity<String>("Can Start Project",
+						HttpStatus.OK);
 			} else {
-				return new ResponseEntity<String>("Cannot Start Project", HttpStatus.OK);
+				return new ResponseEntity<String>("Cannot Start Project",
+						HttpStatus.OK);
 			}
 		} catch (RuntimeException e) {
 			e.printStackTrace();
@@ -124,26 +132,28 @@ public class ProjectController {
 		}
 	}
 
-	@RequestMapping(value = { "/delete/{userId}/{projectId}" }, method = RequestMethod.DELETE)
-	public @ResponseBody ResponseEntity<Project> deleteProject(@PathVariable("userId") int userId,
+	@RequestMapping(value = { "/cancel/{userId}/{projectId}" }, method = RequestMethod.DELETE)
+	public @ResponseBody
+	ResponseEntity<Project> cancelProject(@PathVariable("userId") int userId,
 			@PathVariable("projectId") int projectId) {
 		Project p = projectService.getProjectById(projectId);
 		if (p == null)
 			return new ResponseEntity<Project>(HttpStatus.NOT_FOUND);
 
-		projectService.deleteProjectById(projectId);
+		// projectService.deleteProjectById(projectId);
 
-		/*
-		 * if(p.getOwner().getUserId() == userId){
-		 * projectService.deleteProjectById(projectId); } else{
-		 * System.out.println("Project Can only be deleted by Owner"); }
-		 */
+		if (p.getOwner().getUserId() == userId) {
+			projectService.deleteProjectById(projectId);
+		} else {
+			System.out.println("Project Can only be deleted by Owner");
+		}
 
 		return new ResponseEntity<Project>(p, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/getUsersListForTask/{pid}", method = RequestMethod.GET)
-	public @ResponseBody List<User> getUsersListForTask(@PathVariable int pid) {
+	public @ResponseBody
+	List<User> getUsersListForTask(@PathVariable int pid) {
 
 		try {
 			List<User> userList = projectService.getUsersList(pid);

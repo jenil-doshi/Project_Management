@@ -34,9 +34,10 @@ public class Task {
 	@Column(name="ActualTime")
 	private Integer actual_time;
 	
-	@OneToOne
-	@JoinColumn(name="Assignee", referencedColumnName = "UID")
-	private User assignee;
+	/*@OneToOne
+	@JoinColumn(name="Assignee", referencedColumnName = "UID")*/
+	@Column(name="Assignee")
+	private Integer assignee;
 	
 	@ManyToOne
 	@JoinColumn(name="Project",referencedColumnName = "PID")
@@ -47,11 +48,11 @@ public class Task {
 		return tid;
 	}
 
-	public User getAssignee() {
+	public Integer getAssignee() {
 		return assignee;
 	}
 
-	public void setAssignee(User assignee) {
+	public void setAssignee(Integer assignee) {
 		this.assignee = assignee;
 	}
 

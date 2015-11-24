@@ -63,15 +63,27 @@ public class ProjectDaoImpl implements ProjectDao {
 		return project;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Transactional
 	@Override
-	public Boolean deleteProject(Integer projectId) {
+	public Boolean deleteProjectById(int projectId) {
 
 		boolean status = false;
 		try {
-			sessionFactory.getCurrentSession().delete(getProjectById(projectId));
-			status = true;
+			Query query = sessionFactory.getCurrentSession().createQuery(Queries.GET_PROJECT_TASK_LIST);
+			query.setParameter("projetId", projectId);
+			List<String> statusList = query.list();
+			if(statusList != null){
+				for(String statList : statusList){
+					if(statList.equals(Constants.TASK_FINISHED) || statList.equals(Constants.TASK_CANCELLED)){
+						sessionFactory.getCurrentSession().delete(getProjectById(projectId));
+						status = true;
+						return status;
+					}
+				}
+			}
 			return status;
+			
 		} catch (Exception e) {
 			throw new RuntimeException();
 		}

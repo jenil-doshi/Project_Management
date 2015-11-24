@@ -30,8 +30,8 @@ public class ProjectService {
 		return projectDao.getProjectById(id);
 	}
 
-	public void deleteProjectById(Integer id) {
-		projectDao.deleteProject(id);
+	public void deleteProjectById(int id) {
+		projectDao.deleteProjectById(id);
 	}
 
 	public boolean saveInvitationStatus(int uid, int projectId, String status) {

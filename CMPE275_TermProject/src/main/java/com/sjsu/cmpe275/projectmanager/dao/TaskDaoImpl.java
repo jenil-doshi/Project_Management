@@ -1,15 +1,15 @@
 package com.sjsu.cmpe275.projectmanager.dao;
 
-import org.dbunit.util.concurrent.Takable;
+import java.util.List;
+
+import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
-import com.sjsu.cmpe275.projectmanager.model.Project;
-import com.sjsu.cmpe275.projectmanager.model.Task;
-import com.sjsu.cmpe275.projectmanager.model.User;
+import com.sjsu.cmpe275.projectmanager.configuration.Constants;
+import com.sjsu.cmpe275.projectmanager.configuration.Queries;
+import com.sjsu.cmpe275.projectmanager.model.*;
 
 @Repository
 public class TaskDaoImpl implements TaskDao {
@@ -49,4 +49,18 @@ public class TaskDaoImpl implements TaskDao {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Task> getTasks(int projectId) {
+			List<Task> taskList = null;
+			try {
+				Query query = sessionFactory.getCurrentSession().createQuery(Queries.GET_TASK_LIST);
+				query.setParameter("projectId", projectId);
+				taskList = query.list();
+			} catch (Exception e) {
+				e.printStackTrace();
+				throw new RuntimeException("A Runtime Exception has occurred");
+			}
+			return taskList;
+	}
 }

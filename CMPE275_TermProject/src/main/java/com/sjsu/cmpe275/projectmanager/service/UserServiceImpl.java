@@ -4,10 +4,10 @@ package com.sjsu.cmpe275.projectmanager.service;
 import com.sjsu.cmpe275.projectmanager.dao.UserDAO;
 import com.sjsu.cmpe275.projectmanager.exception.EntityNotFound;
 import com.sjsu.cmpe275.projectmanager.model.User;
+import com.sjsu.cmpe275.projectmanager.model.UserProjectInfo;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-
 
 @Service("UserService")
 
@@ -41,5 +41,11 @@ public class UserServiceImpl implements UserService {
         return user;
 
     }
+
+	@Override
+	public String getUserProjectStatus(int userId, int projectId) {
+		String status = userDao.getUserProjectStatus(userId, projectId);
+		return status;
+	}
 
 }

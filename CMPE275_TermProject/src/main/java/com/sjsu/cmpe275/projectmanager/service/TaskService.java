@@ -1,5 +1,7 @@
 package com.sjsu.cmpe275.projectmanager.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Service;
@@ -26,5 +28,9 @@ public class TaskService {
 	
 	public boolean updateTask(Task task) throws RuntimeException {
 		return taskDao.updateTask(task);
+	}
+	
+	public List<Task> getTasks(int projectId) {
+		return taskDao.getTasks(projectId);
 	}
 }

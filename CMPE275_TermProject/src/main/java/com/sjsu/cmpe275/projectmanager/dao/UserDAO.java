@@ -1,6 +1,7 @@
 package com.sjsu.cmpe275.projectmanager.dao;
 
 import com.sjsu.cmpe275.projectmanager.model.User;
+import com.sjsu.cmpe275.projectmanager.model.UserProjectInfo;
 import com.sjsu.cmpe275.projectmanager.exception.EntityNotFound;
 
 //import java.util.List;
@@ -17,6 +18,6 @@ public interface UserDAO {
 
 	    public User deleteUser(int userId) throws EntityNotFound;
 
-	   
+	    public String getUserProjectStatus(int userId, int projectId); 
 
 }

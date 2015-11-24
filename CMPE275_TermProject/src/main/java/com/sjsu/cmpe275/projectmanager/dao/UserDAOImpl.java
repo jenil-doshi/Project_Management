@@ -1,7 +1,11 @@
 package com.sjsu.cmpe275.projectmanager.dao;
 
+import com.sjsu.cmpe275.projectmanager.configuration.Constants;
+import com.sjsu.cmpe275.projectmanager.configuration.Queries;
 import com.sjsu.cmpe275.projectmanager.exception.EntityNotFound;
 import com.sjsu.cmpe275.projectmanager.model.User;
+import com.sjsu.cmpe275.projectmanager.model.UserProjectInfo;
+
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -30,9 +34,6 @@ public class UserDAOImpl extends AbstractDAO<Integer, User> implements UserDAO {
 		return user;
 	}
 	
-	
-
-	
 	public User getUser(int userId) throws EntityNotFound {
 		
 		return (User) session.getCurrentSession().get(User.class, userId);
@@ -58,5 +59,21 @@ public class UserDAOImpl extends AbstractDAO<Integer, User> implements UserDAO {
 		} else {
 			throw new EntityNotFound("User not found.");
 		}
+	}
+
+	@Override
+	public String getUserProjectStatus(int userId, int projectId) {
+		String result = null;
+		try{
+			Query query = session.getCurrentSession().createQuery(Queries.GET_USER_PROJECT_STATUS);
+			query.setParameter("userId", userId);
+			query.setParameter("projectId", projectId);
+			result = (String) query.uniqueResult();
+			System.out.println("Result of status: " + result);
+		}
+		catch(Exception e){
+			
+		}
+		return result;
 	}
 }
