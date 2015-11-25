@@ -6,11 +6,17 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.Table;
 
+/**
+ * THIS CLASS WILL NOT BE USED BY SPRING SECURITY
+ * @author rainashastri
+ *
+ */
 @Entity
 @Table(name = "User")
-@Embeddable
+
 public class User {
 
 	@Id
@@ -29,7 +35,18 @@ public class User {
 	@Column(name="Password")
 	private String password;
 	
-	
+	/*@JoinColumn(name="role",referencedColumnName="role")
+	public UserRoles getRole() {
+		return role;
+	}
+
+	public void setRole(UserRoles role) {
+		this.role = role;
+	}
+
+	@JoinColumn(name="role")
+	private UserRoles role;
+	*/
 	public String getPassword() {
 		return password;
 	}
@@ -70,7 +87,7 @@ public class User {
 		this.lastName = lastName;
 	}
 	
-	@Column(name="enabled")
+	/*@Column(name="enabled")
 	private int enabled;
 
 	public int getEnabled() {
@@ -79,5 +96,5 @@ public class User {
 
 	public void setEnabled(int enabled) {
 		this.enabled = enabled;
-	}
+	}*/
 }

@@ -2,13 +2,15 @@ package com.sjsu.cmpe275.projectmanager.dao;
 
 import com.sjsu.cmpe275.projectmanager.model.User;
 import com.sjsu.cmpe275.projectmanager.model.UserProjectInfo;
+import com.sjsu.cmpe275.projectmanager.model.UserRoles;
+import com.sjsu.cmpe275.projectmanager.model.Users;
 import com.sjsu.cmpe275.projectmanager.exception.EntityNotFound;
 
 //import java.util.List;
 
 public interface UserDAO {
 
-		public User createUser(User user);
+		public User createUser(User user,UserRoles roles, Users users);
 
 	    public User getUser(int personId) throws EntityNotFound;
 

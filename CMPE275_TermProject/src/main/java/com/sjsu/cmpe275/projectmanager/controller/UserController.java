@@ -1,129 +1,130 @@
 package com.sjsu.cmpe275.projectmanager.controller;
 
-
-import com.sjsu.cmpe275.projectmanager.exception.EntityNotFound;
-import com.sjsu.cmpe275.projectmanager.model.*;
-import com.sjsu.cmpe275.projectmanager.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.sjsu.cmpe275.projectmanager.configuration.Constants;
+import com.sjsu.cmpe275.projectmanager.exception.EntityNotFound;
+import com.sjsu.cmpe275.projectmanager.model.User;
+import com.sjsu.cmpe275.projectmanager.model.UserRoles;
+import com.sjsu.cmpe275.projectmanager.model.Users;
+//import com.sjsu.cmpe275.projectmanager.model.UserRoles;
+//import com.sjsu.cmpe275.projectmanager.model.Users;
+import com.sjsu.cmpe275.projectmanager.service.UserService;
 
 @Controller
+@ComponentScan(basePackages = "com.sjsu.cmpe275.projectmanager.service")
 @RequestMapping("/user")
 
 public class UserController {
 
-    @Autowired
-    UserService userService;
+	@Autowired
+	UserService userService;
 
-    /**
-     * Create a User by passing the following parameters
-     
-     */
+	/**
+	 * Create a User by passing the following parameters
+	 * 
+	 */
 
-    @RequestMapping(value= {"/create"}, method = RequestMethod.POST, produces = "application/json")
-    public ResponseEntity<User> createPerson(@RequestParam(value = "firstname", required = true) String FirstName,
-                                               @RequestParam(value = "lastname", required = true) String LastName,
-                                               @RequestParam(value = "email", required = true) String Email,
-                                               @RequestParam(value = "password", defaultValue = "") String Password
-                                               ) {
+	@RequestMapping(value = { "/create" }, method = RequestMethod.POST)
+	public ResponseEntity<User> createPerson(@RequestParam(value = "firstname", required = true) String firstName,
+			@RequestParam(value = "lastname", required = true) String lastName,
+			@RequestParam(value = "email", required = true) String email,
+			@RequestParam(value = "password", defaultValue = "") String password) {
 
+		User userObj = new User();
 
-    	User userObj = new User();
+		if (firstName == null || "".equalsIgnoreCase(firstName) || lastName == null || "".equalsIgnoreCase(lastName)
+				|| email == null || "".equalsIgnoreCase(email)) {
+			return new ResponseEntity<User>(HttpStatus.BAD_REQUEST);
+		}
 
-        if (FirstName == null || "".equalsIgnoreCase(FirstName)
-                || LastName == null || "".equalsIgnoreCase(LastName)
-                || Email == null || "".equalsIgnoreCase(Email)) {
-            return new ResponseEntity<User>(HttpStatus.BAD_REQUEST);
-        }
+		userObj.setFirstName(firstName);
+		userObj.setLastName(lastName);
+		userObj.setEmail(email);
+		userObj.setPassword(password);
 
-        userObj.setFirstName(FirstName);
-        userObj.setLastName(LastName);
-        userObj.setEmail(Email);
-        userObj.setPassword(Password);
+		UserRoles role = new UserRoles();
+		role.setRole(Constants.ROLE_ADMIN);
+		role.setUsername(email);
 
-    
-        User createdUser = userService.createUser(userObj);
+		Users users = new Users();
+		users.setUsername(email);
+		users.setPassword(password);
+		users.setEnabled(Constants.ENABLED);
 
-        return new ResponseEntity<User>(createdUser, HttpStatus.OK);
-    }
+		User createdUser = userService.createUser(userObj, role, users);
 
-    /**
-     * Get a user by Id in HTML format
-    
-     */
+		return new ResponseEntity<User>(createdUser, HttpStatus.OK);
+	}
 
+	/**
+	 * Get a user by Id in HTML format
+	 * 
+	 */
 
-    @RequestMapping(value = "/{id}",
-            method = RequestMethod.GET,
-            produces = {"application/json"})
-    public ResponseEntity<User> getPersonHTML(@PathVariable(value = "id") int userId, ModelMap model) throws EntityNotFound {
-    	System.out.println("UserId: " + userId);
-    	User user = userService.getUser(userId);
-    	
-        /*if (user == null) {
-            throw new EntityNotFound("User Not Found.");
-        }*/
-        //model.addAttribute("user", user);
-        return new ResponseEntity<User>(user, HttpStatus.OK);
-    }
+	@RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = { "application/json" })
+	public ResponseEntity<User> getPersonHTML(@PathVariable(value = "id") int userId, ModelMap model)
+			throws EntityNotFound {
+		System.out.println("UserId: " + userId);
+		User user = userService.getUser(userId);
 
+		/*
+		 * if (user == null) { throw new EntityNotFound("User Not Found."); }
+		 */
+		// model.addAttribute("user", user);
+		return new ResponseEntity<User>(user, HttpStatus.OK);
+	}
 
-    /**
-     * Update a user by id     
-     */
+	/**
+	 * Update a user by id
+	 */
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.POST, produces = "application/json")
-    public ResponseEntity<User> updatePerson(
-            @PathVariable(value = "id") int UID,
-            @RequestParam(value = "Email", required = true) String email,
-            @RequestParam(value = "FirstName", required = true) String FirstName,
-            @RequestParam(value = "LastName", required = true) String LastName,
-            @RequestParam(value = "Password", defaultValue = "") String Password
-            ) throws Exception {
+	@RequestMapping(value = "/update/{id}", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<User> updatePerson(@PathVariable(value = "id") int uid,
+			@RequestParam(value = "FirstName", required = true) String firstName,
+			@RequestParam(value = "LastName", required = true) String lastName) throws Exception {
 
-    	User user = userService.getUser(UID);
-        if (user == null) {
-            return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
-        }
+		User user = userService.getUser(uid);
+		if (user == null) {
+			return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
+		}
 
-        user.setEmail(email);
+		if (firstName != null || !"".equalsIgnoreCase(firstName))
+			user.setFirstName(firstName);
+		if (lastName != null || !"".equalsIgnoreCase(lastName))
+			user.setLastName(lastName);
 
-        if (FirstName != null || !"".equalsIgnoreCase(FirstName))
-        	user.setFirstName(FirstName);
-        if (LastName != null || !"".equalsIgnoreCase(LastName))
-        	user.setLastName(LastName);
-        if (Password != null || !"".equalsIgnoreCase(Password))
-        	user.setPassword(Password);
-        
-        User updatedPerson = userService.updateUser(user);
-        return new ResponseEntity<User>(updatedPerson, HttpStatus.OK);
-    }
+		
+		
+		User updatedPerson = userService.updateUser(user);
+		return new ResponseEntity<User>(updatedPerson, HttpStatus.OK);
+	}
 
+	/**
+	 * Delete a user
+	 *
+	 * @param userId
+	 * @return
+	 * @throws EntityNotFound
+	 */
+	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = "application/json")
+	public ResponseEntity<User> deletePerson(@PathVariable(value = "id") int UID) throws EntityNotFound {
 
-    /**
-     * Delete a user
-     *
-     * @param userId
-     * @return
-     * @throws EntityNotFound
-     */
-    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = "application/json")
-    public ResponseEntity<User> deletePerson(@PathVariable(value = "id") int UID) throws EntityNotFound {
+		User userToDelete = userService.getUser(UID);
+		if (userToDelete == null)
+			return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
 
-    	User userToDelete = userService.getUser(UID);
-        if (userToDelete == null)
-            return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
-
-        User deletedUser = userService.deleteUser(UID);
-        return new ResponseEntity<User>(deletedUser, HttpStatus.OK);
-    }
+		User deletedUser = userService.deleteUser(UID);
+		return new ResponseEntity<User>(deletedUser, HttpStatus.OK);
+	}
 
 }

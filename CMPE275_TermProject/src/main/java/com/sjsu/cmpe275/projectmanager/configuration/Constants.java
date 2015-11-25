@@ -32,4 +32,9 @@ public final class Constants {
 	public static String TASK_STARTED = "started";
 	public static String TASK_FINISHED = "finished";
 	public static String TASK_CANCELLED = "cancelled";
+
+	/********** ROLES ************/
+	public static final String ROLE_ADMIN = "ROLE_ADMIN";
+	public static final String ROLE_USER = "ROLE_USER";
+	public static final int ENABLED = 1;
 }

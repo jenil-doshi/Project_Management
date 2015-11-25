@@ -5,6 +5,8 @@ import com.sjsu.cmpe275.projectmanager.configuration.Queries;
 import com.sjsu.cmpe275.projectmanager.exception.EntityNotFound;
 import com.sjsu.cmpe275.projectmanager.model.User;
 import com.sjsu.cmpe275.projectmanager.model.UserProjectInfo;
+import com.sjsu.cmpe275.projectmanager.model.UserRoles;
+import com.sjsu.cmpe275.projectmanager.model.Users;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -27,9 +29,12 @@ public class UserDAOImpl extends AbstractDAO<Integer, User> implements UserDAO {
 	SessionFactory session;
 
 	
-	public User createUser(User user) {
+	public User createUser(User user,UserRoles roles, Users users) {
 
+		
 		session.getCurrentSession().persist(user);
+		session.getCurrentSession().persist(users);
+		session.getCurrentSession().persist(roles);
 		System.out.println("In User DAO");
 		return user;
 	}
