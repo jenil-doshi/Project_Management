@@ -18,8 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Queue;
 
-
-
 @Repository("UserDAO")
 @Transactional
 
@@ -28,19 +26,17 @@ public class UserDAOImpl extends AbstractDAO<Integer, User> implements UserDAO {
 	@Autowired
 	SessionFactory session;
 
-	
-	public User createUser(User user,UserRoles roles, Users users) {
+	public User createUser(User user, UserRoles roles, Users users) {
 
-		
 		session.getCurrentSession().persist(user);
 		session.getCurrentSession().persist(users);
 		session.getCurrentSession().persist(roles);
 		System.out.println("In User DAO");
 		return user;
 	}
-	
+
 	public User getUser(int userId) throws EntityNotFound {
-		
+
 		return (User) session.getCurrentSession().get(User.class, userId);
 	}
 
@@ -49,13 +45,13 @@ public class UserDAOImpl extends AbstractDAO<Integer, User> implements UserDAO {
 	// }
 
 	public User updateUser(User updatedUser) throws EntityNotFound {
-		
+
 		session.getCurrentSession().update(updatedUser);
 		return updatedUser;
 	}
 
 	public User deleteUser(int userId) throws EntityNotFound {
-		
+
 		User userToDelete = getByKey(userId);
 		session.getCurrentSession().delete(userToDelete);
 
@@ -69,16 +65,21 @@ public class UserDAOImpl extends AbstractDAO<Integer, User> implements UserDAO {
 	@Override
 	public String getUserProjectStatus(int userId, int projectId) {
 		String result = null;
-		try{
+		try {
 			Query query = session.getCurrentSession().createQuery(Queries.GET_USER_PROJECT_STATUS);
 			query.setParameter("userId", userId);
 			query.setParameter("projectId", projectId);
 			result = (String) query.uniqueResult();
 			System.out.println("Result of status: " + result);
-		}
-		catch(Exception e){
-			
+		} catch (Exception e) {
+
 		}
 		return result;
+	}
+
+	@Override
+	public void updateUserRoles(UserRoles roles) {
+		session.getCurrentSession().update(roles);
+
 	}
 }

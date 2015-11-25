@@ -23,6 +23,7 @@ public interface ProjectDao {
 	public boolean saveInvitationStatus(UserProjectInfo info);
 	public boolean getTasksForProject(int pid);
 	public List<User> getUsersList(int pid);
+	public List<Project> getProjects(int userId, String sql);
 
 
 }

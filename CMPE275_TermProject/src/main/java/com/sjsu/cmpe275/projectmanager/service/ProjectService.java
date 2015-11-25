@@ -64,4 +64,16 @@ public class ProjectService {
 		return status;
 	}
 
+	public List<Project> getProjectsForUser(int userId, String role) {
+		String sql = null;
+		if (role.equalsIgnoreCase(Constants.ROLE_USER)) {
+			sql = "select pid from UserProjectInfo where UID = :userId";
+			return projectDao.getProjects(userId, sql);
+		} else {
+			sql = "select pid from Project where Owner = :userId";
+			return projectDao.getProjects(userId, sql);
+		}
+
+	}
+
 }

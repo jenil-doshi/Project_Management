@@ -20,6 +20,8 @@ public interface UserDAO {
 
 	    public User deleteUser(int userId) throws EntityNotFound;
 
-	    public String getUserProjectStatus(int userId, int projectId); 
+	    public String getUserProjectStatus(int userId, int projectId);
+
+		public void updateUserRoles(UserRoles roles); 
 
 }

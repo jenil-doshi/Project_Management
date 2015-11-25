@@ -51,4 +51,9 @@ public class UserServiceImpl implements UserService {
 		return status;
 	}
 
+	@Override
+	public void updateUserRole(UserRoles roles) {
+		userDao.updateUserRoles(roles);
+	}
+
 }

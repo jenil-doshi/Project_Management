@@ -88,6 +88,17 @@ public class UserController {
 	 * Update a user by id
 	 */
 
+	/**
+	 * Allow to update only firstname and lastname. Email cannot be updated as
+	 * it is PK in users table. password change will be hanfdled through a
+	 * different api
+	 * 
+	 * @param uid
+	 * @param firstName
+	 * @param lastName
+	 * @return
+	 * @throws Exception
+	 */
 	@RequestMapping(value = "/update/{id}", method = RequestMethod.POST, produces = "application/json")
 	public ResponseEntity<User> updatePerson(@PathVariable(value = "id") int uid,
 			@RequestParam(value = "FirstName", required = true) String firstName,
@@ -103,8 +114,6 @@ public class UserController {
 		if (lastName != null || !"".equalsIgnoreCase(lastName))
 			user.setLastName(lastName);
 
-		
-		
 		User updatedPerson = userService.updateUser(user);
 		return new ResponseEntity<User>(updatedPerson, HttpStatus.OK);
 	}
@@ -113,6 +122,12 @@ public class UserController {
 	 * Delete a user
 	 *
 	 * @param userId
+	 * @return
+	 * @throws EntityNotFound
+	 */
+	/**
+	 * This method needs to be changed. Change to deleting user from user project info. Also change user role from ROLE_USER to ROLE_ADMIN
+	 * @param UID
 	 * @return
 	 * @throws EntityNotFound
 	 */

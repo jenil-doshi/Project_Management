@@ -28,4 +28,6 @@ public interface UserService {
 	public User deleteUser(int userId) throws EntityNotFound;
 
 	public String getUserProjectStatus(int userId, int projectId);
+
+	public void updateUserRole(UserRoles roles);
 }

@@ -3,6 +3,7 @@ package com.sjsu.cmpe275.projectmanager.dao;
 import java.util.List;
 
 import org.hibernate.Query;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -73,9 +74,9 @@ public class ProjectDaoImpl implements ProjectDao {
 			Query query = sessionFactory.getCurrentSession().createQuery(Queries.GET_PROJECT_TASK_LIST);
 			query.setParameter("projetId", projectId);
 			List<String> statusList = query.list();
-			if(statusList != null){
-				for(String statList : statusList){
-					if(statList.equals(Constants.TASK_FINISHED) || statList.equals(Constants.TASK_CANCELLED)){
+			if (statusList != null) {
+				for (String statList : statusList) {
+					if (statList.equals(Constants.TASK_FINISHED) || statList.equals(Constants.TASK_CANCELLED)) {
 						sessionFactory.getCurrentSession().delete(getProjectById(projectId));
 						status = true;
 						return status;
@@ -83,7 +84,7 @@ public class ProjectDaoImpl implements ProjectDao {
 				}
 			}
 			return status;
-			
+
 		} catch (Exception e) {
 			throw new RuntimeException();
 		}
@@ -136,6 +137,27 @@ public class ProjectDaoImpl implements ProjectDao {
 			throw new RuntimeException("A Runtime Exception has occurred");
 		}
 		return usersList;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Project> getProjects(int userId, String sql) {
+		List<Project> projList = null;
+		try {
+			Query query = sessionFactory.getCurrentSession().createQuery(sql).setParameter("Owner",userId);
+			List<Integer> projIdList = query.list();
+			if (projIdList != null) {
+				Query queryList = sessionFactory.getCurrentSession()
+						.createQuery("from project where pid in (:projIdList)")
+						.setParameterList("projIdList", projIdList);
+				projList = queryList.list();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException("A Runtime Exception has occured.");
+		}
+
+		return projList;
 	}
 
 }
