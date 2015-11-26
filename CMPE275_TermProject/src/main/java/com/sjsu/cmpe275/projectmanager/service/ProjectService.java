@@ -30,7 +30,7 @@ public class ProjectService {
 		return projectDao.getProjectById(id);
 	}
 
-	public void deleteProjectById(int id) {
+	public void completeProjectById(int id) {
 		projectDao.deleteProjectById(id);
 	}
 

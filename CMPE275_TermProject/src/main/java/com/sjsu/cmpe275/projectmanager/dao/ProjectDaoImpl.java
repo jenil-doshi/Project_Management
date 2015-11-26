@@ -67,7 +67,7 @@ public class ProjectDaoImpl implements ProjectDao {
 	@SuppressWarnings("unchecked")
 	@Transactional
 	@Override
-	public Boolean deleteProjectById(int projectId) {
+	public Boolean completeProjectById(int projectId) {
 
 		boolean status = false;
 		try {

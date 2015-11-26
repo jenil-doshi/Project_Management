@@ -139,8 +139,8 @@ public class ProjectController {
 		}
 	}
 
-	@RequestMapping(value = { "/cancel/{userId}/{projectId}" }, method = RequestMethod.DELETE)
-	public @ResponseBody ResponseEntity<Project> cancelProject(@PathVariable("userId") int userId,
+	@RequestMapping(value = { "/complete/{userId}/{projectId}" }, method = RequestMethod.DELETE)
+	public @ResponseBody ResponseEntity<Project> completeProject(@PathVariable("userId") int userId,
 			@PathVariable("projectId") int projectId) {
 		Project p = projectService.getProjectById(projectId);
 		if (p == null)
@@ -149,7 +149,7 @@ public class ProjectController {
 		// projectService.deleteProjectById(projectId);
 
 		if (p.getOwner().getUserId() == userId) {
-			projectService.deleteProjectById(projectId);
+			projectService.completeProjectById(projectId);
 		} else {
 			System.out.println("Project Can only be deleted by Owner");
 		}
