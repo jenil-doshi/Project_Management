@@ -196,8 +196,8 @@ public class ProjectController {
 
 	}
 
-	@RequestMapping(value = "/getProjects/{userId}/{role}", method = RequestMethod.GET)
-	public List<Project> getUserProjects(@PathVariable int userId, @PathVariable String role) {
+	@RequestMapping(value = "/getProjects/{userId}/{role}", method = RequestMethod.GET,produces = "application/json")
+	public @ResponseBody List<Project> getUserProjects(@PathVariable int userId, @PathVariable String role) {
 
 		try {
 			return projectService.getProjectsForUser(userId, role);
@@ -207,6 +207,8 @@ public class ProjectController {
 		}
 
 	}
+	
+	
 
 	/* Added code for security */
 	/*

@@ -174,14 +174,22 @@ public class ProjectDaoImpl implements ProjectDao {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Project> getProjects(int userId, String sql) {
+	public List<Project> getProjects(int userId, String role) {
 		List<Project> projList = null;
+		Query query = null;
 		try {
-			Query query = sessionFactory.getCurrentSession().createQuery(sql).setParameter("Owner",userId);
+			String sql = null;
+			if (role.equalsIgnoreCase(Constants.ROLE_USER)) {
+				sql = Queries.GET_PID_FORM_USER_PROJECT_INFO;
+				query = sessionFactory.getCurrentSession().createQuery(sql).setParameter("userId", userId);
+			} else {
+				sql = Queries.GET_PID_FROM_PROJECT_FOR_USER;
+				query = sessionFactory.getCurrentSession().createQuery(sql).setParameter("userId", userId);
+			}
 			List<Integer> projIdList = query.list();
 			if (projIdList != null) {
 				Query queryList = sessionFactory.getCurrentSession()
-						.createQuery("from project where pid in (:projIdList)")
+						.createQuery("from Project where pid in (:projIdList)")
 						.setParameterList("projIdList", projIdList);
 				projList = queryList.list();
 			}

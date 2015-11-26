@@ -34,9 +34,9 @@ public class ProjectService {
 		projectDao.completeProjectById(id);
 	}
 
-	//	public void cancelProjectById(int id) {
-//		projectDao.cancelProjectById(id);
-//	}
+	// public void cancelProjectById(int id) {
+	// projectDao.cancelProjectById(id);
+	// }
 
 	public boolean saveInvitationStatus(int uid, int projectId, String status) {
 		UserProjectInfo info = new UserProjectInfo();
@@ -69,14 +69,7 @@ public class ProjectService {
 	}
 
 	public List<Project> getProjectsForUser(int userId, String role) {
-		String sql = null;
-		if (role.equalsIgnoreCase(Constants.ROLE_USER)) {
-			sql = "select pid from UserProjectInfo where UID = :userId";
-			return projectDao.getProjects(userId, sql);
-		} else {
-			sql = "select pid from Project where Owner = :userId";
-			return projectDao.getProjects(userId, sql);
-		}
+		return projectDao.getProjects(userId, role);
 
 	}
 
