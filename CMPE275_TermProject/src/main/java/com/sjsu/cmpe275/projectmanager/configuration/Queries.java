@@ -8,4 +8,5 @@ public class Queries {
 	public static String GET_TASK_LIST = "from Task where project.pid = :projectId";
 	public static String GET_USER_PROJECT_STATUS = "select u.acceptanceStatus from UserProjectInfo u where u.uid = :userId and u.pid = :projectId";
 	public static String GET_PROJECT_TASK_LIST = "select t.state from State t where projectId = :projectId";
+	public static String GET_TASK_LIST_FOR_DELETE="select tid,taskname,description from task t, project p where t.project=p.pid = :projectId and p.owner =:userId";
 }
