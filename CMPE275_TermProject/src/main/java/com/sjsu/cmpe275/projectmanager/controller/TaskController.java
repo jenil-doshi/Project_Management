@@ -161,7 +161,8 @@ public class TaskController {
 			
 			if(project.getStatus().equals(Constants.PROJECT_ONGOING)){
 				if(!(task1.getTaskState().equals(Constants.TASK_CANCELLED)) && task1.getTaskName().equals(Constants.TASK_STARTED)){
-					task.setTaskState(Constants.TASK_FINISHED);					
+					task.setTaskState(Constants.TASK_FINISHED);	
+					task1.setActual_time(task.getActual_time());				
 				}
 			}
 				mv.setViewName("finishTask");
