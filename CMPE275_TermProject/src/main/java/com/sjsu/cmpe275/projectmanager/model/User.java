@@ -9,11 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Table;
 
-/**
- * THIS CLASS WILL NOT BE USED BY SPRING SECURITY
- * @author rainashastri
- *
- */
+
 @Entity
 @Table(name = "User")
 

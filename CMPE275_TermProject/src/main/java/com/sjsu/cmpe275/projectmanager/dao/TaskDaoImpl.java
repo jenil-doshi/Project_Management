@@ -49,6 +49,22 @@ public class TaskDaoImpl implements TaskDao {
 		}
 	}
 
+//////////////Finish Task//////////////////////////
+/*
+
+//	@Override
+	public boolean finishTask(Task task) {
+		boolean status = false;
+		try {
+			sessionFactory.getCurrentSession().update(task);
+			status = true;
+			return status;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException("A Runtime Exception Has occured while finishing task");
+		}
+	}
+*/
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Task> getTasks(int projectId) {

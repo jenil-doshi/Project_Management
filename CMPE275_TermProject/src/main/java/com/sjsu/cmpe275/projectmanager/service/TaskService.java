@@ -30,6 +30,14 @@ public class TaskService {
 		return taskDao.updateTask(task);
 	}
 	
+	//////////Task_Finish....../////////////
+	/*
+		public boolean finishTask(Task task) throws RuntimeException {
+		return taskDao.updateTask(task);
+	}
+	
+	*/
+	
 	public List<Task> getTasks(int projectId) {
 		return taskDao.getTasks(projectId);
 	}

@@ -142,4 +142,44 @@ public class TaskController {
 		}
 		return null;
 	}
+	
+	//////////////////////////////////////TASK_FINISH///////////////////////////////
+
+	/*@RequestMapping(value = { "/task/finish/{taskId}" }, method = RequestMethod.POST, produces = "application/json")
+	public @ResponseBody Task finishTask(
+			@PathVariable("taskId") int taskId,
+			@ModelAttribute Task task) {
+		
+		ModelAndView mv = new ModelAndView();
+		Task task1 = null;
+		
+		try {
+			task1 = taskService.getTaskById(taskId);
+			Project project = projectService.getProjectById(task1.getProject().getPid());
+			int userId = project.getOwner().getUserId();
+			User user = userService.getUser(userId);
+			
+			if(project.getStatus().equals(Constants.PROJECT_ONGOING)){
+				if(!(task1.getTaskState().equals(Constants.TASK_CANCELLED)) && task1.getTaskName().equals(Constants.TASK_STARTED)){
+					task.setTaskState(Constants.TASK_FINISHED);					
+				}
+			}
+				mv.setViewName("finishTask");
+
+				if (taskService.finishTask(task1)) {
+					mv.addObject("finishTask", task1);
+					return task1;
+				}
+			}
+		
+			 catch (RuntimeException e) {
+				task = null;
+				mv.addObject("finishTask", task1);
+				e.printStackTrace();
+				return task1;
+
+			}
+			return null;	
+			}*/
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
 }

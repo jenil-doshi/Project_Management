@@ -9,5 +9,6 @@ public interface TaskDao {
 	public boolean createTask(Task task);
 	public Task getTaskById(int taskId);
 	public boolean updateTask(Task task);
+	//public boolean finishTask(Task task);
 	public List<Task> getTasks(int projectId);
 }
