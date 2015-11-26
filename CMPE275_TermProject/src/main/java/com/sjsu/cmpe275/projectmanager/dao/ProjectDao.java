@@ -20,7 +20,7 @@ public interface ProjectDao {
 	public boolean createProject(Project project);
 	public Project getProjectById(int Id);
 	public boolean completeProjectById(int projectId);
-	//	public boolean cancelProjectById(int projectId);
+	public boolean cancelProjectById(Project project);
 	public boolean saveInvitationStatus(UserProjectInfo info);
 	public boolean getTasksForProject(int pid);
 	public List<User> getUsersList(int pid);

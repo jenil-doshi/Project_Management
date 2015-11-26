@@ -159,23 +159,21 @@ public class ProjectController {
 
 ////////////// Project Cancel///////////////////////////////////////////////////////////
 	
-//	@RequestMapping(value = { "/cancel/{userId}/{projectId}" }, method = RequestMethod.DELETE)
-//	public @ResponseBody ResponseEntity<Project> cancelProject(@PathVariable("userId") int userId,
-//			@PathVariable("projectId") int projectId) {
-//		Project p = projectService.getProjectById(projectId);
-//		if (p == null)
-//			return new ResponseEntity<Project>(HttpStatus.NOT_FOUND);
-//
-//		// projectService.deleteProjectById(projectId);
-//
-//		if (p.getOwner().getUserId() == userId) {
-//			projectService.cancelProjectById(projectId);
-//		} else {
-//			System.out.println("Project Can only be deleted by Owner");
-//		}
-//
-//		return new ResponseEntity<Project>(p, HttpStatus.OK);
-//	}
+	@RequestMapping(value = { "/cancel/{userId}/{projectId}" }, method = RequestMethod.DELETE)
+	public @ResponseBody ResponseEntity<Project> cancelProject(@PathVariable("userId") int userId,
+			@PathVariable("projectId") int projectId) {
+		Project p = projectService.getProjectById(projectId);
+		if (p == null)
+			return new ResponseEntity<Project>(HttpStatus.NOT_FOUND);
+
+		if (p.getOwner().getUserId() == userId) {
+			projectService.cancelProjectById(p);
+		} else {
+			System.out.println("Project Can only be deleted by Owner");
+		}
+
+		return new ResponseEntity<Project>(p, HttpStatus.OK);
+	}
 ///////////////////////////////////////////////////////////////////////////////////////
 	
 

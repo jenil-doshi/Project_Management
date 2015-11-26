@@ -16,7 +16,6 @@ import com.sjsu.cmpe275.projectmanager.configuration.*;
 import com.sjsu.cmpe275.projectmanager.model.*;
 import com.sjsu.cmpe275.projectmanager.service.*;
 
-
 @Controller
 @ComponentScan(basePackages = "com.sjsu.cmpe275.projectmanager.service")
 @RequestMapping("/project")
@@ -24,56 +23,53 @@ public class TaskController {
 
 	@Autowired
 	TaskService taskService;
-	
+
 	@Autowired
 	ProjectService projectService;
-	
+
 	@Autowired
 	UserService userService;
 
 	@RequestMapping(value = { "/tasks/{projectId}" }, method = RequestMethod.GET, produces = "application/json")
-	public @ResponseBody List<Task> getTasks(
-			@PathVariable("projectId") int projectId) {
-			try {
-				List<Task> taskList = taskService.getTasks(projectId);
-				if (taskList != null) {
-					return taskList;
-				} else {
-					return null;
-				}
-			} catch (RuntimeException e) {
-				e.printStackTrace();
+	public @ResponseBody List<Task> getTasks(@PathVariable("projectId") int projectId) {
+		try {
+			List<Task> taskList = taskService.getTasks(projectId);
+			if (taskList != null) {
+				return taskList;
+			} else {
 				return null;
 			}
+		} catch (RuntimeException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
-	
-	@RequestMapping(value = { "/task/create/{userId}/{projectId}" }, method = RequestMethod.POST, produces = "application/json")
-	public @ResponseBody Task createTask(
-			@PathVariable("userId") int userId, 
-			@PathVariable("projectId") int projectId, 
+
+	@RequestMapping(value = {
+			"/task/create/{userId}/{projectId}" }, method = RequestMethod.POST, produces = "application/json")
+	public @ResponseBody Task createTask(@PathVariable("userId") int userId, @PathVariable("projectId") int projectId,
 			@ModelAttribute Task task) {
 		ModelAndView mv = new ModelAndView();
 		try {
-			
+
 			Project project = projectService.getProjectById(projectId);
-			if(project.getStatus().equals(Constants.PROJECT_NEW) ||
-					project.getStatus().equals(Constants.PROJECT_PLANNING)){
-				if(userService.getUserProjectStatus(userId, projectId).equals(Constants.INVITATION_ACCEPT)){
-					project.setPid(projectId);	
+			if (project.getStatus().equals(Constants.PROJECT_NEW)
+					|| project.getStatus().equals(Constants.PROJECT_PLANNING)) {
+				if (userService.getUserProjectStatus(userId, projectId).equals(Constants.INVITATION_ACCEPT)) {
+					project.setPid(projectId);
 					User user = new User();
 					user.setUserId(userId);
 					task.setProject(project);
-					
-					if(task.getAssignee() == null)
+
+					if (task.getAssignee() == null)
 						task.setTaskState(Constants.TASK_NEW);
 					else
 						task.setTaskState(Constants.TASK_ASSIGNED);
 				}
-			}
-			else{
+			} else {
 				return null;
 			}
-			
+
 			mv.setViewName("createTask");
 
 			if (taskService.createTask(task)) {
@@ -90,97 +86,51 @@ public class TaskController {
 		}
 		return null;
 	}
-	
-	@RequestMapping(value = { "/task/update/{taskId}" }, method = RequestMethod.POST, produces = "application/json")
-	public @ResponseBody Task updateTask(
-			@PathVariable("taskId") int taskId,
+
+	@RequestMapping(value = {
+			"/task/update/{taskId}/{userId}" }, method = RequestMethod.POST, produces = "application/json")
+	public @ResponseBody Task updateTask(@PathVariable("taskId") int taskId, @PathVariable("userId") int userId,
 			@ModelAttribute Task task) {
-		
+
 		ModelAndView mv = new ModelAndView();
-		Task task1 = null;
-		
+		Task existingTask = null;
+
 		try {
-			task1 = taskService.getTaskById(taskId);
-			Project project = projectService.getProjectById(task1.getProject().getPid());
-			int userId = project.getOwner().getUserId();
-			User user = userService.getUser(userId);
-			
-			if(task.getTaskName() != null){
-				task1.setTaskName(task.getTaskName());
-			}
-			if(task.getDescription() != null){
-				task1.setDescription(task.getDescription());
-			}
-			if(task.getActual_time() != null){
-				task1.setActual_time(task.getActual_time());
-			}
-			if(project.getStatus().equals(Constants.PROJECT_NEW) ||
-					project.getStatus().equals(Constants.PROJECT_PLANNING)){
-				if(task.getEstimated_time() != null){
-					task1.setEstimate_time(task.getEstimated_time());
+			existingTask = taskService.getTaskById(taskId);
+			Project project = projectService.getProjectById(existingTask.getProject().getPid());
+			int ownerId = project.getOwner().getUserId();
+			// User user = userService.getUser(userId);
+			existingTask.setTid(taskId);
+			if (task.getTaskState().equals(Constants.TASK_FINISHED)) {
+				if (project.getStatus().equalsIgnoreCase(Constants.PROJECT_ONGOING)
+						&& (!(existingTask.getTaskState().equals(Constants.TASK_CANCELLED))
+								&& existingTask.getTaskState().equals(Constants.TASK_STARTED))) {
+					// mandatory
+					existingTask.setTaskName(task.getTaskName());
+					// mandatory
+					existingTask.setDescription(task.getDescription());
+					// mandatory
+					existingTask.setActual_time(task.getActual_time());
+					// mandatory
+					existingTask.setTaskState(Constants.TASK_FINISHED);
+
+					// assignee and estimated task cannot be changed. Disable
+					// from UI
+					taskService.updateTask(existingTask);
 				}
 			}
-			if(project.getStatus().equals(Constants.PROJECT_NEW) ||
-					project.getStatus().equals(Constants.PROJECT_PLANNING) ||
-					project.getStatus().equals(Constants.PROJECT_ONGOING)){
-				if(!(task1.getTaskState().equals(Constants.TASK_CANCELLED))){
-					user.setUserId(userId);
-					task1.setAssignee(userId);
-				}
-			}
-			
-			mv.setViewName("updateTask");
-			if (taskService.updateTask(task1)) {
-				mv.addObject("updateTask", task1);
-				return task1;
-			}
+			return existingTask;
 		} catch (RuntimeException e) {
 			task = null;
-			mv.addObject("updateTask", task1);
+			mv.addObject("updateTask", existingTask);
 			e.printStackTrace();
-			return task1;
+			return existingTask;
 		}
-		return null;
 	}
-	
-	//////////////////////////////////////TASK_FINISH///////////////////////////////
 
-	/*@RequestMapping(value = { "/task/finish/{taskId}" }, method = RequestMethod.POST, produces = "application/json")
-	public @ResponseBody Task finishTask(
-			@PathVariable("taskId") int taskId,
-			@ModelAttribute Task task) {
-		
-		ModelAndView mv = new ModelAndView();
-		Task task1 = null;
-		
-		try {
-			task1 = taskService.getTaskById(taskId);
-			Project project = projectService.getProjectById(task1.getProject().getPid());
-			int userId = project.getOwner().getUserId();
-			User user = userService.getUser(userId);
-			
-			if(project.getStatus().equals(Constants.PROJECT_ONGOING)){
-				if(!(task1.getTaskState().equals(Constants.TASK_CANCELLED)) && task1.getTaskName().equals(Constants.TASK_STARTED)){
-					task.setTaskState(Constants.TASK_FINISHED);	
-					task1.setActual_time(task.getActual_time());				
-				}
-			}
-				mv.setViewName("finishTask");
-
-				if (taskService.finishTask(task1)) {
-					mv.addObject("finishTask", task1);
-					return task1;
-				}
-			}
-		
-			 catch (RuntimeException e) {
-				task = null;
-				mv.addObject("finishTask", task1);
-				e.printStackTrace();
-				return task1;
-
-			}
-			return null;	
-			}*/
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
+	@RequestMapping(value = { "/task/finish/{taskId}" }, method = RequestMethod.POST, produces = "application/json")
+	public @ResponseBody Task finishTask(@PathVariable("taskId") int taskId, @ModelAttribute Task task) {
+		task.setTaskState(Constants.TASK_FINISHED);
+		return updateTask(taskId, 0, task);
+	}
 }
