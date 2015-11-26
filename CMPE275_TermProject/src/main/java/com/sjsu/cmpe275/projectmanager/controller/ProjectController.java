@@ -157,6 +157,28 @@ public class ProjectController {
 		return new ResponseEntity<Project>(p, HttpStatus.OK);
 	}
 
+////////////// Project Cancel///////////////////////////////////////////////////////////
+	
+//	@RequestMapping(value = { "/cancel/{userId}/{projectId}" }, method = RequestMethod.DELETE)
+//	public @ResponseBody ResponseEntity<Project> cancelProject(@PathVariable("userId") int userId,
+//			@PathVariable("projectId") int projectId) {
+//		Project p = projectService.getProjectById(projectId);
+//		if (p == null)
+//			return new ResponseEntity<Project>(HttpStatus.NOT_FOUND);
+//
+//		// projectService.deleteProjectById(projectId);
+//
+//		if (p.getOwner().getUserId() == userId) {
+//			projectService.cancelProjectById(projectId);
+//		} else {
+//			System.out.println("Project Can only be deleted by Owner");
+//		}
+//
+//		return new ResponseEntity<Project>(p, HttpStatus.OK);
+//	}
+///////////////////////////////////////////////////////////////////////////////////////
+	
+
 	@RequestMapping(value = "/getUsersListForTask/{pid}", method = RequestMethod.GET)
 	public @ResponseBody List<User> getUsersListForTask(@PathVariable int pid) {
 

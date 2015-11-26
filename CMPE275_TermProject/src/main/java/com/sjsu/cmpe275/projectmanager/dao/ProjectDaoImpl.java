@@ -67,7 +67,7 @@ public class ProjectDaoImpl implements ProjectDao {
 	@SuppressWarnings("unchecked")
 	@Transactional
 	@Override
-	public Boolean completeProjectById(int projectId) {
+	public boolean completeProjectById(int projectId) {
 
 		boolean status = false;
 		try {
@@ -90,6 +90,39 @@ public class ProjectDaoImpl implements ProjectDao {
 		}
 	}
 
+	
+/////////////////////////////////Project_Cancel////////////////////////////////////////
+	/* @SuppressWarnings("unchecked")
+	@Transactional
+	@Override
+	public boolean cancelProjectById(int projectId) {
+
+		boolean status = false;
+		try {
+			Query query = sessionFactory.getCurrentSession().createQuery(Queries.GET_PROJECT_TASK_LIST);
+			query.setParameter("projetId", projectId);
+			List<String> statusList = query.list();
+			if (statusList != null) {
+				for (String statList : statusList) {
+
+					if (statList.equals(Constants.PROJECT_NEW) || statList.equals(Constants.PROJECT_PLANNING) || statList.equals(Constants.PROJECT_ONGOING))	
+//						sessionFactory.getCurrentSession().delete(getProjectById(projectId));
+						sessionFactory.getCurrentSession().delete(getProjectById(projectId));
+
+						status = true;
+						return status;
+					}
+				}
+			  
+			
+			return status;
+
+		} catch (Exception e) {
+			throw new RuntimeException();
+		}
+	}*/
+	 /////////////////////////////////////////////////////////////////////////////////////////////
+	 
 	@SuppressWarnings("unchecked")
 	@Override
 	public boolean getTasksForProject(int pid) {

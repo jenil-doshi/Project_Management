@@ -34,6 +34,10 @@ public class ProjectService {
 		projectDao.completeProjectById(id);
 	}
 
+	//	public void cancelProjectById(int id) {
+//		projectDao.cancelProjectById(id);
+//	}
+
 	public boolean saveInvitationStatus(int uid, int projectId, String status) {
 		UserProjectInfo info = new UserProjectInfo();
 		info.setUid(uid);
