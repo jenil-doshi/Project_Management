@@ -85,17 +85,21 @@ public class ProjectDaoImpl implements ProjectDao {
 
 		boolean status = false;
 		try {
-			Query query = sessionFactory.getCurrentSession().createQuery(Queries.GET_PROJECT_TASK_LIST);
-			query.setParameter("projetId", projectId);
-			List<String> statusList = query.list();
-			if (statusList != null) {
-				for (String statList : statusList) {
-					if (statList.equals(Constants.TASK_FINISHED) || statList.equals(Constants.TASK_CANCELLED)) {
-						sessionFactory.getCurrentSession().delete(getProjectById(projectId));
-						status = true;
+			Query query = sessionFactory.getCurrentSession().createQuery(Queries.GET_TASK_LIST);
+			query.setParameter("projectId", projectId);
+			List<Task> tasksList = query.list();
+			if (tasksList != null) {
+				for (Task taskList : tasksList) {
+					if(taskList.getTaskState().equals(Constants.TASK_NEW) ||
+							taskList.getTaskState().equals(Constants.TASK_STARTED) ||
+								taskList.getTaskState().equals(Constants.TASK_ASSIGNED)){
 						return status;
 					}
 				}
+				Project project = getProjectById(projectId);
+				project.setStatus(Constants.PROJECT_COMPLETED);
+				status = true;
+				return status;
 			}
 			return status;
 

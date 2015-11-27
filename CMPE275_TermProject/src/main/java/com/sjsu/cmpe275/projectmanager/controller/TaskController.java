@@ -54,17 +54,32 @@ public class TaskController {
 
 			Project project = projectService.getProjectById(projectId);
 			if (project.getStatus().equals(Constants.PROJECT_NEW)
-					|| project.getStatus().equals(Constants.PROJECT_PLANNING)) {
-				if (userService.getUserProjectStatus(userId, projectId).equals(Constants.INVITATION_ACCEPT)) {
-					project.setPid(projectId);
-					User user = new User();
-					user.setUserId(userId);
-					task.setProject(project);
-
-					if (task.getAssignee() == null)
-						task.setTaskState(Constants.TASK_NEW);
-					else
-						task.setTaskState(Constants.TASK_ASSIGNED);
+					|| project.getStatus().equals(Constants.PROJECT_PLANNING)
+							|| project.getStatus().equals(Constants.PROJECT_ONGOING)) {
+				
+				User user_role = userService.getUser(userId);
+				String username = user_role.getEmail();
+				String userRole = userService.getUserRole(username);
+				System.out.println("Username: " + username);
+				System.out.println("UserRole: " + userRole);
+				System.out.println(project.getOwner().getUserId() == userId);
+				System.out.println(userRole.equals(Constants.ROLE_ADMIN));
+				if((project.getOwner().getUserId() == userId && userRole.equals(Constants.ROLE_ADMIN))){
+					if(project.getStatus().equals(Constants.PROJECT_ONGOING)){
+						if(task.getEstimated_time() == null || task.getAssignee() == null)
+							return null;
+					}
+					setTaskValues(project, projectId, userId, task);
+				}
+				else if(userService.getUserProjectStatus(userId, projectId).equals(Constants.INVITATION_ACCEPT)){
+					if(project.getStatus().equals(Constants.PROJECT_ONGOING)){
+						if(task.getEstimated_time() == null || task.getAssignee() == null)
+							return null;
+					}
+					setTaskValues(project, projectId, userId, task);
+				}
+				else{
+					return null;
 				}
 			} else {
 				return null;
@@ -85,6 +100,18 @@ public class TaskController {
 
 		}
 		return null;
+	}
+
+	private void setTaskValues(Project project, int projectId, int userId, Task task) {
+		project.setPid(projectId);
+		User user = new User();
+		user.setUserId(userId);
+		task.setProject(project);
+
+		if (task.getAssignee() == null)
+			task.setTaskState(Constants.TASK_NEW);
+		else
+			task.setTaskState(Constants.TASK_ASSIGNED);
 	}
 
 	@RequestMapping(value = {

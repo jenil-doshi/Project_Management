@@ -30,4 +30,6 @@ public interface UserService {
 	public String getUserProjectStatus(int userId, int projectId);
 
 	public void updateUserRole(UserRoles roles);
+	
+	public String getUserRole(String username);
 }

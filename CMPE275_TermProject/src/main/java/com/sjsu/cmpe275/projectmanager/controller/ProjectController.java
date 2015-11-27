@@ -182,17 +182,17 @@ public class ProjectController {
 		}
 	}
 
-	@RequestMapping(value = { "/complete/{userId}/{projectId}" }, method = RequestMethod.DELETE)
+	@RequestMapping(value = { "/complete/{userId}/{projectId}" }, method = RequestMethod.POST)
 	public @ResponseBody ResponseEntity<Project> completeProject(@PathVariable("userId") int userId,
 			@PathVariable("projectId") int projectId) {
 		Project p = projectService.getProjectById(projectId);
 		if (p == null)
 			return new ResponseEntity<Project>(HttpStatus.NOT_FOUND);
 
-		// projectService.deleteProjectById(projectId);
-
 		if (p.getOwner().getUserId() == userId) {
-			projectService.completeProjectById(projectId);
+			if(projectService.completeProjectById(projectId)){
+				p = projectService.getProjectById(projectId);
+			}
 		} else {
 			System.out.println("Project Can only be deleted by Owner");
 		}

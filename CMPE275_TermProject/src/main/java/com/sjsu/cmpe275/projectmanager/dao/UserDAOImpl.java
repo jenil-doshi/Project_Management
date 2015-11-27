@@ -82,4 +82,10 @@ public class UserDAOImpl extends AbstractDAO<Integer, User> implements UserDAO {
 		session.getCurrentSession().update(roles);
 
 	}
+
+	@Override
+	public String getUserRole(String username) {
+		UserRoles userRole = (UserRoles) session.getCurrentSession().get(UserRoles.class, username);
+		return userRole.getRole();
+	}
 }

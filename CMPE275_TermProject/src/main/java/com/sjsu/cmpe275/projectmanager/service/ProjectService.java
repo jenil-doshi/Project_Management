@@ -34,8 +34,8 @@ public class ProjectService {
 		return projectDao.getProjectById(id);
 	}
 
-	public void completeProjectById(int id) {
-		projectDao.completeProjectById(id);
+	public boolean completeProjectById(int id) {
+		return projectDao.completeProjectById(id);
 	}
 
 	 public void cancelProjectById(Project project) {
