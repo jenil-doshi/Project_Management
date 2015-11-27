@@ -18,6 +18,7 @@ import com.sjsu.cmpe275.projectmanager.model.UserProjectInfo;
 public interface ProjectDao {
 
 	public boolean createProject(Project project);
+	public boolean updateProject(Project project);
 	public Project getProjectById(int Id);
 	public boolean completeProjectById(int projectId);
 	public boolean cancelProjectById(Project project);

@@ -43,6 +43,20 @@ public class ProjectDaoImpl implements ProjectDao {
 		}
 
 	}
+	
+	@Override
+	public boolean updateProject(Project project) {
+		boolean status = false;
+		try {
+			sessionFactory.getCurrentSession().update(project);
+			status = true;
+			return status;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException("A Runtime Exception Has occured while updating Project");
+		}
+	}
+
 
 	@Override
 	public boolean saveInvitationStatus(UserProjectInfo info) {

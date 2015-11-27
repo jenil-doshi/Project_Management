@@ -118,6 +118,25 @@ public class TaskController {
 					// from UI
 					taskService.updateTask(existingTask);
 				}
+			} else if (task.getTaskState().equals(Constants.TASK_STARTED)) {
+				if (project.getStatus().equalsIgnoreCase(Constants.PROJECT_ONGOING)
+						&& existingTask.getTaskState().equalsIgnoreCase(Constants.TASK_ASSIGNED)) {
+					// mandatory
+					existingTask.setTaskName(task.getTaskName());
+					// mandatory
+					existingTask.setDescription(task.getDescription());
+
+					// cannot be changed if in ongoing. Disable from UI
+					// t.setEstimate_time(task.getEstimated_time());
+
+					// can be changed
+					// mandatory
+					existingTask.setAssignee(task.getAssignee());
+					// mandatory
+					existingTask.setTaskState(Constants.TASK_STARTED);
+					taskService.updateTask(existingTask);
+				}
+
 			}
 			return existingTask;
 		} catch (RuntimeException e) {
@@ -131,6 +150,12 @@ public class TaskController {
 	@RequestMapping(value = { "/task/finish/{taskId}" }, method = RequestMethod.POST, produces = "application/json")
 	public @ResponseBody Task finishTask(@PathVariable("taskId") int taskId, @ModelAttribute Task task) {
 		task.setTaskState(Constants.TASK_FINISHED);
+		return updateTask(taskId, 0, task);
+	}
+
+	@RequestMapping(value = { "/task/start/{taskId}" }, method = RequestMethod.POST, produces = "application/json")
+	public @ResponseBody Task startTask(@PathVariable("taskId") int taskId, @ModelAttribute Task task) {
+		task.setTaskState(Constants.TASK_STARTED);
 		return updateTask(taskId, 0, task);
 	}
 }

@@ -26,6 +26,10 @@ public class ProjectService {
 		return projectDao.createProject(project);
 	}
 
+	public boolean updateProject(Project project)throws RuntimeException {
+		return projectDao.updateProject(project);
+	}
+	
 	public Project getProjectById(Integer id) {
 		return projectDao.getProjectById(id);
 	}

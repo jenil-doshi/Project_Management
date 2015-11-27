@@ -65,6 +65,49 @@ public class ProjectController {
 	}
 
 	// update Project
+	@RequestMapping(value = { "/update/{userId}/{pid}" }, method = RequestMethod.POST, produces = "application/json")
+	public @ResponseBody ResponseEntity<Project> updateProject(@PathVariable int userId, @PathVariable int pid,
+			@ModelAttribute Project project) {
+		ModelAndView mv = new ModelAndView();
+
+		Project proj = projectService.getProjectById(pid);
+
+		if (proj == null)
+			return new ResponseEntity<Project>(HttpStatus.NOT_FOUND);
+
+		if (!(proj.getStatus().equalsIgnoreCase(Constants.PROJECT_CANCELLED)
+				|| proj.getStatus().equalsIgnoreCase(Constants.PROJECT_COMPLETED))) {
+			
+			// status and owner mandatory from ui
+			if (proj.getOwner().getUserId() == userId) {
+				if (proj.getName() != null) {
+					proj.setName(project.getName());
+				}
+
+				if (proj.getDescription() != null) {
+					proj.setDescription(project.getDescription());
+				}
+				
+			}
+
+			if (proj.getStatus().equals(Constants.PROJECT_NEW))
+
+			{
+				if (proj.getStartDate() != null) {
+					proj.setStartDate(project.getStartDate());
+				}
+
+				if (proj.getEndDate() != null) {
+					proj.setStartDate(project.getEndDate());
+				}
+
+			}
+			
+			projectService.updateProject(proj);
+		}
+		return new ResponseEntity<Project>(proj,HttpStatus.OK);
+
+	}
 
 	@RequestMapping(value = {
 			"/sendInvite/{uid}/{recipientId}/{projectId}/{projectName}/{projectOwner}" }, method = RequestMethod.POST)
@@ -157,8 +200,9 @@ public class ProjectController {
 		return new ResponseEntity<Project>(p, HttpStatus.OK);
 	}
 
-////////////// Project Cancel///////////////////////////////////////////////////////////
-	
+	////////////// Project
+	////////////// Cancel///////////////////////////////////////////////////////////
+
 	@RequestMapping(value = { "/cancel/{userId}/{projectId}" }, method = RequestMethod.DELETE)
 	public @ResponseBody ResponseEntity<Project> cancelProject(@PathVariable("userId") int userId,
 			@PathVariable("projectId") int projectId) {
@@ -174,8 +218,7 @@ public class ProjectController {
 
 		return new ResponseEntity<Project>(p, HttpStatus.OK);
 	}
-///////////////////////////////////////////////////////////////////////////////////////
-	
+	///////////////////////////////////////////////////////////////////////////////////////
 
 	@RequestMapping(value = "/getUsersListForTask/{pid}", method = RequestMethod.GET)
 	public @ResponseBody List<User> getUsersListForTask(@PathVariable int pid) {
@@ -194,7 +237,7 @@ public class ProjectController {
 
 	}
 
-	@RequestMapping(value = "/getProjects/{userId}/{role}", method = RequestMethod.GET,produces = "application/json")
+	@RequestMapping(value = "/getProjects/{userId}/{role}", method = RequestMethod.GET, produces = "application/json")
 	public @ResponseBody List<Project> getUserProjects(@PathVariable int userId, @PathVariable String role) {
 
 		try {
@@ -205,8 +248,6 @@ public class ProjectController {
 		}
 
 	}
-	
-	
 
 	/* Added code for security */
 	/*
