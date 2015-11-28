@@ -55,8 +55,8 @@ public class TaskController {
 			Project project = projectService.getProjectById(projectId);
 			if (project.getStatus().equals(Constants.PROJECT_NEW)
 					|| project.getStatus().equals(Constants.PROJECT_PLANNING)
-							|| project.getStatus().equals(Constants.PROJECT_ONGOING)) {
-				
+					|| project.getStatus().equals(Constants.PROJECT_ONGOING)) {
+
 				User user_role = userService.getUser(userId);
 				String username = user_role.getEmail();
 				String userRole = userService.getUserRole(username);
@@ -64,21 +64,19 @@ public class TaskController {
 				System.out.println("UserRole: " + userRole);
 				System.out.println(project.getOwner().getUserId() == userId);
 				System.out.println(userRole.equals(Constants.ROLE_ADMIN));
-				if((project.getOwner().getUserId() == userId && userRole.equals(Constants.ROLE_ADMIN))){
-					if(project.getStatus().equals(Constants.PROJECT_ONGOING)){
-						if(task.getEstimated_time() == null || task.getAssignee() == null)
+				if ((project.getOwner().getUserId() == userId && userRole.equals(Constants.ROLE_ADMIN))) {
+					if (project.getStatus().equals(Constants.PROJECT_ONGOING)) {
+						if (task.getEstimated_time() == null || task.getAssignee() == null)
 							return null;
 					}
 					setTaskValues(project, projectId, userId, task);
-				}
-				else if(userService.getUserProjectStatus(userId, projectId).equals(Constants.INVITATION_ACCEPT)){
-					if(project.getStatus().equals(Constants.PROJECT_ONGOING)){
-						if(task.getEstimated_time() == null || task.getAssignee() == null)
+				} else if (userService.getUserProjectStatus(userId, projectId).equals(Constants.INVITATION_ACCEPT)) {
+					if (project.getStatus().equals(Constants.PROJECT_ONGOING)) {
+						if (task.getEstimated_time() == null || task.getAssignee() == null)
 							return null;
 					}
 					setTaskValues(project, projectId, userId, task);
-				}
-				else{
+				} else {
 					return null;
 				}
 			} else {
@@ -164,6 +162,18 @@ public class TaskController {
 					taskService.updateTask(existingTask);
 				}
 
+			} else if (task.getTaskState().equals(Constants.TASK_CANCELLED)) {
+				if (ownerId == userId) {
+					if (!(project.getStatus().equalsIgnoreCase(Constants.PROJECT_CANCELLED))
+							|| (project.getStatus().equalsIgnoreCase(Constants.PROJECT_COMPLETED))) {
+						// mandatory
+						if (!(existingTask.getTaskState().equalsIgnoreCase(Constants.TASK_FINISHED))) {
+							existingTask.setTaskState(Constants.TASK_CANCELLED);
+							taskService.updateTask(existingTask);
+						}
+					}
+				}
+
 			}
 			return existingTask;
 		} catch (RuntimeException e) {
@@ -184,5 +194,13 @@ public class TaskController {
 	public @ResponseBody Task startTask(@PathVariable("taskId") int taskId, @ModelAttribute Task task) {
 		task.setTaskState(Constants.TASK_STARTED);
 		return updateTask(taskId, 0, task);
+	}
+
+	@RequestMapping(value = {
+			"/task/cancel/{taskId}/{userId}" }, method = RequestMethod.POST, produces = "application/json")
+	public @ResponseBody Task cancelTask(@PathVariable("taskId") int taskId, @PathVariable int userId,
+			@ModelAttribute Task task) {
+		task.setTaskState(Constants.TASK_CANCELLED);
+		return updateTask(taskId, userId, task);
 	}
 }
