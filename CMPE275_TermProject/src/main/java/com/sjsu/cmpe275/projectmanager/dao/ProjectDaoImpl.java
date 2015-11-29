@@ -208,4 +208,21 @@ public class ProjectDaoImpl implements ProjectDao {
 		return projList;
 	}
 
+	/* Code for generating list of users to add to invitation list  in ProjectDAOImpl*/
+		@SuppressWarnings("unchecked")
+		@Override
+		public List<User> getUsersForAddProject(String username)
+		{
+			List<User> usersList = null;
+			try {
+				Query query = sessionFactory.getCurrentSession().createQuery(Queries.GET_USERS_FROM_USER_ROLES);
+				query.setParameter("username", username);
+				usersList = query.list();
+				System.out.println(usersList.get(0).getEmail());
+			} catch (Exception e) {
+				e.printStackTrace();
+				throw new RuntimeException("A Runtime Exception has occurred");
+			}
+			return usersList;
+		}
 }
