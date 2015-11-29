@@ -76,5 +76,10 @@ public class ProjectService {
 		return projectDao.getProjects(userId, role);
 
 	}
+	
+	public List<User> getUsersForAddProject(String username)
+	{
+		return projectDao.getUsersForAddProject(username);
+	}
 
 }
