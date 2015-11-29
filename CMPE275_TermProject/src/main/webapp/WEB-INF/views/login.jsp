@@ -1,9 +1,14 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@taglib prefix="sec"
+	uri="http://www.springframework.org/security/tags"%>
 <%@page session="true"%>
 <html>
+<html lang="en">
 <head>
-<title>Login Page</title>
-<style>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Edmin</title>
+<style type="text/css">
 .error {
 	padding: 15px;
 	margin-bottom: 20px;
@@ -23,56 +28,127 @@
 	background-color: #d9edf7;
 	border-color: #bce8f1;
 }
-
-#login-box {
-	width: 300px;
-	padding: 20px;
-	margin: 100px auto;
-	background: #fff;
-	-webkit-border-radius: 2px;
-	-moz-border-radius: 2px;
-	border: 1px solid #000;
-}
 </style>
+<link type="text/css"
+	href="${pageContext.request.contextPath}/assets/bootstrap/css/bootstrap.min.css"
+	rel="stylesheet">
+<link type="text/css"
+	href="${pageContext.request.contextPath}/assets/bootstrap/css/bootstrap-responsive.min.css"
+	rel="stylesheet">
+<link type="text/css"
+	href="${pageContext.request.contextPath}/assets/css/theme.css"
+	rel="stylesheet">
+<link type="text/css"
+	href="${pageContext.request.contextPath}/assets/images/icons/css/font-awesome.css"
+	rel="stylesheet">
+<link type="text/css"
+	href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,400,600'
+	rel='stylesheet'>
 </head>
 <body onload='document.loginForm.username.focus();'>
 
-	<h1>Spring Security Login Form (Database Authentication)</h1>
+	<div class="navbar navbar-fixed-top">
+		<div class="navbar-inner">
+			<div class="container">
+				<a class="btn btn-navbar" data-toggle="collapse"
+					data-target=".navbar-inverse-collapse"> <i
+					class="icon-reorder shaded"></i>
+				</a> <a class="brand" href="index.html"> Edmin </a>
 
-	<div id="login-box">
+				<div class="nav-collapse collapse navbar-inverse-collapse">
 
-		<h3>Login with Username and Password</h3>
+					<ul class="nav pull-right">
 
-		<c:if test="${not empty error}">
-			<div class="error">${error}</div>
-		</c:if>
-		<c:if test="${not empty msg}">
-			<div class="msg">${msg}</div>
-		</c:if>
+						<li><a href="#"> Sign Up </a></li>
 
-		<form name='loginForm'
-			action="<c:url value='/login' />" method='POST'>
 
-			<table>
-				<tr>
-					<td>User:</td>
-					<td><input type='text' name='username'></td>
-				</tr>
-				<tr>
-					<td>Password:</td>
-					<td><input type='password' name='password' /></td>
-				</tr>
-				<tr>
-					<td colspan='2'><input name="submit" type="submit"
-						value="submit" /></td>
-				</tr>
-			</table>
 
-			<input type="hidden" name="${_csrf.parameterName}"
-				value="${_csrf.token}" />
-
-		</form>
+						<li><a href="#"> Forgot your password? </a></li>
+					</ul>
+				</div>
+				<!-- /.nav-collapse -->
+			</div>
+		</div>
+		<!-- /navbar-inner -->
 	</div>
+	<!-- /navbar -->
 
+
+
+	<div class="wrapper">
+		<div class="container">
+			<div class="row">
+				<div class="module module-login span4 offset4">
+					<c:if test="${not empty error}">
+						<div class="error">${error}</div>
+					</c:if>
+					<c:if test="${not empty msg}">
+						<div class="msg">${msg}</div>
+					</c:if>
+					<c:url var="loginUrl" value="/login" />
+					<form class="form-vertical" name='loginForm'
+						action="${loginUrl}" method='POST'>
+						<div class="module-head">
+							<h3>Sign In</h3>
+						</div>
+						<c:if test="${param.error != null}">
+								<div class="alert alert-danger">
+									<p>Invalid username and password.</p>
+								</div>
+							</c:if>
+							<c:if test="${param.logout != null}">
+								<div class="alert alert-success">
+									<p>You have been logged out successfully.</p>
+								</div>
+							</c:if>
+						<div class="module-body">
+							<div class="control-group">
+								<div class="controls row-fluid">
+									<input class="span12" type="text" id="inputEmail"
+										name="username" placeholder="Username">
+								</div>
+							</div>
+							<div class="control-group">
+								<div class="controls row-fluid">
+									<input class="span12" type="password" id="inputPassword"
+										password="password" placeholder="Password" name="password">
+								</div>
+							</div>
+						</div>
+						<div class="module-foot">
+							<div class="control-group">
+								<div class="controls clearfix">
+									<button type="submit" class="btn btn-primary pull-right">Login</button>
+									<label class="checkbox"> <input type="checkbox">
+										Remember me
+									</label>
+								</div>
+							</div>
+						</div>
+						<input type="hidden" name="${_csrf.parameterName}"
+							value="${_csrf.token}" />
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--/.wrapper-->
+
+	<div class="footer">
+		<div class="container">
+
+
+			<b class="copyright">&copy; 2014 Edmin - EGrappler.com </b> All
+			rights reserved.
+		</div>
+	</div>
+	<script
+		src="${pageContext.request.contextPath}/assets/scripts/jquery-1.9.1.min.js"
+		type="text/javascript"></script>
+	<script
+		src="${pageContext.request.contextPath}/assets/scripts/jquery-ui-1.10.1.custom.min.js"
+		type="text/javascript"></script>
+	<script
+		src="${pageContext.request.contextPath}/assets/bootstrap/js/bootstrap.min.js"
+		type="text/javascript"></script>
 </body>
-</html>

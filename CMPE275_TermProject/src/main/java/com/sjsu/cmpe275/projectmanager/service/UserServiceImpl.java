@@ -24,7 +24,7 @@ public class UserServiceImpl implements UserService {
 		return userDao.getUser(userId);
 	}
 
-	public User createUser(User user, UserRoles roles, Users users) {
+	public boolean createUser(User user, UserRoles roles, Users users) throws RuntimeException {
 		return userDao.createUser(user, roles, users);
 	}
 
@@ -32,10 +32,8 @@ public class UserServiceImpl implements UserService {
 	// return null;
 	// }
 
-	public User updateUser(User user) throws EntityNotFound {
-
-		User usrRet = userDao.updateUser(user);
-		return usrRet;
+	public boolean updateUser(User user) throws RuntimeException {
+		return userDao.updateUser(user);
 	}
 
 	public User deleteUser(int id) throws EntityNotFound {
@@ -60,6 +58,11 @@ public class UserServiceImpl implements UserService {
 	public String getUserRole(String username) {
 		return userDao.getUserRole(username);
 	}
-	
+
+	@Override
+	public User getUserByUserName(String userName) {
+
+		return userDao.getUserByUserName(userName);
+	}
 
 }

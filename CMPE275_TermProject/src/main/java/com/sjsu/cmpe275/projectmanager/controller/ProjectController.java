@@ -2,15 +2,25 @@ package com.sjsu.cmpe275.projectmanager.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -35,6 +45,11 @@ public class ProjectController {
 
 	@Autowired
 	UserService userService;
+
+	@RequestMapping(value = "/addProjectFormView", method = RequestMethod.GET)
+	public String addProjectFormView() {
+		return "addProjectForm";
+	}
 
 	@RequestMapping(value = { "/create/{userId}" }, headers = "Accept=*/*", method = RequestMethod.POST, produces = {
 			"application/json" })
@@ -77,7 +92,7 @@ public class ProjectController {
 
 		if (!(proj.getStatus().equalsIgnoreCase(Constants.PROJECT_CANCELLED)
 				|| proj.getStatus().equalsIgnoreCase(Constants.PROJECT_COMPLETED))) {
-			
+
 			// status and owner mandatory from ui
 			if (proj.getOwner().getUserId() == userId) {
 				if (proj.getName() != null) {
@@ -87,7 +102,7 @@ public class ProjectController {
 				if (proj.getDescription() != null) {
 					proj.setDescription(project.getDescription());
 				}
-				
+
 			}
 
 			if (proj.getStatus().equals(Constants.PROJECT_NEW))
@@ -102,10 +117,10 @@ public class ProjectController {
 				}
 
 			}
-			
+
 			projectService.updateProject(proj);
 		}
-		return new ResponseEntity<Project>(proj,HttpStatus.OK);
+		return new ResponseEntity<Project>(proj, HttpStatus.OK);
 
 	}
 
@@ -190,7 +205,7 @@ public class ProjectController {
 			return new ResponseEntity<Project>(HttpStatus.NOT_FOUND);
 
 		if (p.getOwner().getUserId() == userId) {
-			if(projectService.completeProjectById(projectId)){
+			if (projectService.completeProjectById(projectId)) {
 				p = projectService.getProjectById(projectId);
 			}
 		} else {
@@ -199,9 +214,6 @@ public class ProjectController {
 
 		return new ResponseEntity<Project>(p, HttpStatus.OK);
 	}
-
-	////////////// Project
-	////////////// Cancel///////////////////////////////////////////////////////////
 
 	@RequestMapping(value = { "/cancel/{userId}/{projectId}" }, method = RequestMethod.DELETE)
 	public @ResponseBody ResponseEntity<Project> cancelProject(@PathVariable("userId") int userId,
@@ -218,7 +230,6 @@ public class ProjectController {
 
 		return new ResponseEntity<Project>(p, HttpStatus.OK);
 	}
-	///////////////////////////////////////////////////////////////////////////////////////
 
 	@RequestMapping(value = "/getUsersListForTask/{pid}", method = RequestMethod.GET)
 	public @ResponseBody List<User> getUsersListForTask(@PathVariable int pid) {
@@ -250,65 +261,79 @@ public class ProjectController {
 	}
 
 	/* Added code for security */
-	/*
-	 * @RequestMapping(value = { "/", "/welcome**" }, method =
-	 * RequestMethod.GET) public ModelAndView defaultPage() {
-	 * 
-	 * ModelAndView model = new ModelAndView(); model.addObject("title",
-	 * "Spring Security Login Form - Database Authentication");
-	 * model.addObject("message", "This is default page!");
-	 * model.setViewName("hello"); return model;
-	 * 
-	 * }
-	 * 
-	 * @RequestMapping(value = "/admin**", method = RequestMethod.GET) public
-	 * ModelAndView adminPage() {
-	 * 
-	 * ModelAndView model = new ModelAndView(); model.addObject("title",
-	 * "Spring Security Login Form - Database Authentication");
-	 * model.addObject("message", "This page is for ROLE_ADMIN only!");
-	 * model.setViewName("admin");
-	 * 
-	 * return model;
-	 * 
-	 * }
-	 */
 
-	/*
-	 * @RequestMapping(value = "/login", method = RequestMethod.GET) public
-	 * ModelAndView login(@RequestParam(value = "error", required = false)
-	 * String error,
-	 * 
-	 * @RequestParam(value = "logout", required = false) String logout) {
-	 * 
-	 * ModelAndView model = new ModelAndView(); if (error != null) {
-	 * model.addObject("error", "Invalid username and password!"); }
-	 * 
-	 * if (logout != null) { model.addObject("msg",
-	 * "You've been logged out successfully."); } model.setViewName("login");
-	 * 
-	 * return model;
-	 * 
-	 * }
-	 * 
-	 * // for 403 access denied page
-	 * 
-	 * @RequestMapping(value = "/403", method = RequestMethod.GET) public
-	 * ModelAndView accesssDenied() {
-	 * 
-	 * ModelAndView model = new ModelAndView();
-	 * 
-	 * // check if user is login Authentication auth =
-	 * SecurityContextHolder.getContext().getAuthentication(); if (!(auth
-	 * instanceof AnonymousAuthenticationToken)) { UserDetails userDetail =
-	 * (UserDetails) auth.getPrincipal(); System.out.println(userDetail);
-	 * 
-	 * model.addObject("username", userDetail.getUsername());
-	 * 
-	 * }
-	 * 
-	 * model.setViewName("403"); return model;
-	 * 
-	 * }
-	 */
+	@RequestMapping(value = { "/", "/home" }, method = RequestMethod.GET)
+	public String defaultPage(HttpServletRequest request) {
+		// System.out.println("User is: " + getPrincipal());
+		request.getSession().setAttribute("USER", getPrincipal());
+		// model.addAttribute("user", getPrincipal());
+		return "index";
+
+	}
+
+	private User getPrincipal() {
+		String userName = null;
+		User user = null;
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+		if (principal instanceof UserDetails) {
+			userName = ((UserDetails) principal).getUsername();
+		} else {
+			userName = principal.toString();
+		}
+		user = userService.getUserByUserName(userName);
+
+		return user;
+	}
+
+	@RequestMapping(value = "/admin**", method = RequestMethod.GET)
+	public ModelAndView adminPage() {
+
+		ModelAndView model = new ModelAndView();
+		model.addObject("title", "Spring Security Login Form - Database Authentication");
+		model.addObject("message", "This page is for ROLE_ADMIN only!");
+		model.setViewName("admin");
+
+		return model;
+
+	}
+
+	@RequestMapping(value = "/login", method = RequestMethod.GET)
+	public String loginPage() {
+		return "login";
+	}
+
+	@RequestMapping(value = "/logout", method = RequestMethod.GET)
+	public String logoutPage(HttpServletRequest request, HttpServletResponse response) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		if (auth != null) {
+			new SecurityContextLogoutHandler().logout(request, response, auth);
+		}
+		return "redirect:/login?logout";// You can redirect wherever you want,
+										// but generally it's a good idea to
+										// show login screen again.
+	}
+
+	// for 403 access denied page
+
+	@RequestMapping(value = "/403", method = RequestMethod.GET)
+	public ModelAndView accesssDenied() {
+
+		ModelAndView model = new ModelAndView();
+
+		// check if user is login
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		if (!(auth instanceof AnonymousAuthenticationToken)) {
+			UserDetails userDetail = (UserDetails) auth.getPrincipal();
+			System.out.println(userDetail);
+
+			model.addObject("username", userDetail.getUsername());
+
+		}
+
+		model.setViewName("403");
+		return model;
+
+	}
+
 }

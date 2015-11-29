@@ -6,10 +6,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.sjsu.cmpe275.projectmanager.configuration.Constants;
 import com.sjsu.cmpe275.projectmanager.exception.EntityNotFound;
@@ -34,37 +37,42 @@ public class UserController {
 	 * 
 	 */
 
-	@RequestMapping(value = { "/create" }, method = RequestMethod.POST)
-	public ResponseEntity<User> createPerson(@RequestParam(value = "firstname", required = true) String firstName,
-			@RequestParam(value = "lastname", required = true) String lastName,
-			@RequestParam(value = "email", required = true) String email,
-			@RequestParam(value = "password", defaultValue = "") String password) {
+	/**
+	 * Create User
+	 * 
+	 */
 
-		User userObj = new User();
+	@RequestMapping(value= {"/create"}, method = RequestMethod.POST, produces = "application/json")
+    public @ResponseBody User createUser(@ModelAttribute User user){
+    	ModelAndView mv = new ModelAndView();
+		try {
+			Users users = new Users();
+			
+			UserRoles roles = new UserRoles();
+			roles.setRole(Constants.ROLE_ADMIN);
+			roles.setUsername(user.getEmail());
+			
+			users.setUsername(user.getEmail());
+			users.setPassword(user.getPassword());
+			users.setEnabled(Constants.ENABLED);
+	
+			mv.setViewName("createUser");
 
-		if (firstName == null || "".equalsIgnoreCase(firstName) || lastName == null || "".equalsIgnoreCase(lastName)
-				|| email == null || "".equalsIgnoreCase(email)) {
-			return new ResponseEntity<User>(HttpStatus.BAD_REQUEST);
+			if (userService.createUser(user, roles, users)){
+				mv.addObject("createUser", user);
+				return user;
+			}
 		}
+		
+		catch (RuntimeException e) {
+			user = null;
+			mv.addObject("createUser", user);
+			e.printStackTrace();
+			return user;
 
-		userObj.setFirstName(firstName);
-		userObj.setLastName(lastName);
-		userObj.setEmail(email);
-		userObj.setPassword(password);
-
-		UserRoles role = new UserRoles();
-		role.setRole(Constants.ROLE_ADMIN);
-		role.setUsername(email);
-
-		Users users = new Users();
-		users.setUsername(email);
-		users.setPassword(password);
-		users.setEnabled(Constants.ENABLED);
-
-		User createdUser = userService.createUser(userObj, role, users);
-
-		return new ResponseEntity<User>(createdUser, HttpStatus.OK);
-	}
+		}
+		return null;
+    }
 
 	/**
 	 * Get a user by Id in HTML format
@@ -99,24 +107,44 @@ public class UserController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/update/{id}", method = RequestMethod.POST, produces = "application/json")
-	public ResponseEntity<User> updatePerson(@PathVariable(value = "id") int uid,
-			@RequestParam(value = "FirstName", required = true) String firstName,
-			@RequestParam(value = "LastName", required = true) String lastName) throws Exception {
-
-		User user = userService.getUser(uid);
-		if (user == null) {
-			return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
+	@RequestMapping(value = { "/update/{id}" }, method = RequestMethod.POST, produces = "application/json")
+	public @ResponseBody User updateUser(@PathVariable(value = "id") int userId, @ModelAttribute User user) {
+		
+		ModelAndView mv = new ModelAndView();
+		User user1 = null;
+		
+		try{
+		user1 = userService.getUser(userId);
+		if (user1 == null) {
+			System.out.println("User not found...");
 		}
 
-		if (firstName != null || !"".equalsIgnoreCase(firstName))
-			user.setFirstName(firstName);
-		if (lastName != null || !"".equalsIgnoreCase(lastName))
-			user.setLastName(lastName);
+			if (user.getFirstName() != null){
+				user1.setFirstName(user.getFirstName());
+			}
+			if (user.getLastName() != null){
+				user1.setLastName(user.getLastName());
+			}
+			if (user.getEmail() != null){
+				user1.setEmail(user.getEmail());
+			}
+			if (user.getPassword() != null){
+				user1.setPassword(user.getPassword());
+			}
+			
+			mv.setViewName("updateUser");
+			if (userService.updateUser(user1)){
+				mv.addObject("updateUser", user1);
+				return user1;
+			}
+		} catch (RuntimeException e){
+			user = null;
+			mv.addObject("updateUser", user1);
+			return user1;
+		}
+		return null;		
 
-		User updatedPerson = userService.updateUser(user);
-		return new ResponseEntity<User>(updatedPerson, HttpStatus.OK);
-	}
+		}
 
 	/**
 	 * Delete a user

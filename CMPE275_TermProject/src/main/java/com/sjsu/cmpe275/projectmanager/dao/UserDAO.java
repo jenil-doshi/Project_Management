@@ -10,20 +10,22 @@ import com.sjsu.cmpe275.projectmanager.exception.EntityNotFound;
 
 public interface UserDAO {
 
-		public User createUser(User user,UserRoles roles, Users users);
+	public boolean createUser(User user, UserRoles roles, Users users);
 
-	    public User getUser(int personId) throws EntityNotFound;
+	public User getUser(int personId) throws EntityNotFound;
 
-//	    public List<User> getAllUser();
+	// public List<User> getAllUser();
 
-	    public User updateUser(User user) throws EntityNotFound;
+	public boolean updateUser(User user) throws EntityNotFound;
 
-	    public User deleteUser(int userId) throws EntityNotFound;
+	public User deleteUser(int userId) throws EntityNotFound;
 
-	    public String getUserProjectStatus(int userId, int projectId);
+	public String getUserProjectStatus(int userId, int projectId);
 
-		public void updateUserRoles(UserRoles roles); 
-		
-		public String getUserRole(String username);
+	public void updateUserRoles(UserRoles roles);
+
+	public String getUserRole(String username);
+
+	public User getUserByUserName(String userName);
 
 }

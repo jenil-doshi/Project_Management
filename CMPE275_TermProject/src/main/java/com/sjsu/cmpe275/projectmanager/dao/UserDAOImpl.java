@@ -26,13 +26,21 @@ public class UserDAOImpl extends AbstractDAO<Integer, User> implements UserDAO {
 	@Autowired
 	SessionFactory session;
 
-	public User createUser(User user, UserRoles roles, Users users) {
+	public boolean createUser(User user, UserRoles roles, Users users) {
 
-		session.getCurrentSession().persist(user);
-		session.getCurrentSession().persist(users);
-		session.getCurrentSession().persist(roles);
-		System.out.println("In User DAO");
-		return user;
+		boolean status = false;
+		try {
+			session.getCurrentSession().persist(user);
+			session.getCurrentSession().persist(users);
+			session.getCurrentSession().persist(roles);
+			System.out.println("In User DAO");
+			status = true;
+			return status;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException("A Runtime Exception Has occurred in createUser()");
+		}
+
 	}
 
 	public User getUser(int userId) throws EntityNotFound {
@@ -44,10 +52,18 @@ public class UserDAOImpl extends AbstractDAO<Integer, User> implements UserDAO {
 	// return null;
 	// }
 
-	public User updateUser(User updatedUser) throws EntityNotFound {
+	public boolean updateUser(User updatedUser) throws EntityNotFound {
 
-		session.getCurrentSession().update(updatedUser);
-		return updatedUser;
+		boolean status = false;
+		try {
+			session.getCurrentSession().update(updatedUser);
+			status = true;
+			return status;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException("A Runtime Exception Has occured while updating the user");
+		}
+
 	}
 
 	public User deleteUser(int userId) throws EntityNotFound {
@@ -87,5 +103,19 @@ public class UserDAOImpl extends AbstractDAO<Integer, User> implements UserDAO {
 	public String getUserRole(String username) {
 		UserRoles userRole = (UserRoles) session.getCurrentSession().get(UserRoles.class, username);
 		return userRole.getRole();
+	}
+
+	@Override
+	public User getUserByUserName(String userName) {
+		User user = null;
+		try {
+			Query query = session.getCurrentSession().createQuery("from User where email=:userName")
+					.setParameter("userName", userName);
+			user = (User) query.list().get(0);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException("A Runtime exception has occured");
+		}
+		return user;
 	}
 }

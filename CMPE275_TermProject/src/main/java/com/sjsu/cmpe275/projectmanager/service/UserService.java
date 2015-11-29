@@ -17,13 +17,13 @@ import org.springframework.stereotype.Service;
 @Component
 public interface UserService {
 
-	public User createUser(User user, UserRoles roles, Users users);
+	public boolean createUser(User user, UserRoles roles, Users users);
 
 	public User getUser(int userId) throws EntityNotFound;
 
 	// public List<User> getAllUser();
 
-	public User updateUser(User user) throws EntityNotFound;
+	public boolean updateUser(User user) throws EntityNotFound;
 
 	public User deleteUser(int userId) throws EntityNotFound;
 
@@ -32,4 +32,6 @@ public interface UserService {
 	public void updateUserRole(UserRoles roles);
 	
 	public String getUserRole(String username);
+
+	public User getUserByUserName(String userName);
 }
