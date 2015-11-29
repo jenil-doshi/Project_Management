@@ -10,6 +10,7 @@ public class Queries {
 	public static String GET_TASK_LIST_FOR_DELETE="select tid,taskname,description from task t, project p where t.project=p.pid = :projectId and p.owner =:userId";
 	public static String GET_PID_FORM_USER_PROJECT_INFO = "select pid from UserProjectInfo where uid = :userId";
 	public static String GET_PID_FROM_PROJECT_FOR_USER = "select pid from Project where owner.userId = :userId";
+	public static String GET_USERS_FROM_USER_ROLES="from User where email not in (select username from UserRoles where username= :username)";
 
 
 	
