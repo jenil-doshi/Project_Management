@@ -294,23 +294,5 @@ public class ProjectController {
 		return modelAndView;
 
 	}
-	
-	@RequestMapping(value = "/getUsersListForAddProject/{username}", method = RequestMethod.GET)
-	public @ResponseBody List<User> getUsersListForAddProject(@PathVariable String username) {
-
-		try {
-			List<User> userList = projectService.getUsersForAddProject(username);
-			if (userList != null) {
-				return userList;
-			} else {
-				return null;
-			}
-		} catch (RuntimeException e) {
-			e.printStackTrace();
-			return null;
-		}
-
-	}
-
 
 }
