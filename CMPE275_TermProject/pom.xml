@@ -11,7 +11,7 @@
 	<name>CMPE275_TermProject</name>
 
 	<properties>
-		<springframework.version>4.0.6.RELEASE</springframework.version>
+		<springframework.version>4.1.6.RELEASE</springframework.version>
 		<hibernate.version>4.3.6.Final</hibernate.version>
 		<mysql.version>5.1.31</mysql.version>
 		<joda-time.version>2.3</joda-time.version>
@@ -53,8 +53,8 @@
 			<artifactId>spring-oxm</artifactId>
 			<version>${springframework.version}</version>
 		</dependency>
-		
-  		<!-- Needed for JSON View -->
+
+		<!-- Needed for JSON View -->
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
@@ -157,17 +157,22 @@
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-core</artifactId>
-			<version>4.0.3.RELEASE</version>
+			<version>4.0.1.RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-web</artifactId>
-			<version>4.0.3.RELEASE</version>
+			<version>4.0.1.RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-config</artifactId>
-			<version>4.0.3.RELEASE</version>
+			<version>4.0.1.RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-taglibs</artifactId>
+			<version>4.0.1.RELEASE</version>
 		</dependency>
 	</dependencies>
 

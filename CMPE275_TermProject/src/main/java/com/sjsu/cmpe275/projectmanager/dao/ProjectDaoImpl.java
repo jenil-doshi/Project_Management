@@ -43,7 +43,7 @@ public class ProjectDaoImpl implements ProjectDao {
 		}
 
 	}
-	
+
 	@Override
 	public boolean updateProject(Project project) {
 		boolean status = false;
@@ -56,7 +56,6 @@ public class ProjectDaoImpl implements ProjectDao {
 			throw new RuntimeException("A Runtime Exception Has occured while updating Project");
 		}
 	}
-
 
 	@Override
 	public boolean saveInvitationStatus(UserProjectInfo info) {
@@ -90,9 +89,9 @@ public class ProjectDaoImpl implements ProjectDao {
 			List<Task> tasksList = query.list();
 			if (tasksList != null) {
 				for (Task taskList : tasksList) {
-					if(taskList.getTaskState().equals(Constants.TASK_NEW) ||
-							taskList.getTaskState().equals(Constants.TASK_STARTED) ||
-								taskList.getTaskState().equals(Constants.TASK_ASSIGNED)){
+					if (taskList.getTaskState().equals(Constants.TASK_NEW)
+							|| taskList.getTaskState().equals(Constants.TASK_STARTED)
+							|| taskList.getTaskState().equals(Constants.TASK_ASSIGNED)) {
 						return status;
 					}
 				}
@@ -117,7 +116,8 @@ public class ProjectDaoImpl implements ProjectDao {
 		boolean status = false;
 		try {
 
-			if (project.getStatus().equals(Constants.PROJECT_NEW) || project.getStatus().equals(Constants.PROJECT_PLANNING)
+			if (project.getStatus().equals(Constants.PROJECT_NEW)
+					|| project.getStatus().equals(Constants.PROJECT_PLANNING)
 					|| project.getStatus().equals(Constants.PROJECT_ONGOING)) {
 				project.setStatus(Constants.PROJECT_CANCELLED);
 				sessionFactory.getCurrentSession().update(project);
@@ -208,21 +208,24 @@ public class ProjectDaoImpl implements ProjectDao {
 		return projList;
 	}
 
-	/* Code for generating list of users to add to invitation list  in ProjectDAOImpl*/
-		@SuppressWarnings("unchecked")
-		@Override
-		public List<User> getUsersForAddProject(String username)
-		{
-			List<User> usersList = null;
-			try {
-				Query query = sessionFactory.getCurrentSession().createQuery(Queries.GET_USERS_FROM_USER_ROLES);
-				query.setParameter("username", username);
-				usersList = query.list();
-				System.out.println(usersList.get(0).getEmail());
-			} catch (Exception e) {
-				e.printStackTrace();
-				throw new RuntimeException("A Runtime Exception has occurred");
-			}
-			return usersList;
+	/*
+	 * Code for generating list of users to add to invitation list in
+	 * ProjectDAOImpl
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<User> getUsersForAddProject(String username) {
+		List<User> usersList = null;
+		try {
+			Query query = sessionFactory.getCurrentSession().createQuery(Queries.GET_USERS_FROM_USER_ROLES);
+			query.setParameter("username", username);
+			query.setParameter("role", Constants.ROLE_ADMIN);
+			usersList = query.list();
+			System.out.println(usersList.get(0).getEmail());
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException("A Runtime Exception has occurred");
 		}
+		return usersList;
+	}
 }

@@ -5,7 +5,7 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>View Projects</title>
+	<title>Project Information</title>
 	<link type="text/css" href="<c:url value="/assets/bootstrap/css/bootstrap.min.css"/>" rel="stylesheet">
     <link type="text/css" href="<c:url value="/assets/bootstrap/css/bootstrap-responsive.min.css"/>" rel="stylesheet">
     <link type="text/css" href="<c:url value="/assets/css/theme.css"/>" rel="stylesheet">
@@ -147,42 +147,60 @@
 							</div>
 							<div class="module-body">
 								<p>
-									<strong>List of Projects</strong>
+									<strong>Project Information</strong>	
+								</p>
+								<b>ID: ${project.pid}</b><br/>
+								<b>Name:${project.name}</b><br/>
+								<b>Description: ${project.description}</b><br/>
+								<b>Start Date: ${project.startDate}</b><br/>
+								<b>End Date: ${project.endDate}</b><br/>
+								<b>Owner:${project.owner.userId}</b><br/>
+								<b>Status:${project.status}</b><br/>
+
+								<br />
+								
+								
+								<div class="module-body">
+								<p>
+									<strong>Task information</strong>
 									
 									
 								</p>
 								<table class="table">
 								<tr>
 									  <th>#</th>
-									  <th>Project ID</th>
-									  <th>Project Name</th>
-									  <th>Description</th>
-									  <th>Start Date</th>
-									  <th>End Date</th>  
-									  <th>Owner</th>  
-									  <th>Status</th>  
+									  <th>ID</th>
+									  <th>Name</th>
+									  <th>Estimated Units</th>
+									  <th>Actual Units</th>
+									  <th>Assignee</th>   
+									  <th>State</th>  
 									  <th>View</th>  
 									</tr>
 								  </thead>
 								  <thead>
-								  <c:forEach items="${projectList}" var="project" varStatus="loop">
+								  <c:forEach items="${taskList}" var="task" varStatus="loop">
 								  <tbody>
 									<tr>
 									  <td>${loop.index+1}</td>
-									  <td>${project.pid}</td>
-									  <td>${project.name}</td>
-									  <td>${project.description}</td>
-									  <td>${project.startDate}</td>
-									  <td>${project.endDate}</td>
-									  <td>${project.owner.firstName}</td>
-									  <td>${project.status}</td>
-									  <td><a class="btn btn-info" href="<c:url value="/project/getProjectInfo/${project.pid}"/>">VIEW</td>
+									  <td>${task.tid}</td>
+									  <td>${task.taskName}</td>
+									  <td>${task.description}</td>
+									  <td>${task.estimated_time}</td>
+									  <td>${task.actual_time}</td>
+									 <%--  <td>${task.owner.firstName}</td> --%>
+									  <td>${task.taskState}</td>
+									  <div class=".btn-info">
+									  <td><a href="/project/getProjectInfo/${project.pid}"></td>
+									  </div>
 									</tr>
 								  </tbody>
 								  </c:forEach> 
 								</table>
 
 								<br />
+								
+				</div>	
 								
 				</div><!--/.span9-->
 			</div>

@@ -30,9 +30,11 @@ import org.springframework.web.servlet.ModelAndView;
 import com.sjsu.cmpe275.projectmanager.configuration.Constants;
 import com.sjsu.cmpe275.projectmanager.configuration.EmailUtility;
 import com.sjsu.cmpe275.projectmanager.model.Project;
+import com.sjsu.cmpe275.projectmanager.model.Task;
 import com.sjsu.cmpe275.projectmanager.model.User;
 import com.sjsu.cmpe275.projectmanager.model.UserRoles;
 import com.sjsu.cmpe275.projectmanager.service.ProjectService;
+import com.sjsu.cmpe275.projectmanager.service.TaskService;
 import com.sjsu.cmpe275.projectmanager.service.UserService;
 
 @Controller
@@ -49,6 +51,9 @@ public class ProjectController {
 	@Autowired
 	UserService userService;
 
+	@Autowired
+	TaskService taskService;
+
 	/**
 	 * Method for fetching project add form
 	 */
@@ -62,23 +67,23 @@ public class ProjectController {
 	@RequestMapping(value = { "/create/{userId}" }, headers = "Accept=*/*", method = RequestMethod.POST, produces = {
 			"application/json" })
 	public String createProject(@PathVariable int userId, @ModelAttribute("addProjectForm") Project project) {
-		String role=null;
+		String role = null;
 		User user = new User();
-		
+
 		try {
-			
-			Collection<GrantedAuthority> authorities = (Collection<GrantedAuthority>)
-					  SecurityContextHolder.getContext().getAuthentication().getAuthorities();
-			for(GrantedAuthority authority:authorities){
-				if(authority.getAuthority().equalsIgnoreCase(Constants.ROLE_ADMIN)){
+
+			Collection<GrantedAuthority> authorities = (Collection<GrantedAuthority>) SecurityContextHolder.getContext()
+					.getAuthentication().getAuthorities();
+			for (GrantedAuthority authority : authorities) {
+				if (authority.getAuthority().equalsIgnoreCase(Constants.ROLE_ADMIN)) {
 					role = "role_admin";
 					break;
-				}else if(authority.getAuthority().equalsIgnoreCase(Constants.ROLE_USER)){
+				} else if (authority.getAuthority().equalsIgnoreCase(Constants.ROLE_USER)) {
 					role = "role_user";
 					break;
 				}
 			}
-			
+
 			user.setUserId(userId);
 			project.setOwner(user);
 			// to change from new to planning... handle the control from ui by
@@ -88,10 +93,10 @@ public class ProjectController {
 		} catch (RuntimeException e) {
 			project = null;
 			e.printStackTrace();
-			//return project;
+			// return project;
 
 		}
-		return "redirect:/project/viewProjects/" + user.getUserId()+"/"+role;
+		return "redirect:/project/viewProjects/" + user.getUserId() + "/" + role;
 	}
 
 	public User getPrincipal() {
@@ -294,23 +299,43 @@ public class ProjectController {
 		return modelAndView;
 
 	}
-	
+
 	@RequestMapping(value = "/getUsersListForAddProject/{username}", method = RequestMethod.GET)
 	public @ResponseBody List<User> getUsersListForAddProject(@PathVariable String username) {
-
+		List<User> userList = null;
+		ModelAndView model = new ModelAndView();
 		try {
-			List<User> userList = projectService.getUsersForAddProject(username);
-			if (userList != null) {
-				return userList;
-			} else {
-				return null;
-			}
+			userList = projectService.getUsersForAddProject(username);
+			// model.setViewName(");
+			model.addObject("inviteesList", userList);
 		} catch (RuntimeException e) {
 			e.printStackTrace();
-			return null;
+			return userList;
 		}
+
+		return userList;
 
 	}
 
+	@RequestMapping(value = "/getProjectInfo/{pid}", method = RequestMethod.GET)
+	public ModelAndView getProjectInfo(@PathVariable int pid) {
+		ModelAndView model = new ModelAndView();
+		Project project = null;
+		List<Task> taskList = null;
+		try {
+			project = projectService.getProjectById(pid);
+			model.addObject("project", project);
+			taskList = taskService.getTasks(pid);
+			model.addObject("taskList", taskList);
+			model.setViewName("projectInfo");
+		} catch (Exception e) {
+			e.printStackTrace();
+			model.addObject("project", project);
+			model.addObject("taskList", taskList);
+			model.setViewName("projectInfo");
+		}
+		
+		return model;
+	}
 
 }
