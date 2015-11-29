@@ -1,6 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="sec" uri="http://www.springframework.org/security/tags"%> 
-<html lang="en">
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>  
+<!DOCTYPE html>
 <head>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -16,13 +17,20 @@
 <div class="navbar navbar-fixed-top">
 		<div class="navbar-inner">
 			<div class="container">
-				<a class="btn btn-navbar" data-toggle="collapse" data-target=".navbar-inverse-collapse">
-					<i class="icon-reorder shaded"></i>
-				</a>
-
-			  	<a class="brand" href="index.html">
-			  		Edmin
-			  	</a>
+				<sec:authorize access="hasRole('ROLE_ADMIN')">
+					<a class="btn btn-navbar" data-toggle="collapse"
+						data-target=".navbar-inverse-collapse"> <i
+						class="icon-reorder shaded"></i></a>
+					<a class="brand" href="index.html">Owner -
+						${sessionScope.USER.firstName} </a>
+				</sec:authorize>
+				<sec:authorize access="hasRole('ROLE_USER')">
+					<a class="btn btn-navbar" data-toggle="collapse"
+						data-target=".navbar-inverse-collapse"> <i
+						class="icon-reorder shaded"></i></a>
+					<a class="brand" href="index.html">Team Member -
+						${sessionScope.USER.firstName} </a>
+				</sec:authorize>
 
 				<div class="nav-collapse collapse navbar-inverse-collapse">
 					<ul class="nav nav-icons">
@@ -61,19 +69,6 @@
 						<li><a href="#">
 							Support
 						</a></li>
-						<li class="nav-user dropdown">
-							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-								<img src="images/user.png" class="nav-avatar" />
-								<b class="caret"></b>
-							</a>
-							<ul class="dropdown-menu">
-								<li><a href="#">Your Profile</a></li>
-								<li><a href="#">Edit Profile</a></li>
-								<li><a href="#">Account Settings</a></li>
-								<li class="divider"></li>
-								<li><a href="#">Logout</a></li>
-							</ul>
-						</li>
 					</ul>
 				</div><!-- /.nav-collapse -->
 			</div>
@@ -90,41 +85,40 @@
 
 						<ul class="widget widget-menu unstyled">
 							<li class="active">
-								<a href="index.html">
+								<a href="<c:url value="/home"/>">
 									<i class="menu-icon icon-dashboard"></i>
 									Dashboard
 								</a>
 							</li>
 							<li>
-								<a href="activity.html">
+								<a href="#">
 									<i class="menu-icon icon-bullhorn"></i>
 									Calendar
 								</a>
 							</li>
 							<li>
-								<a href="message.html">
+								<a href="#">
 									<i class="menu-icon icon-inbox"></i>
 									Statistics
-									<b class="label green pull-right">11</b>
 								</a>
 							</li>
 							
 							<li>
-								<a href="task.html">
-									<i class="menu-icon icon-tasks"></i>
-									Tasks
-									<b class="label orange pull-right">19</b>
-								</a>
+								<a href="<c:url value="/project/addProjectFormView"/>"><i
+									class="menu-icon icon-tasks"></i>Add Project </a>
 							</li>
+							<sec:authorize access="hasRole('ROLE_ADMIN')">
+							<li><a href="<c:url value="/project/viewProjects/${sessionScope.USER.userId}/role_admin"/>">
+							<i class="menu-icon icon-tasks"></i>View Projects </a></li>
+ 									
+							</sec:authorize>
+							<sec:authorize access="hasRole('ROLE_USER')">
+ 							<li><a href="<c:url value="/project/viewProjects/${sessionScope.USER.userId}/role_user"/>">
+							<i class="menu-icon icon-tasks"></i>View Projects </a></li>
+							</sec:authorize>
 						</ul><!--/.widget-nav-->
 
-						<ul class="widget widget-menu unstyled">
-                                <li><a href="ui-button-icon.html"><i class="menu-icon icon-bold"></i> Buttons </a></li>
-                                <li><a href="ui-typography.html"><i class="menu-icon icon-book"></i>Typography </a></li>
-                                <li><a href="form.html"><i class="menu-icon icon-paste"></i>Forms </a></li>
-                                <li><a href="table.html"><i class="menu-icon icon-table"></i>Tables </a></li>
-                                <li><a href="charts.html"><i class="menu-icon icon-bar-chart"></i>Charts </a></li>
-                            </ul><!--/.widget-nav-->
+						
 
 						<ul class="widget widget-menu unstyled">
 							<li>
@@ -134,44 +128,28 @@
 									More Pages
 								</a>
 								<ul id="togglePages" class="collapse unstyled">
+									
 									<li>
-										<a href="other-login.html">
-											<i class="icon-inbox"></i>
-											Login
-										</a>
-									</li>
-									<li>
-										<a href="other-user-profile.html">
+										<a href="#">
 											<i class="icon-inbox"></i>
 											Profile
 										</a>
 									</li>
 									<li>
-										<a href="other-user-listing.html">
+										<a href="#">
 											<i class="icon-inbox"></i>
 											All Users
 										</a>
 									</li>
-									<li>
-										<a href="other-faq.html">
-											<i class="icon-inbox"></i>
-											Frequently Asked Questions
-										</a>
-									</li>
-									<li>
-										<a href="other-404.html">
-											<i class="icon-inbox"></i>
-											Error Page (404)
-										</a>
-									</li>
+									
+									
 								</ul>
 							</li>
 							
 							<li>
-								<a href="#">
-									<i class="menu-icon icon-signout"></i>
-									Logout
-								</a>
+								<a href="<c:url value="/logout" />" >Logout </a>
+									
+								
 							</li>
 						</ul>
 
@@ -192,44 +170,42 @@
 							<div class="module-body">
 
 							
-
-									<form class="form-horizontal row-fluid">
+									<c:url value="/project/create/${sessionScope.USER.userId}" var="formUrl"/>
+									<form:form action="${formUrl}" commandName="addProjectForm" class="form-horizontal row-fluid">
 										<div class="control-group">
-											<label class="control-label" for="basicinput">Project Name</label>
+											<label class="control-label" for="basicinput">Project Name *</label>
 											<div class="controls">
-												<input type="text" id="basicinput" placeholder="Name of the Project" class="span8">
-											</div>
-											
+												<form:input path="name" type="text" id="basicinput" placeholder="Name of the Project" class="span8" required="required"/>
+											</div>								
 										</div>
 
 										<div class="control-group">
 											<label class="control-label" for="basicinput">Project Description</label>
 											<div class="controls">
-												<textarea class="span8" rows="5"></textarea>
-											</div>
-											
+												<form:textarea path="description" class="span8" rows="5"/>
+											</div>											
 										</div>
 
 										<div class="control-group">
-											<label class="control-label" for="basicinput">Start Date</label>
+											<label class="control-label" for="basicinput">Start Date *</label>
 											<div class="controls">
-												<input type="text" id="basicinput" placeholder="When will the project Start?" class="span8">
+												<form:input path="startDate" type="text" id="basicinput" placeholder="When will the project Start?" class="span8" required="required"/>
 											</div>
 										</div>
 
 										<div class="control-group">
-											<label class="control-label" for="basicinput">End Date</label>
+											<label class="control-label" for="basicinput">End Date *</label>
 											<div class="controls">
-												<input type="text" id="basicinput" placeholder="When will the project end." class="span8">
+												<form:input path="endDate" type="text" id="basicinput" placeholder="When will the project end." class="span8" required="required"/>
 											</div>
 										</div>
-										${sessionScope.USER.firstName}
+										
 										<div class="control-group">
 											<div class="controls">
-												<button type="submit" class="btn">Submit Form</button>
+												<input type="submit" class="btn"/>
 											</div>
 										</div>
-									</form>
+									</form:form>
 							</div>
 						</div>
 

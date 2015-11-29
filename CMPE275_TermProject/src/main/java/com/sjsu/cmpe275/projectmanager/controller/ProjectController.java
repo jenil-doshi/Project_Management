@@ -1,6 +1,8 @@
 package com.sjsu.cmpe275.projectmanager.controller;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -11,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
@@ -46,37 +49,64 @@ public class ProjectController {
 	@Autowired
 	UserService userService;
 
+	/**
+	 * Method for fetching project add form
+	 */
+
 	@RequestMapping(value = "/addProjectFormView", method = RequestMethod.GET)
-	public String addProjectFormView() {
+	public String addProjectFormView(Map<String, Object> model) {
+		model.put("addProjectForm", new Project());
 		return "addProjectForm";
 	}
 
 	@RequestMapping(value = { "/create/{userId}" }, headers = "Accept=*/*", method = RequestMethod.POST, produces = {
 			"application/json" })
-	public @ResponseBody Project createProject(@PathVariable int userId, @ModelAttribute Project project) {
-		ModelAndView mv = new ModelAndView();
+	public String createProject(@PathVariable int userId, @ModelAttribute("addProjectForm") Project project) {
+		String role=null;
+		User user = new User();
+		
 		try {
-			User user = new User();
+			
+			Collection<GrantedAuthority> authorities = (Collection<GrantedAuthority>)
+					  SecurityContextHolder.getContext().getAuthentication().getAuthorities();
+			for(GrantedAuthority authority:authorities){
+				if(authority.getAuthority().equalsIgnoreCase(Constants.ROLE_ADMIN)){
+					role = "role_admin";
+					break;
+				}else if(authority.getAuthority().equalsIgnoreCase(Constants.ROLE_USER)){
+					role = "role_user";
+					break;
+				}
+			}
+			
 			user.setUserId(userId);
 			project.setOwner(user);
 			// to change from new to planning... handle the control from ui by
 			// invoking update state service every once a day.
 			project.setStatus(projectService.setProjectStatus(project.getStartDate()));
-			mv.setViewName("project");
-
-			if (projectService.createProject(userId, project)) {
-				mv.addObject("project", project);
-				return project;
-			}
-
+			projectService.createProject(userId, project);
 		} catch (RuntimeException e) {
 			project = null;
-			mv.addObject("project", project);
 			e.printStackTrace();
-			return project;
+			//return project;
 
 		}
-		return null;
+		return "redirect:/project/viewProjects/" + user.getUserId()+"/"+role;
+	}
+
+	public User getPrincipal() {
+		String userName = null;
+		User user = null;
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+		if (principal instanceof UserDetails) {
+			userName = ((UserDetails) principal).getUsername();
+		} else {
+			userName = principal.toString();
+		}
+		user = userService.getUserByUserName(userName);
+
+		return user;
 	}
 
 	// update Project
@@ -105,13 +135,10 @@ public class ProjectController {
 
 			}
 
-			if (proj.getStatus().equals(Constants.PROJECT_NEW))
-
-			{
+			if (proj.getStatus().equals(Constants.PROJECT_NEW)) {
 				if (proj.getStartDate() != null) {
 					proj.setStartDate(project.getStartDate());
 				}
-
 				if (proj.getEndDate() != null) {
 					proj.setStartDate(project.getEndDate());
 				}
@@ -248,91 +275,23 @@ public class ProjectController {
 
 	}
 
-	@RequestMapping(value = "/getProjects/{userId}/{role}", method = RequestMethod.GET, produces = "application/json")
-	public @ResponseBody List<Project> getUserProjects(@PathVariable int userId, @PathVariable String role) {
-
+	@RequestMapping(value = "/viewProjects/{userId}/{role}", method = RequestMethod.GET, produces = "application/json")
+	public ModelAndView getUserProjects(@PathVariable int userId, @PathVariable String role) {
+		List<Project> projectList = null;
+		ModelAndView modelAndView = new ModelAndView();
 		try {
-			return projectService.getProjectsForUser(userId, role);
+			projectList = projectService.getProjectsForUser(userId, role);
+
+			modelAndView.setViewName("viewProjects");
+			modelAndView.addObject("projectList", projectList);
+
 		} catch (Exception e) {
 			e.printStackTrace();
-			return null;
-		}
-
-	}
-
-	/* Added code for security */
-
-	@RequestMapping(value = { "/", "/home" }, method = RequestMethod.GET)
-	public String defaultPage(HttpServletRequest request) {
-		// System.out.println("User is: " + getPrincipal());
-		request.getSession().setAttribute("USER", getPrincipal());
-		// model.addAttribute("user", getPrincipal());
-		return "index";
-
-	}
-
-	private User getPrincipal() {
-		String userName = null;
-		User user = null;
-		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-		if (principal instanceof UserDetails) {
-			userName = ((UserDetails) principal).getUsername();
-		} else {
-			userName = principal.toString();
-		}
-		user = userService.getUserByUserName(userName);
-
-		return user;
-	}
-
-	@RequestMapping(value = "/admin**", method = RequestMethod.GET)
-	public ModelAndView adminPage() {
-
-		ModelAndView model = new ModelAndView();
-		model.addObject("title", "Spring Security Login Form - Database Authentication");
-		model.addObject("message", "This page is for ROLE_ADMIN only!");
-		model.setViewName("admin");
-
-		return model;
-
-	}
-
-	@RequestMapping(value = "/login", method = RequestMethod.GET)
-	public String loginPage() {
-		return "login";
-	}
-
-	@RequestMapping(value = "/logout", method = RequestMethod.GET)
-	public String logoutPage(HttpServletRequest request, HttpServletResponse response) {
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		if (auth != null) {
-			new SecurityContextLogoutHandler().logout(request, response, auth);
-		}
-		return "redirect:/login?logout";// You can redirect wherever you want,
-										// but generally it's a good idea to
-										// show login screen again.
-	}
-
-	// for 403 access denied page
-
-	@RequestMapping(value = "/403", method = RequestMethod.GET)
-	public ModelAndView accesssDenied() {
-
-		ModelAndView model = new ModelAndView();
-
-		// check if user is login
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		if (!(auth instanceof AnonymousAuthenticationToken)) {
-			UserDetails userDetail = (UserDetails) auth.getPrincipal();
-			System.out.println(userDetail);
-
-			model.addObject("username", userDetail.getUsername());
+			modelAndView.setViewName("viewProjects");
+			modelAndView.addObject("projectList", null);
 
 		}
-
-		model.setViewName("403");
-		return model;
+		return modelAndView;
 
 	}
 

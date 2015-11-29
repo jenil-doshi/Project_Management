@@ -32,7 +32,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		// .formLogin().loginPage("/login").usernameParameter("username").passwordParameter("password").and()
 		// .logout().permitAll().and().csrf().disable();
 
-		http.authorizeRequests().antMatchers("/project/**").access("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')").and()
+		http.authorizeRequests().antMatchers("/","/home","/project/**","/task**","/user**").access("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')").and()
 				.formLogin().loginPage("/login").failureUrl("/login?error").usernameParameter("username")
 				.passwordParameter("password").and()
 				.exceptionHandling().accessDeniedPage("/403").and().csrf();

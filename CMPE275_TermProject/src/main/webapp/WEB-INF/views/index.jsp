@@ -3,7 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="sec"
 	uri="http://www.springframework.org/security/tags"%>
-<html lang="en">
+<!DOCTYPE html>
 <head>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -35,14 +35,14 @@
 						data-target=".navbar-inverse-collapse"> <i
 						class="icon-reorder shaded"></i></a>
 					<a class="brand" href="index.html">Owner -
-						${pageContext.request.userPrincipal.name} </a>
+						${sessionScope.USER.firstName} </a>
 				</sec:authorize>
 				<sec:authorize access="hasRole('ROLE_USER')">
 					<a class="btn btn-navbar" data-toggle="collapse"
 						data-target=".navbar-inverse-collapse"> <i
 						class="icon-reorder shaded"></i></a>
 					<a class="brand" href="index.html">Team Member -
-						${pageContext.request.userPrincipal.name} </a>
+						${sessionScope.USER.firstName} </a>
 				</sec:authorize>
 				<div class="nav-collapse collapse navbar-inverse-collapse">
 					<ul class="nav nav-icons">
@@ -101,8 +101,16 @@
 							</a></li>
 							<li><a href="<c:url value="/project/addProjectFormView"/>"><i
 									class="menu-icon icon-tasks"></i>Add Project </a></li>
-							<li><a href="<c:url value="/project/addProjectFormView"/>"><i
-									class="menu-icon icon-tasks"></i>View Projecs </a></li>
+							<sec:authorize access="hasRole('ROLE_ADMIN')">
+							<li><a href="<c:url value="/project/viewProjects/${sessionScope.USER.userId}/role_admin"/>">
+							<i class="menu-icon icon-tasks"></i>View Projects </a></li>
+ 									
+							</sec:authorize>
+							<sec:authorize access="hasRole('ROLE_USER')">
+ 							<li><a href="<c:url value="/project/viewProjects/${sessionScope.USER.userId}/role_user"/>">
+							<i class="menu-icon icon-tasks"></i>View Projects </a></li>
+							</sec:authorize>
+							
 						</ul>
 						<!--/.widget-nav-->
 
@@ -115,9 +123,9 @@
 									class="icon-chevron-down pull-right"></i><i
 									class="icon-chevron-up pull-right"> </i>More Pages </a>
 								<ul id="togglePages" class="collapse unstyled">
-									<li><a href="other-user-profile.html"><i
+									<li><a href="#"><i
 											class="icon-inbox"></i>Profile </a></li>
-									<li><a href="other-user-listing.html"><i
+									<li><a href="#"><i
 											class="icon-inbox"></i>All Users </a></li>
 								</ul></li>
 							<%-- <c:url value="/login?logout" var="logoutUrl" />
@@ -125,7 +133,7 @@
 								<input type="hidden" name="${_csrf.parameterName}"
 									value="${_csrf.token}" />
 							</form> --%>
-							<li><a href="<c:url value="/project/logout" />" >Logout </a></li>
+							<li><a href="<c:url value="/logout" />" >Logout </a></li>
 						</ul>
 					</div>
 					<!--/.sidebar-->
