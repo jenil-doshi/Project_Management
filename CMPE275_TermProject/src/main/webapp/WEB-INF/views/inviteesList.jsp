@@ -90,10 +90,13 @@
 								</a>
 							</li>
 							
+							<sec:authorize access="hasRole('ROLE_ADMIN')">
 							<li>
 								<a href="<c:url value="/project/addProjectFormView"/>"><i
 									class="menu-icon icon-tasks"></i>Add Project </a>
 							</li>
+							</sec:authorize>
+							
 							<sec:authorize access="hasRole('ROLE_ADMIN')">
 							<li><a href="<c:url value="/project/viewProjects/${sessionScope.USER.userId}/role_admin"/>">
 							<i class="menu-icon icon-tasks"></i>View Projects </a></li>

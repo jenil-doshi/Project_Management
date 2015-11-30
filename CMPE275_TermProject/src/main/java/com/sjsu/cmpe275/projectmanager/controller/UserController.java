@@ -1,3 +1,4 @@
+
 package com.sjsu.cmpe275.projectmanager.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,48 +33,7 @@ public class UserController {
 	@Autowired
 	UserService userService;
 
-	/**
-	 * Create a User by passing the following parameters
-	 * 
-	 */
-
-	/**
-	 * Create User
-	 * 
-	 */
-
-	@RequestMapping(value= {"/create"}, method = RequestMethod.POST, produces = "application/json")
-    public @ResponseBody User createUser(@ModelAttribute User user){
-    	ModelAndView mv = new ModelAndView();
-		try {
-			Users users = new Users();
-			
-			UserRoles roles = new UserRoles();
-			roles.setRole(Constants.ROLE_ADMIN);
-			roles.setUsername(user.getEmail());
-			
-			users.setUsername(user.getEmail());
-			users.setPassword(user.getPassword());
-			users.setEnabled(Constants.ENABLED);
 	
-			mv.setViewName("createUser");
-
-			if (userService.createUser(user, roles, users)){
-				mv.addObject("createUser", user);
-				return user;
-			}
-		}
-		
-		catch (RuntimeException e) {
-			user = null;
-			mv.addObject("createUser", user);
-			e.printStackTrace();
-			return user;
-
-		}
-		return null;
-    }
-
 	/**
 	 * Get a user by Id in HTML format
 	 * 

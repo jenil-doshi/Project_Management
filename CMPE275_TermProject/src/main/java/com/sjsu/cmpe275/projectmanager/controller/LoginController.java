@@ -1,5 +1,7 @@
 package com.sjsu.cmpe275.projectmanager.controller;
 
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -11,11 +13,17 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.sjsu.cmpe275.projectmanager.configuration.Constants;
 import com.sjsu.cmpe275.projectmanager.model.User;
+import com.sjsu.cmpe275.projectmanager.model.UserRoles;
+import com.sjsu.cmpe275.projectmanager.model.Users;
 import com.sjsu.cmpe275.projectmanager.service.UserService;
 
 @Controller
@@ -25,6 +33,43 @@ public class LoginController {
 	@Autowired
 	UserService userService;
 	
+	@RequestMapping(value= {"/create"}, method = RequestMethod.POST, produces = "application/json")
+    public String createUser(@ModelAttribute("regForm") User user,RedirectAttributes attributes){
+    	ModelAndView mv = new ModelAndView();
+		try {
+			Users users = new Users();
+			
+			UserRoles roles = new UserRoles();
+			roles.setRole(Constants.ROLE_ADMIN);
+			roles.setUsername(user.getEmail());
+			
+			users.setUsername(user.getEmail());
+			users.setPassword(user.getPassword());
+			users.setEnabled(Constants.ENABLED);
+	
+			mv.setViewName("createUser");
+
+			if (userService.createUser(user, roles, users)){
+				mv.addObject("createUser", user);
+				//throw new RuntimeException();
+				attributes.addAttribute("success", "Registration Success");
+				return "redirect:/home";
+			}
+			attributes.addAttribute("error", "Registration Failure");
+			return "redirect:/getRegForm";
+		}
+		
+		catch (RuntimeException e) {
+			user = null;
+			mv.addObject("createUser", user);
+			e.printStackTrace();
+			attributes.addAttribute("error", "Registration Failure");
+			return "redirect:/getRegForm";
+
+		}
+		
+    }
+    
 	@RequestMapping(value = { "/", "/home" }, method = RequestMethod.GET)
 	public String defaultPage(HttpServletRequest request) {
 		// System.out.println("User is: " + getPrincipal());
@@ -97,6 +142,13 @@ public class LoginController {
 		model.setViewName("403");
 		return model;
 
+	}
+	
+	@RequestMapping(value="/getRegForm", method=RequestMethod.GET)
+	public String getRegForm(Map<String, Object> model){
+		model.put("regForm", new User());
+		
+		return "registration";
 	}
 
 }

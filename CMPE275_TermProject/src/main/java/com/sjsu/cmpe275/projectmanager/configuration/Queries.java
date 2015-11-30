@@ -16,6 +16,6 @@ public class Queries {
 	// (select username from UserRoles where username:username and role=
 	// :role)";
 
-	public static String GET_USERS_FROM_USER_ROLES = "from User where email in (select username from UserRoles where NOT (username=:username) and role = :role)";
+	public static String GET_USERS_FROM_USER_ROLES = "from User where email in (select username from UserRoles where NOT (username=:username))";
 
 }

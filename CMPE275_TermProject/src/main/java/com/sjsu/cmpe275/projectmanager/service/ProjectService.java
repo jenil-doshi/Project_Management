@@ -77,8 +77,8 @@ public class ProjectService {
 
 	}
 
-	public List<User> getUsersForAddProject(String username) {
-		return projectDao.getUsersForAddProject(username);
+	public List<User> getUsersForAddProject(String username,int pid) {
+		return projectDao.getUsersForAddProject(username,pid);
 	}
 //
 //	public List<User> getInvitationStatusForUser(int pid) {

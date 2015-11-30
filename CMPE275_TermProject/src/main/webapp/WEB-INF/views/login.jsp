@@ -59,7 +59,7 @@
 
 					<ul class="nav pull-right">
 
-						<li><a href="#"> Sign Up </a></li>
+						<li><a href="<c:url value="/getRegForm"/>"> Sign Up </a></li>
 
 
 

@@ -54,6 +54,9 @@ public class ProjectController {
 
 	@Autowired
 	TaskService taskService;
+	
+	
+	
 
 	/**
 	 * Method for fetching project add form
@@ -313,7 +316,7 @@ public class ProjectController {
 		List<User> userList = null;
 		ModelAndView model = new ModelAndView();
 		try {
-			userList = projectService.getUsersForAddProject(username);
+			userList = projectService.getUsersForAddProject(username,pid);
 			//projectService.getInvitationStatusForUser(pid);
 			model.setViewName("inviteesList");
 			model.addObject("inviteesList", userList);

@@ -194,7 +194,7 @@ public class ProjectDaoImpl implements ProjectDao {
 				query = sessionFactory.getCurrentSession().createQuery(sql).setParameter("userId", userId);
 			}
 			List<Integer> projIdList = query.list();
-			if (projIdList != null) {
+			if (!projIdList.isEmpty()) {
 				Query queryList = sessionFactory.getCurrentSession()
 						.createQuery("from Project where pid in (:projIdList)")
 						.setParameterList("projIdList", projIdList);
@@ -214,29 +214,30 @@ public class ProjectDaoImpl implements ProjectDao {
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<User> getUsersForAddProject(String username) {
+	public List<User> getUsersForAddProject(String username, int pid) {
 		List<User> usersList = null;
 		try {
 			Query query = sessionFactory.getCurrentSession().createQuery(Queries.GET_USERS_FROM_USER_ROLES);
 			query.setParameter("username", username);
-			query.setParameter("role", Constants.ROLE_ADMIN);
+			// query.setParameter("role", Constants.ROLE_ADMIN);
 			usersList = query.list();
-			List<Integer> ownerIdList = sessionFactory.getCurrentSession().createQuery(Queries.GET_UID_FROM_PROJECT).list();
+			List<Integer> ownerIdList = sessionFactory.getCurrentSession().createQuery(Queries.GET_UID_FROM_PROJECT)
+					.list();
 			usersList.removeAll(ownerIdList);
-			for(User user: usersList){
-				Query statusQuery = sessionFactory.getCurrentSession().createQuery(Queries.GET_INVITATION_STATUS).setParameter("userId", user.getUserId());
-				if(!statusQuery.list().isEmpty()){
+			for (User user : usersList) {
+				Query statusQuery = sessionFactory.getCurrentSession().createQuery(Queries.GET_INVITATION_STATUS)
+						.setParameter("userId", user.getUserId());
+				if (!statusQuery.list().isEmpty()) {
 					String status = (String) statusQuery.list().get(0);
 					user.setStatus(status);
-				}else{
-					//User u = (User) statusQuery.list().get(0);
+				} else {
+
 					user.setStatus("Available");
 				}
-				
+
 			}
-			
-			
-			//System.out.println(usersList.get(0).getEmail());
+
+			// System.out.println(usersList.get(0).getEmail());
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new RuntimeException("A Runtime Exception has occurred");

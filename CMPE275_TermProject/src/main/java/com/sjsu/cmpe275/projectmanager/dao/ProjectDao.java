@@ -26,7 +26,7 @@ public interface ProjectDao {
 	public boolean getTasksForProject(int pid);
 	public List<User> getUsersList(int pid);
 	public List<Project> getProjects(int userId, String role);
-	public List<User> getUsersForAddProject(String username);
+	public List<User> getUsersForAddProject(String username,int pid);
 	
 
 }
