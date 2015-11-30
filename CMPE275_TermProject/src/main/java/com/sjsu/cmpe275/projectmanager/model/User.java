@@ -8,6 +8,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 
 @Entity
@@ -31,6 +32,17 @@ public class User {
 	@Column(name="Password")
 	private String password;
 	
+	@Transient
+	private String status;
+	
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
 	/*@JoinColumn(name="role",referencedColumnName="role")
 	public UserRoles getRole() {
 		return role;

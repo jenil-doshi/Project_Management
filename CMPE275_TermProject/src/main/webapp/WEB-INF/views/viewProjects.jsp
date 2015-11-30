@@ -126,11 +126,11 @@
 								</ul>
 							</li>
 							
+							
 							<li>
-								<a href="#">
-									<i class="menu-icon icon-signout"></i>
-									Logout
-								</a>
+								<a href="<c:url value="/logout" />" >Logout </a>
+									
+								
 							</li>
 						</ul>
 

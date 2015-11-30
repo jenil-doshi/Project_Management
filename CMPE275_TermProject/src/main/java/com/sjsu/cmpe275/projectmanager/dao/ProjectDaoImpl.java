@@ -221,7 +221,22 @@ public class ProjectDaoImpl implements ProjectDao {
 			query.setParameter("username", username);
 			query.setParameter("role", Constants.ROLE_ADMIN);
 			usersList = query.list();
-			System.out.println(usersList.get(0).getEmail());
+			List<Integer> ownerIdList = sessionFactory.getCurrentSession().createQuery(Queries.GET_UID_FROM_PROJECT).list();
+			usersList.removeAll(ownerIdList);
+			for(User user: usersList){
+				Query statusQuery = sessionFactory.getCurrentSession().createQuery(Queries.GET_INVITATION_STATUS).setParameter("userId", user.getUserId());
+				if(!statusQuery.list().isEmpty()){
+					String status = (String) statusQuery.list().get(0);
+					user.setStatus(status);
+				}else{
+					//User u = (User) statusQuery.list().get(0);
+					user.setStatus("Available");
+				}
+				
+			}
+			
+			
+			//System.out.println(usersList.get(0).getEmail());
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new RuntimeException("A Runtime Exception has occurred");

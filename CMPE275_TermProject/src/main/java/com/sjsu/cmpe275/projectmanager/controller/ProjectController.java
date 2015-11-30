@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.sjsu.cmpe275.projectmanager.configuration.Constants;
 import com.sjsu.cmpe275.projectmanager.configuration.EmailUtility;
@@ -157,28 +158,35 @@ public class ProjectController {
 	}
 
 	@RequestMapping(value = {
-			"/sendInvite/{uid}/{recipientId}/{projectId}/{projectName}/{projectOwner}" }, method = RequestMethod.POST)
-	public ResponseEntity<String> sendInvite(@PathVariable int uid, @PathVariable String recipientId,
-			@PathVariable int projectId, @PathVariable String projectName, @PathVariable String projectOwner) {
+			"/sendInvite/{uid}/{recipientId}/{projectId}/{projectName}/{projectOwner}" }, method = RequestMethod.GET)
+	public String sendInvite(@PathVariable int uid, @PathVariable String recipientId,
+			@PathVariable int projectId, @PathVariable String projectName, @PathVariable String projectOwner,RedirectAttributes attributes) {
 
 		try {
 			if (utility.sendEmail(uid, recipientId, projectId, projectName, projectOwner)) {
 				if (projectService.saveInvitationStatus(uid, projectId, Constants.INVITATION_PENDING)) {
-					return new ResponseEntity<String>("Success", HttpStatus.OK);
+					attributes.addFlashAttribute("status", "Invitation sent successfully");
+					return "redirect:/project/getUsersListForAddProject/{projectOwner}/{projectId}/{projectName}/{projectOwner}";
+					//return new ResponseEntity<String>("Success", HttpStatus.OK);
 				}
-				return new ResponseEntity<String>("Fail", HttpStatus.OK);
+				attributes.addFlashAttribute("status", "Invitation sending Failed");
+				return "redirect:/project/getUsersListForAddProject/{projectOwner}/{projectId}/{projectName}/{projectOwner}";
 			} else {
-				return new ResponseEntity<String>("Fail", HttpStatus.OK);
+				attributes.addFlashAttribute("status", "Invitation sending Failed");
+				return "redirect:/project/getUsersListForAddProject/{projectOwner}/{projectId}/{projectName}/{projectOwner}";
 			}
 		} catch (RuntimeException e) {
 			e.printStackTrace();
-			return new ResponseEntity<String>("Fail", HttpStatus.OK);
+			attributes.addFlashAttribute("status", "Invitation sending Failed");
+			return "redirect:/project/getUsersListForAddProject/{projectOwner}/{projectId}/{projectName}/{projectOwner}";
 		} catch (Exception e) {
 
 			System.out.println("Error occured while sending email");
 			e.printStackTrace();
-			return new ResponseEntity<String>("Fail", HttpStatus.OK);
+			attributes.addFlashAttribute("status", "Invitation sending Failed");
+			return "redirect:/project/getUsersListForAddProject/{projectOwner}/{projectId}/{projectName}/{projectOwner}";
 		}
+		
 
 	}
 
@@ -300,20 +308,26 @@ public class ProjectController {
 
 	}
 
-	@RequestMapping(value = "/getUsersListForAddProject/{username}", method = RequestMethod.GET)
-	public @ResponseBody List<User> getUsersListForAddProject(@PathVariable String username) {
+	@RequestMapping(value = "/getUsersListForAddProject/{username}/{pid}/{pname}/{owner}", method = RequestMethod.GET)
+	public ModelAndView getUsersListForAddProject(@PathVariable String username ,@PathVariable int pid,@PathVariable String pname,@PathVariable String owner) {
 		List<User> userList = null;
 		ModelAndView model = new ModelAndView();
 		try {
 			userList = projectService.getUsersForAddProject(username);
-			// model.setViewName(");
+			//projectService.getInvitationStatusForUser(pid);
+			model.setViewName("inviteesList");
 			model.addObject("inviteesList", userList);
+			model.addObject("pid", pid);
+			model.addObject("pname", pname);
+			model.addObject("owner", owner);
+			
+			
 		} catch (RuntimeException e) {
 			e.printStackTrace();
-			return userList;
+			return model;
 		}
 
-		return userList;
+		return model;
 
 	}
 

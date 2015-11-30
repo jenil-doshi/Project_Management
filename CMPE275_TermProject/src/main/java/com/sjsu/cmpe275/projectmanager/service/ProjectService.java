@@ -26,10 +26,10 @@ public class ProjectService {
 		return projectDao.createProject(project);
 	}
 
-	public boolean updateProject(Project project)throws RuntimeException {
+	public boolean updateProject(Project project) throws RuntimeException {
 		return projectDao.updateProject(project);
 	}
-	
+
 	public Project getProjectById(Integer id) {
 		return projectDao.getProjectById(id);
 	}
@@ -38,9 +38,9 @@ public class ProjectService {
 		return projectDao.completeProjectById(id);
 	}
 
-	 public void cancelProjectById(Project project) {
-	 projectDao.cancelProjectById(project);
-	 }
+	public void cancelProjectById(Project project) {
+		projectDao.cancelProjectById(project);
+	}
 
 	public boolean saveInvitationStatus(int uid, int projectId, String status) {
 		UserProjectInfo info = new UserProjectInfo();
@@ -76,10 +76,15 @@ public class ProjectService {
 		return projectDao.getProjects(userId, role);
 
 	}
-	
-	public List<User> getUsersForAddProject(String username)
-	{
+
+	public List<User> getUsersForAddProject(String username) {
 		return projectDao.getUsersForAddProject(username);
 	}
+//
+//	public List<User> getInvitationStatusForUser(int pid) {
+//
+//		return projectDao.getInvitationStatusForUser(pid);
+//
+//	}
 
 }
