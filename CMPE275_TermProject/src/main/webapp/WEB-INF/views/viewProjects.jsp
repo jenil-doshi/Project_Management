@@ -168,6 +168,7 @@
 									  <th>Owner</th>  
 									  <th>Status</th>  
 									  <th>View</th>  
+									  <th>Task</th>
 									</tr>
 								  </thead>
 								  <thead>
@@ -183,6 +184,7 @@
 									  <td>${project.owner.firstName}</td>
 									  <td>${project.status}</td>
 									  <td><a class="btn btn-info" href="<c:url value="/project/getProjectInfo/${project.pid}"/>">VIEW</td>
+									  <td><a class="btn btn-info" href="<c:url value="/project/addTask/${project.pid}"/>">Add Task</td>
 									</tr>
 								  </tbody>
 								  </c:forEach> 

@@ -91,20 +91,19 @@
 					<div class="sidebar">
 
 						<ul class="widget widget-menu unstyled">
-							<li class="active"><a href="<c:url value="/home"/>">
-									<i class="menu-icon icon-dashboard"></i>
-									Dashboard
-								</a></li>
+							<li class="active"><a href="<c:url value="/home"/>"> <i
+									class="menu-icon icon-dashboard"></i> Dashboard
+							</a></li>
 							<li><a href="#"><i class="menu-icon icon-bullhorn"></i>Calendar
 							</a></li>
 							<li><a href="#"><i class="menu-icon icon-inbox"></i>Statistics
 							</a></li>
-							
+
 							<sec:authorize access="hasRole('ROLE_ADMIN')">
-							<li><a href="<c:url value="/project/addProjectFormView"/>"><i
-									class="menu-icon icon-tasks"></i>Add Project </a></li>
+								<li><a href="<c:url value="/project/addProjectFormView"/>"><i
+										class="menu-icon icon-tasks"></i>Add Project </a></li>
 							</sec:authorize>
-							
+
 							<sec:authorize access="hasRole('ROLE_ADMIN')">
 								<li><a
 									href="<c:url value="/project/viewProjects/${sessionScope.USER.userId}/role_admin"/>">
@@ -157,7 +156,9 @@
 
 
 							<div class="pull-right ">
-								<a href="<c:url value="/project/getUsersListForAddProject/${pageContext.request.userPrincipal.name}/${project.pid}/${project.name}/${project.owner.firstName}"/>" class="btn btn-primary"
+								<a
+									href="<c:url value="/project/getUsersListForAddProject/${pageContext.request.userPrincipal.name}/${project.pid}/${project.name}/${project.owner.firstName}"/>"
+									class="btn btn-primary"
 									style="margin-left: -17%; margin-top: 11%;">Invite Users</a>
 							</div>
 
@@ -181,11 +182,12 @@
 											<th>#</th>
 											<th>ID</th>
 											<th>Name</th>
+											<th>Description</th>
 											<th>Estimated Units</th>
 											<th>Actual Units</th>
 											<th>Assignee</th>
 											<th>State</th>
-											<th>View</th>
+											<th>Update Task</th>
 										</tr>
 										<thead>
 											<c:forEach items="${taskList}" var="task" varStatus="loop">
@@ -197,11 +199,10 @@
 														<td>${task.description}</td>
 														<td>${task.estimated_time}</td>
 														<td>${task.actual_time}</td>
-														<%--  <td>${task.owner.firstName}</td> --%>
+														<td>${task.assignee}</td>
 														<td>${task.taskState}</td>
 
-														<td><a class="btn btn-info"
-															href="<c:url value="/project/getProjectInfo/${project.pid}"/>">VIEW</td>
+														<td><a class="btn btn-info" href="<c:url value="/project/updateTask/${task.tid}"/>">Update Task</td>
 
 													</tr>
 												</tbody>

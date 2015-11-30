@@ -91,12 +91,12 @@ public class Task {
 	public void setTaskState(String taskState) {
 		this.taskState = taskState;
 	}
-
+	
 	public Integer getEstimated_time() {
 		return estimated_time;
 	}
 
-	public void setEstimate_time(Integer estimated_time) {
+	public void setEstimated_time(Integer estimated_time) {
 		this.estimated_time = estimated_time;
 	}
 
