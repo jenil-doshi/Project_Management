@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -54,9 +55,6 @@ public class ProjectController {
 
 	@Autowired
 	TaskService taskService;
-	
-	
-	
 
 	/**
 	 * Method for fetching project add form
@@ -66,6 +64,13 @@ public class ProjectController {
 	public String addProjectFormView(Map<String, Object> model) {
 		model.put("addProjectForm", new Project());
 		return "addProjectForm";
+	}
+
+	@RequestMapping(value = "/updateProjectFormView/{pid}", method = RequestMethod.GET)
+	public String updateProjectFormView(Map<String, Object> model, @PathVariable int pid) {
+		model.put("updateProjectForm", projectService.getProjectById(pid));
+		model.put("pid", pid);
+		return "updateProjectForm";
 	}
 
 	@RequestMapping(value = { "/create/{userId}" }, headers = "Accept=*/*", method = RequestMethod.POST, produces = {
@@ -120,57 +125,70 @@ public class ProjectController {
 
 	// update Project
 	@RequestMapping(value = { "/update/{userId}/{pid}" }, method = RequestMethod.POST, produces = "application/json")
-	public @ResponseBody ResponseEntity<Project> updateProject(@PathVariable int userId, @PathVariable int pid,
-			@ModelAttribute Project project) {
-		ModelAndView mv = new ModelAndView();
+	public String updateProject(@PathVariable int userId, @PathVariable int pid,
+			@ModelAttribute("updateProjectForm") Project project, RedirectAttributes attributes) {
 
-		Project proj = projectService.getProjectById(pid);
+		try {
+			Project proj = projectService.getProjectById(pid);
 
-		if (proj == null)
-			return new ResponseEntity<Project>(HttpStatus.NOT_FOUND);
-
-		if (!(proj.getStatus().equalsIgnoreCase(Constants.PROJECT_CANCELLED)
-				|| proj.getStatus().equalsIgnoreCase(Constants.PROJECT_COMPLETED))) {
-
-			// status and owner mandatory from ui
-			if (proj.getOwner().getUserId() == userId) {
-				if (proj.getName() != null) {
-					proj.setName(project.getName());
-				}
-
-				if (proj.getDescription() != null) {
-					proj.setDescription(project.getDescription());
-				}
-
+			if (proj == null) {
+				attributes.addAttribute("noProject", "Failed");
+				return "redirect:/project/getProjectInfo/" + pid;
 			}
 
-			if (proj.getStatus().equals(Constants.PROJECT_NEW)) {
-				if (proj.getStartDate() != null) {
-					proj.setStartDate(project.getStartDate());
-				}
-				if (proj.getEndDate() != null) {
-					proj.setStartDate(project.getEndDate());
+			if (!(proj.getStatus().equalsIgnoreCase(Constants.PROJECT_CANCELLED)
+					|| proj.getStatus().equalsIgnoreCase(Constants.PROJECT_COMPLETED))) {
+
+				// status and owner mandatory from ui
+				if (proj.getOwner().getUserId() == userId) {
+					if (proj.getName() != null) {
+						proj.setName(project.getName());
+					}
+
+					if (proj.getDescription() != null) {
+						proj.setDescription(project.getDescription());
+					}
+
 				}
 
+				if (proj.getStatus().equals(Constants.PROJECT_NEW)) {
+					if (proj.getStartDate() != null) {
+						proj.setStartDate(project.getStartDate());
+						proj.setStatus(projectService.setProjectStatus(project.getStartDate()));
+					}
+					if (proj.getEndDate() != null) {
+						proj.setEndDate(project.getEndDate());
+					}
+
+				}
+
+				projectService.updateProject(proj);
+				attributes.addAttribute("successfulUpdate","Successfully updated project");
+				return "redirect:/project/getProjectInfo/"+pid;
 			}
-
-			projectService.updateProject(proj);
+			attributes.addAttribute("error","Cannot update Project.Project is Cancelled or Completed");
+			return "redirect:/project/getProjectInfo/"+pid;
+		} catch (Exception e) {
+			e.printStackTrace();
+			attributes.addAttribute("ExceptionError","CannotUpdate");
+			return "redirect:/project/getProjectInfo/"+pid;
 		}
-		return new ResponseEntity<Project>(proj, HttpStatus.OK);
+		
 
 	}
 
 	@RequestMapping(value = {
 			"/sendInvite/{uid}/{recipientId}/{projectId}/{projectName}/{projectOwner}" }, method = RequestMethod.GET)
-	public String sendInvite(@PathVariable int uid, @PathVariable String recipientId,
-			@PathVariable int projectId, @PathVariable String projectName, @PathVariable String projectOwner,RedirectAttributes attributes) {
+	public String sendInvite(@PathVariable int uid, @PathVariable String recipientId, @PathVariable int projectId,
+			@PathVariable String projectName, @PathVariable String projectOwner, RedirectAttributes attributes) {
 
 		try {
 			if (utility.sendEmail(uid, recipientId, projectId, projectName, projectOwner)) {
 				if (projectService.saveInvitationStatus(uid, projectId, Constants.INVITATION_PENDING)) {
 					attributes.addFlashAttribute("status", "Invitation sent successfully");
 					return "redirect:/project/getUsersListForAddProject/{projectOwner}/{projectId}/{projectName}/{projectOwner}";
-					//return new ResponseEntity<String>("Success", HttpStatus.OK);
+					// return new ResponseEntity<String>("Success",
+					// HttpStatus.OK);
 				}
 				attributes.addFlashAttribute("status", "Invitation sending Failed");
 				return "redirect:/project/getUsersListForAddProject/{projectOwner}/{projectId}/{projectName}/{projectOwner}";
@@ -189,7 +207,6 @@ public class ProjectController {
 			attributes.addFlashAttribute("status", "Invitation sending Failed");
 			return "redirect:/project/getUsersListForAddProject/{projectOwner}/{projectId}/{projectName}/{projectOwner}";
 		}
-		
 
 	}
 
@@ -312,19 +329,19 @@ public class ProjectController {
 	}
 
 	@RequestMapping(value = "/getUsersListForAddProject/{username}/{pid}/{pname}/{owner}", method = RequestMethod.GET)
-	public ModelAndView getUsersListForAddProject(@PathVariable String username ,@PathVariable int pid,@PathVariable String pname,@PathVariable String owner) {
+	public ModelAndView getUsersListForAddProject(@PathVariable String username, @PathVariable int pid,
+			@PathVariable String pname, @PathVariable String owner) {
 		List<User> userList = null;
 		ModelAndView model = new ModelAndView();
 		try {
-			userList = projectService.getUsersForAddProject(username,pid);
-			//projectService.getInvitationStatusForUser(pid);
+			userList = projectService.getUsersForAddProject(username, pid);
+			// projectService.getInvitationStatusForUser(pid);
 			model.setViewName("inviteesList");
 			model.addObject("inviteesList", userList);
 			model.addObject("pid", pid);
 			model.addObject("pname", pname);
 			model.addObject("owner", owner);
-			
-			
+
 		} catch (RuntimeException e) {
 			e.printStackTrace();
 			return model;
@@ -341,6 +358,8 @@ public class ProjectController {
 		List<Task> taskList = null;
 		try {
 			project = projectService.getProjectById(pid);
+			//String status = projectService.setProjectStatus(project.getStartDate());
+			//project.setStatus(status);
 			model.addObject("project", project);
 			taskList = taskService.getTasks(pid);
 			model.addObject("taskList", taskList);
@@ -351,7 +370,7 @@ public class ProjectController {
 			model.addObject("taskList", taskList);
 			model.setViewName("projectInfo");
 		}
-		
+
 		return model;
 	}
 

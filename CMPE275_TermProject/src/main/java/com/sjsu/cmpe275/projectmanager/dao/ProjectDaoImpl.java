@@ -74,6 +74,8 @@ public class ProjectDaoImpl implements ProjectDao {
 	@Override
 	public Project getProjectById(int Id) {
 		Project project = (Project) sessionFactory.getCurrentSession().get(Project.class, Id);
+		User user = (User)sessionFactory.getCurrentSession().get(User.class, project.getOwner().getUserId());
+		project.setOwner(user);
 		return project;
 	}
 

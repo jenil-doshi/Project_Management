@@ -65,9 +65,9 @@ public class ProjectService {
 	public String setProjectStatus(Date startDate) {
 		String status;
 		if (startDate.before(new Date())) {
-			status = Constants.PROJECT_NEW;
-		} else {
 			status = Constants.PROJECT_PLANNING;
+		} else {
+			status = Constants.PROJECT_NEW;
 		}
 		return status;
 	}

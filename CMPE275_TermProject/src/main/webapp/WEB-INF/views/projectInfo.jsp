@@ -21,6 +21,12 @@
 <link type="text/css"
 	href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,400,600'
 	rel='stylesheet'>
+<style type="text/css">
+
+#projTable.td {
+word-spacing: 30px;
+}
+</style>
 </head>
 <body>
 
@@ -153,23 +159,104 @@
 									<strong>Project Information</strong>
 								</h3>
 							</div>
-
-
-							<div class="pull-right ">
-								<a
-									href="<c:url value="/project/getUsersListForAddProject/${pageContext.request.userPrincipal.name}/${project.pid}/${project.name}/${project.owner.firstName}"/>"
-									class="btn btn-primary"
-									style="margin-left: -17%; margin-top: 11%;">Invite Users</a>
+							<c:if test="${param.successfulUpdate!=null}">
+							<div class="alert alert-success">
+							${param.successfulUpdate}
 							</div>
-
+							</c:if>
+							<c:if test="${param.error!=null}">
+							<div class="alert alert-danger">
+							${param.error}
+							</div>
+							</c:if>
+							<c:if test="${param.ExceptionError!=null}">
+							<div class="alert alert-danger">
+							${param.ExceptionError}
+							</div>
+							</c:if>
+							<table style="width: 100%;">
+								<tr>
+									<td rowspan="4">
+										<div class="module-body">
+											<table id="projTable" style="width:100%;">
+												<tr>
+													<td>ID</td>
+													<td> ${project.pid}</td>
+												</tr>
+												<tr>
+													<td>Name </td>
+													<td>${project.name}</td>
+												</tr>
+												<tr>
+													<td>Description </td>
+													<td>${project.description}</td>
+												</tr>
+												<tr>
+													<td>Start Date</td>
+													<td> ${project.startDate}</td>
+												</tr>
+												<tr>
+													<td>End Date</td>
+													<td>${project.endDate}</td>
+												</tr>
+												<tr>
+													<td>Owner</td>
+													<td>${project.owner.firstName}</td>
+												</tr>
+												<tr>
+													<td>Status</td>
+													<td>${project.status}</td>
+												</tr>
+											</table>
+										
+										</div>
+									</td>
+									<td><sec:authorize access="hasRole('ROLE_ADMIN')">
+											<div class="pull-right ">
+												<a
+													href="<c:url value="/project/getUsersListForAddProject/${pageContext.request.userPrincipal.name}/${project.pid}/${project.name}/${project.owner.firstName}"/>"
+													class="btn btn-primary"
+													style="margin-left: -17%; margin-top: 11%;">Invite
+													Users </a>
+											</div>
+										</sec:authorize></td>
+								</tr>
+								<tr>
+									<td><sec:authorize access="hasRole('ROLE_ADMIN')">
+											<div class="pull-right ">
+												<a
+													href="<c:url value="/project/getUsersListForAddProject/${pageContext.request.userPrincipal.name}/${project.pid}/${project.name}/${project.owner.firstName}"/>"
+													class="btn btn-primary"
+													style="margin-left: -17%; margin-top: 11%;">Start
+													Project </a>
+											</div>
+										</sec:authorize></td>
+								</tr>
+								<tr>
+									<td><sec:authorize access="hasRole('ROLE_ADMIN')">
+											<div class="pull-right ">
+												<a
+													href="<c:url value="/project/getUsersListForAddProject/${pageContext.request.userPrincipal.name}/${project.pid}/${project.name}/${project.owner.firstName}"/>"
+													class="btn btn-primary"
+													style="margin-left: -17%; margin-top: 11%;">Cancel
+													Project </a>
+											</div>
+										</sec:authorize></td>
+								</tr>
+								<tr>
+									<td><sec:authorize access="hasRole('ROLE_ADMIN')">
+											<div class="pull-right ">
+												<a
+													href="<c:url value="/project/getUsersListForAddProject/${pageContext.request.userPrincipal.name}/${project.pid}/${project.name}/${project.owner.firstName}"/>"
+													class="btn btn-primary"
+													style="margin-left: -17%; margin-top: 11%;">Complete
+													Project </a>
+											</div>
+										</sec:authorize></td>
+								</tr>
+							</table>
 							<section>
-								<div class="module-body">
-									<b>ID: ${project.pid}</b><br /> <b>Name:${project.name}</b><br />
-									<b>Description: ${project.description}</b><br /> <b>Start
-										Date: ${project.startDate}</b><br /> <b>End Date:
-										${project.endDate}</b><br /> <b>Owner:${project.owner.userId}</b><br />
-									<b>Status:${project.status}</b><br /> <br />
-								</div>
+							<a class="btn btn-primary" href="<c:url value="/project/updateProjectFormView/${project.pid}"/>">Update Project</a>
 							</section>
 							<section>
 								<div class="module-body">
@@ -202,7 +289,9 @@
 														<td>${task.assignee}</td>
 														<td>${task.taskState}</td>
 
-														<td><a class="btn btn-info" href="<c:url value="/project/updateTask/${task.tid}"/>">Update Task</td>
+														<td><a class="btn btn-info"
+															href="<c:url value="/project/updateTask/${task.tid}"/>">Update
+																Task</td>
 
 													</tr>
 												</tbody>

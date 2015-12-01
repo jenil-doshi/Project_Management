@@ -12,6 +12,11 @@
     <link type="text/css" href="<c:url value="/assets/images/icons/css/font-awesome.css"/>" rel="stylesheet">
 	<link type="text/css" href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,400,600' rel='stylesheet'>
 </head>
+<style>
+table,th,td {
+width=100%;
+}
+</style>
 <body>
 
 	<div class="navbar navbar-fixed-top">
