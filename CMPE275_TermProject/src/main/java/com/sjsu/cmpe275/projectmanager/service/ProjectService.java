@@ -1,8 +1,9 @@
 package com.sjsu.cmpe275.projectmanager.service;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-
+import org.mockito.exceptions.verification.NeverWantedButInvoked;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Service;
@@ -38,8 +39,8 @@ public class ProjectService {
 		return projectDao.completeProjectById(id);
 	}
 
-	public void cancelProjectById(Project project) {
-		projectDao.cancelProjectById(project);
+	public boolean cancelProjectById(Project project) {
+		return projectDao.cancelProjectById(project);
 	}
 
 	public boolean saveInvitationStatus(int uid, int projectId, String status) {
@@ -62,8 +63,12 @@ public class ProjectService {
 
 	}
 
-	public String setProjectStatus(Date startDate) {
+	public String getProjectStatus(Date startDate, Date endDate) {
 		String status;
+
+		if (endDate.equals(new Date()) || endDate.before(new Date())) {
+			return Constants.PROJECT_COMPLETED;
+		}
 		if (startDate.before(new Date())) {
 			status = Constants.PROJECT_PLANNING;
 		} else {

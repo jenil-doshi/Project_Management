@@ -164,13 +164,13 @@ width=100%;
 								</p> -->
 								<table class="table">
 								<tr>
-									  <th>#</th>
+									  <!-- <th>#</th> -->
 									  <th>Project ID</th>
 									  <th>Project Name</th>
-									  <th>Description</th>
+									 <!--  <th>Description</th>
 									  <th>Start Date</th>
-									  <th>End Date</th>  
-									  <th>Owner</th>  
+									  <th>End Date</th>   -->
+									  <!-- <th>Owner</th>   -->
 									  <th>Status</th>  
 									  <th>View</th>  
 									  <th>Task</th>
@@ -180,13 +180,13 @@ width=100%;
 								  <c:forEach items="${projectList}" var="project" varStatus="loop">
 								  <tbody>
 									<tr>
-									  <td>${loop.index+1}</td>
+									 <%--  <td>${loop.index+1}</td> --%>
 									  <td>${project.pid}</td>
 									  <td>${project.name}</td>
-									  <td>${project.description}</td>
+									  <%-- <td>${project.description}</td>
 									  <td>${project.startDate}</td>
 									  <td>${project.endDate}</td>
-									  <td>${project.owner.firstName}</td>
+									  <td>${project.owner.firstName}</td> --%>
 									  <td>${project.status}</td>
 									  <td><a class="btn btn-primary" href="<c:url value="/project/getProjectInfo/${project.pid}"/>">VIEW</td>
 									  <td><a class="btn btn-primary" href="<c:url value="/project/addTask/${project.pid}"/>">Add Task</td>

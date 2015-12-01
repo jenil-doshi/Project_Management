@@ -11,6 +11,8 @@
     <link type="text/css" href="<c:url value="/assets/bootstrap/css/bootstrap-responsive.min.css"/>" rel="stylesheet">
     <link type="text/css" href="<c:url value="/assets/css/theme.css"/>" rel="stylesheet">
     <link type="text/css" href="<c:url value="/assets/images/icons/css/font-awesome.css"/>" rel="stylesheet">
+    <link rel="stylesheet"
+	href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
 	<link type="text/css" href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,400,600' rel='stylesheet'>
 </head>
 <body>
@@ -169,7 +171,9 @@
 							</div>
 							<div class="module-body">
 
-							
+									<c:if test="${param.error!=null}">
+									<div class="alert alert-danger">${param.error}</div>
+								</c:if>
 									<c:url value="/project/update/${sessionScope.USER.userId}/${pid}" var="formUrl"/>
 									<form:form action="${formUrl}" commandName="updateProjectForm" class="form-horizontal row-fluid">
 										<div class="control-group">
@@ -189,14 +193,14 @@
 										<div class="control-group">
 											<label class="control-label" for="basicinput">Start Date *</label>
 											<div class="controls">
-												<form:input path="startDate" type="text" id="basicinput" placeholder="When will the project Start?" class="span8" required="required"/>
+												<form:input path="startDate" id="startDate" placeholder="When will the project Start?" class="span8" required="required"/>
 											</div>
 										</div>
 
 										<div class="control-group">
 											<label class="control-label" for="basicinput">End Date *</label>
 											<div class="controls">
-												<form:input path="endDate" type="text" id="basicinput" placeholder="When will the project end." class="span8" required="required"/>
+												<form:input path="endDate" id="endDate" placeholder="When will the project end." class="span8" required="required"/>
 											</div>
 										</div>
 										
@@ -228,5 +232,30 @@
 	 <script src="<c:url value="/assets/scripts/jquery-1.9.1.min.js"/>" type="text/javascript"></script>
      <script src="<c:url value="/assets/scripts/jquery-ui-1.10.1.custom.min.js"/>" type="text/javascript"></script>
      <script src="<c:url value="/assets/bootstrap/js/bootstrap.min.js"/>" type="text/javascript"></script>
+     <script>
+     $(document).ready(function() {
+			/* $(function() { */
+				$("#startDate").datepicker({
+					dateFormat : 'mm/dd/yy',
+						 minDate: "-30D",
+					        maxDate: "+60D",
+					        numberOfMonths: 2,
+					        onSelect: function(selected) {
+					          $("#endDate").datepicker("option","minDate", selected)
+					        }
+				});
+				$("#endDate").datepicker({
+					dateFormat : 'mm/dd/yy',
+						 minDate: 0,
+					        maxDate: "+60D",
+					        numberOfMonths: 2,
+					        onSelect: function(selected) {
+					          $("#startDate").datepicker("option","maxDate", selected)
+					        }
+				});
+			/* }); */
+		});
+	</script>
+     
 
 </body>

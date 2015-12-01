@@ -1,6 +1,10 @@
 package com.sjsu.cmpe275.projectmanager.controller;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -19,6 +23,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -61,13 +66,15 @@ public class ProjectController {
 	 */
 
 	@RequestMapping(value = "/addProjectFormView", method = RequestMethod.GET)
-	public String addProjectFormView(Map<String, Object> model) {
+	public String addProjectFormView(Map<String, Object> model, HttpServletRequest request) {
+		request.getSession().setAttribute("USER", getPrincipal());
 		model.put("addProjectForm", new Project());
 		return "addProjectForm";
 	}
 
 	@RequestMapping(value = "/updateProjectFormView/{pid}", method = RequestMethod.GET)
-	public String updateProjectFormView(Map<String, Object> model, @PathVariable int pid) {
+	public String updateProjectFormView(Map<String, Object> model, @PathVariable int pid, HttpServletRequest request) {
+		request.getSession().setAttribute("USER", getPrincipal());
 		model.put("updateProjectForm", projectService.getProjectById(pid));
 		model.put("pid", pid);
 		return "updateProjectForm";
@@ -76,7 +83,8 @@ public class ProjectController {
 	@RequestMapping(value = { "/create/{userId}" }, headers = "Accept=*/*", method = RequestMethod.POST, produces = {
 			"application/json" })
 	public String createProject(@PathVariable int userId, @ModelAttribute("addProjectForm") Project project,
-			RedirectAttributes att) {
+			RedirectAttributes att, HttpServletRequest request, RedirectAttributes attributes) {
+		request.getSession().setAttribute("USER", getPrincipal());
 		String role = null;
 		User user = new User();
 
@@ -96,7 +104,12 @@ public class ProjectController {
 
 			user.setUserId(userId);
 			project.setOwner(user);
-			project.setStatus(projectService.setProjectStatus(project.getStartDate()));
+			String status = projectService.getProjectStatus(project.getStartDate(), project.getEndDate());
+			if (status.equalsIgnoreCase(Constants.PROJECT_COMPLETED)) {
+				attributes.addAttribute("error", "End date has to be a future date.");
+				return "redirect:/project/addProjectFormView";
+			}
+			project.setStatus(status);
 			projectService.createProject(userId, project);
 		} catch (RuntimeException e) {
 			e.printStackTrace();
@@ -124,8 +137,9 @@ public class ProjectController {
 
 	@RequestMapping(value = { "/update/{userId}/{pid}" }, method = RequestMethod.POST, produces = "application/json")
 	public String updateProject(@PathVariable int userId, @PathVariable int pid,
-			@ModelAttribute("updateProjectForm") Project project, RedirectAttributes attributes) {
-
+			@ModelAttribute("updateProjectForm") Project project, RedirectAttributes attributes,
+			HttpServletRequest request) {
+		request.getSession().setAttribute("USER", getPrincipal());
 		try {
 			Project proj = projectService.getProjectById(pid);
 
@@ -152,7 +166,12 @@ public class ProjectController {
 				if (proj.getStatus().equals(Constants.PROJECT_NEW)) {
 					if (proj.getStartDate() != null) {
 						proj.setStartDate(project.getStartDate());
-						proj.setStatus(projectService.setProjectStatus(project.getStartDate()));
+						String status  = projectService.getProjectStatus(project.getStartDate(), project.getEndDate());
+						if(status.equalsIgnoreCase(Constants.PROJECT_COMPLETED)){
+							attributes.addAttribute("error", "End date has to be a future date.");
+							return "redirect:/project/updateProjectFormView/"+ pid;
+						}
+						proj.setStatus(status);
 					}
 					if (proj.getEndDate() != null) {
 						proj.setEndDate(project.getEndDate());
@@ -177,8 +196,9 @@ public class ProjectController {
 	@RequestMapping(value = {
 			"/sendInvite/{uid}/{recipientId}/{projectId}/{projectName}/{projectOwner}" }, method = RequestMethod.GET)
 	public String sendInvite(@PathVariable int uid, @PathVariable String recipientId, @PathVariable int projectId,
-			@PathVariable String projectName, @PathVariable String projectOwner, RedirectAttributes attributes) {
-
+			@PathVariable String projectName, @PathVariable String projectOwner, RedirectAttributes attributes,
+			HttpServletRequest request) {
+		request.getSession().setAttribute("USER", getPrincipal());
 		try {
 			if (utility.sendEmail(uid, recipientId, projectId, projectName, projectOwner)) {
 				if (projectService.saveInvitationStatus(uid, projectId, Constants.INVITATION_PENDING)) {
@@ -207,7 +227,8 @@ public class ProjectController {
 	@RequestMapping(value = {
 			"/invitationStatus/{status}/{uid}/{recipientId}/{projectId}" }, method = RequestMethod.GET)
 	public ResponseEntity<String> inviteStatus(@PathVariable String status, @PathVariable String recipientId,
-			@PathVariable int uid, @PathVariable int projectId) {
+			@PathVariable int uid, @PathVariable int projectId, HttpServletRequest request) {
+		request.getSession().setAttribute("USER", getPrincipal());
 		try {
 			if (status.equalsIgnoreCase(Constants.ACCEPT)) {
 				status = Constants.INVITATION_ACCEPT;
@@ -233,7 +254,9 @@ public class ProjectController {
 
 	@RequestMapping(value = "/start/{pid}/{userId}", method = RequestMethod.GET)
 
-	public String startProject(@PathVariable int pid, @PathVariable int userId, RedirectAttributes attributes) {
+	public String startProject(@PathVariable int pid, @PathVariable int userId, RedirectAttributes attributes,
+			HttpServletRequest request) {
+		request.getSession().setAttribute("USER", getPrincipal());
 		try {
 			Project projInfo = projectService.getProjectById(pid);
 			if (projInfo.getOwner().getUserId() == userId) {
@@ -259,7 +282,8 @@ public class ProjectController {
 
 	@RequestMapping(value = { "/complete/{projectId}/{userId}" }, method = RequestMethod.GET)
 	public String completeProject(@PathVariable("userId") int userId, @PathVariable("projectId") int projectId,
-			RedirectAttributes attributes) {
+			RedirectAttributes attributes, HttpServletRequest request) {
+		request.getSession().setAttribute("USER", getPrincipal());
 		try {
 			Project p = projectService.getProjectById(projectId);
 			if (p == null) {
@@ -267,16 +291,16 @@ public class ProjectController {
 				return "redirect:/project/getProjectInfo/" + projectId;
 			}
 
-//			if (p.getOwner().getUserId() == userId) {
-				if (projectService.completeProjectById(projectId)) {
-					attributes.addAttribute("completeProjSuccess", "Project Completed");
-					return "redirect:/project/getProjectInfo/" + projectId;
-					// p = projectService.getProjectById(projectId);
-				}
-				attributes.addAttribute("completeProjError", "Project cannot be completed until the tasks are finished");
+			// if (p.getOwner().getUserId() == userId) {
+			if (projectService.completeProjectById(projectId)) {
+				attributes.addAttribute("completeProjSuccess", "Project Completed");
 				return "redirect:/project/getProjectInfo/" + projectId;
+				// p = projectService.getProjectById(projectId);
+			}
+			attributes.addAttribute("completeProjError", "Project cannot be completed until the tasks are finished");
+			return "redirect:/project/getProjectInfo/" + projectId;
 
-			//}
+			// }
 		} catch (Exception e) {
 
 			attributes.addAttribute("completeProjException", "Error occured while completing the project");
@@ -285,25 +309,34 @@ public class ProjectController {
 		}
 	}
 
-	@RequestMapping(value = { "/cancel/{userId}/{projectId}" }, method = RequestMethod.DELETE)
-	public @ResponseBody ResponseEntity<Project> cancelProject(@PathVariable("userId") int userId,
-			@PathVariable("projectId") int projectId) {
-		Project p = projectService.getProjectById(projectId);
-		if (p == null)
-			return new ResponseEntity<Project>(HttpStatus.NOT_FOUND);
-
-		if (p.getOwner().getUserId() == userId) {
-			projectService.cancelProjectById(p);
-		} else {
-			System.out.println("Project Can only be deleted by Owner");
+	@RequestMapping(value = { "/cancel/{projectId}/{userId}" }, method = RequestMethod.GET)
+	public String cancelProject(@PathVariable("userId") int userId, @PathVariable("projectId") int projectId,
+			RedirectAttributes attributes, HttpServletRequest request) {
+		request.getSession().setAttribute("USER", getPrincipal());
+		try {
+			Project p = projectService.getProjectById(projectId);
+			if (p == null) {
+				attributes.addAttribute("noProject", "No Project found");
+				return "redirect:/project/getProjectInfo/" + projectId;
+			}
+			// if (p.getOwner().getUserId() == userId) {
+			if (projectService.cancelProjectById(p)) {
+				attributes.addAttribute("cancelProjSuccess", "Project cancelled");
+				return "redirect:/project/getProjectInfo/" + projectId;
+			}
+			// }
+			attributes.addAttribute("cancelProjError", "Project cannot be cancelled");
+			return "redirect:/project/getProjectInfo/" + projectId;
+		} catch (Exception e) {
+			attributes.addAttribute("cancelProjException", "Error occured while completing the project");
+			return "redirect:/project/getProjectInfo/" + projectId;
 		}
 
-		return new ResponseEntity<Project>(p, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/getUsersListForTask/{pid}", method = RequestMethod.GET)
-	public @ResponseBody List<User> getUsersListForTask(@PathVariable int pid) {
-
+	public @ResponseBody List<User> getUsersListForTask(@PathVariable int pid, HttpServletRequest request) {
+		request.getSession().setAttribute("USER", getPrincipal());
 		try {
 			List<User> userList = projectService.getUsersList(pid);
 			if (userList != null) {
@@ -319,7 +352,9 @@ public class ProjectController {
 	}
 
 	@RequestMapping(value = "/viewProjects/{userId}/{role}", method = RequestMethod.GET, produces = "application/json")
-	public ModelAndView getUserProjects(@PathVariable int userId, @PathVariable String role) {
+	public ModelAndView getUserProjects(@PathVariable int userId, @PathVariable String role,
+			HttpServletRequest request) {
+		request.getSession().setAttribute("USER", getPrincipal());
 		List<Project> projectList = null;
 		ModelAndView modelAndView = new ModelAndView();
 		try {
@@ -340,7 +375,8 @@ public class ProjectController {
 
 	@RequestMapping(value = "/getUsersListForAddProject/{username}/{pid}/{pname}/{owner}", method = RequestMethod.GET)
 	public ModelAndView getUsersListForAddProject(@PathVariable String username, @PathVariable int pid,
-			@PathVariable String pname, @PathVariable String owner) {
+			@PathVariable String pname, @PathVariable String owner, HttpServletRequest request) {
+		request.getSession().setAttribute("USER", getPrincipal());
 		List<User> userList = null;
 		ModelAndView model = new ModelAndView();
 		try {
@@ -362,7 +398,8 @@ public class ProjectController {
 	}
 
 	@RequestMapping(value = "/getProjectInfo/{pid}", method = RequestMethod.GET)
-	public ModelAndView getProjectInfo(@PathVariable int pid) {
+	public ModelAndView getProjectInfo(@PathVariable int pid, HttpServletRequest request) {
+		request.getSession().setAttribute("USER", getPrincipal());
 		ModelAndView model = new ModelAndView();
 		Project project = null;
 		List<Task> taskList = null;

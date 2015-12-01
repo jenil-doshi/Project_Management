@@ -36,6 +36,7 @@ public class LoginController {
 	@RequestMapping(value= {"/create"}, method = RequestMethod.POST, produces = "application/json")
     public String createUser(@ModelAttribute("regForm") User user,RedirectAttributes attributes){
     	ModelAndView mv = new ModelAndView();
+    
 		try {
 			Users users = new Users();
 			

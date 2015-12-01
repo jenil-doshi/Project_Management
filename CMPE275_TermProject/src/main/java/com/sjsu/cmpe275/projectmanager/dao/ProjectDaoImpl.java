@@ -25,6 +25,8 @@ public class ProjectDaoImpl implements ProjectDao {
 
 	@Autowired
 	private SessionFactory sessionFactory;
+	
+	@Autowired TaskDao taskDao;
 
 	@Transactional
 	@Override
@@ -123,6 +125,13 @@ public class ProjectDaoImpl implements ProjectDao {
 					|| project.getStatus().equals(Constants.PROJECT_ONGOING)) {
 				project.setStatus(Constants.PROJECT_CANCELLED);
 				sessionFactory.getCurrentSession().update(project);
+				List<Task> taskList = taskDao.getTasks(project.getPid());
+				if(taskList!=null&&(!taskList.isEmpty())){
+					for(Task task : taskList){
+						task.setTaskState(Constants.TASK_CANCELLED);
+						sessionFactory.getCurrentSession().update(task);
+					}
+				}
 				status = true;
 			}
 		} catch (Exception e) {
