@@ -157,12 +157,12 @@ public class ProjectDaoImpl implements ProjectDao {
 				
 				
 			}
-			
+
 		} catch (Exception e) {
 			startProject = false;
 			throw new RuntimeException("A Runtime exception has occured");
 		}
-		//return startProject;
+		return startProject;
 	}
 
 	@SuppressWarnings("unchecked")
