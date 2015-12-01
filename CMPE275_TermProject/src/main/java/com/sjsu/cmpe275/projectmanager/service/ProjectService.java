@@ -77,14 +77,14 @@ public class ProjectService {
 
 	}
 
-	public List<User> getUsersForAddProject(String username,int pid) {
-		return projectDao.getUsersForAddProject(username,pid);
+	public List<User> getUsersForAddProject(String username, int pid) {
+		return projectDao.getUsersForAddProject(username, pid);
 	}
-//
-//	public List<User> getInvitationStatusForUser(int pid) {
-//
-//		return projectDao.getInvitationStatusForUser(pid);
-//
-//	}
+	//
+	// public List<User> getInvitationStatusForUser(int pid) {
+	//
+	// return projectDao.getInvitationStatusForUser(pid);
+	//
+	// }
 
 }

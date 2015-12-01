@@ -75,7 +75,8 @@ public class ProjectController {
 
 	@RequestMapping(value = { "/create/{userId}" }, headers = "Accept=*/*", method = RequestMethod.POST, produces = {
 			"application/json" })
-	public String createProject(@PathVariable int userId, @ModelAttribute("addProjectForm") Project project) {
+	public String createProject(@PathVariable int userId, @ModelAttribute("addProjectForm") Project project,
+			RedirectAttributes att) {
 		String role = null;
 		User user = new User();
 
@@ -95,14 +96,12 @@ public class ProjectController {
 
 			user.setUserId(userId);
 			project.setOwner(user);
-			// to change from new to planning... handle the control from ui by
-			// invoking update state service every once a day.
 			project.setStatus(projectService.setProjectStatus(project.getStartDate()));
 			projectService.createProject(userId, project);
 		} catch (RuntimeException e) {
-			project = null;
 			e.printStackTrace();
-			// return project;
+			att.addAttribute("error", "Project Creation Failed");
+			return "redirect:/project/create/" + userId;
 
 		}
 		return "redirect:/project/viewProjects/" + user.getUserId() + "/" + role;
@@ -123,7 +122,6 @@ public class ProjectController {
 		return user;
 	}
 
-	// update Project
 	@RequestMapping(value = { "/update/{userId}/{pid}" }, method = RequestMethod.POST, produces = "application/json")
 	public String updateProject(@PathVariable int userId, @PathVariable int pid,
 			@ModelAttribute("updateProjectForm") Project project, RedirectAttributes attributes) {
@@ -163,17 +161,16 @@ public class ProjectController {
 				}
 
 				projectService.updateProject(proj);
-				attributes.addAttribute("successfulUpdate","Successfully updated project");
-				return "redirect:/project/getProjectInfo/"+pid;
+				attributes.addAttribute("successfulUpdate", "Successfully updated project");
+				return "redirect:/project/getProjectInfo/" + pid;
 			}
-			attributes.addAttribute("error","Cannot update Project.Project is Cancelled or Completed");
-			return "redirect:/project/getProjectInfo/"+pid;
+			attributes.addAttribute("error", "Cannot update Project.Project is Cancelled or Completed");
+			return "redirect:/project/getProjectInfo/" + pid;
 		} catch (Exception e) {
 			e.printStackTrace();
-			attributes.addAttribute("ExceptionError","CannotUpdate");
-			return "redirect:/project/getProjectInfo/"+pid;
+			attributes.addAttribute("ExceptionError", "CannotUpdate");
+			return "redirect:/project/getProjectInfo/" + pid;
 		}
-		
 
 	}
 
@@ -187,8 +184,6 @@ public class ProjectController {
 				if (projectService.saveInvitationStatus(uid, projectId, Constants.INVITATION_PENDING)) {
 					attributes.addFlashAttribute("status", "Invitation sent successfully");
 					return "redirect:/project/getUsersListForAddProject/{projectOwner}/{projectId}/{projectName}/{projectOwner}";
-					// return new ResponseEntity<String>("Success",
-					// HttpStatus.OK);
 				}
 				attributes.addFlashAttribute("status", "Invitation sending Failed");
 				return "redirect:/project/getUsersListForAddProject/{projectOwner}/{projectId}/{projectName}/{projectOwner}";
@@ -201,7 +196,6 @@ public class ProjectController {
 			attributes.addFlashAttribute("status", "Invitation sending Failed");
 			return "redirect:/project/getUsersListForAddProject/{projectOwner}/{projectId}/{projectName}/{projectOwner}";
 		} catch (Exception e) {
-
 			System.out.println("Error occured while sending email");
 			e.printStackTrace();
 			attributes.addFlashAttribute("status", "Invitation sending Failed");
@@ -214,7 +208,6 @@ public class ProjectController {
 			"/invitationStatus/{status}/{uid}/{recipientId}/{projectId}" }, method = RequestMethod.GET)
 	public ResponseEntity<String> inviteStatus(@PathVariable String status, @PathVariable String recipientId,
 			@PathVariable int uid, @PathVariable int projectId) {
-
 		try {
 			if (status.equalsIgnoreCase(Constants.ACCEPT)) {
 				status = Constants.INVITATION_ACCEPT;
@@ -238,22 +231,28 @@ public class ProjectController {
 
 	}
 
-	@RequestMapping(value = "/start/{pid}/{userId}", method = RequestMethod.POST)
+	@RequestMapping(value = "/start/{pid}/{userId}", method = RequestMethod.GET)
 
-	public @ResponseBody ResponseEntity<String> startProject(@PathVariable int pid, @PathVariable int userId) {
+	public String startProject(@PathVariable int pid, @PathVariable int userId, RedirectAttributes attributes) {
 		try {
 			Project projInfo = projectService.getProjectById(pid);
 			if (projInfo.getOwner().getUserId() == userId) {
 				if (projectService.getTasksForProject(pid)) {
-					return new ResponseEntity<String>("Can Start Project", HttpStatus.OK);
+					projInfo.setStatus(Constants.PROJECT_ONGOING);
+					projectService.updateProject(projInfo);
+					attributes.addAttribute("startProjSuccess", "Project Started");
+					return "redirect:/project/getProjectInfo/" + pid;
 				} else {
-					return new ResponseEntity<String>("Cannot Start Project", HttpStatus.OK);
+					attributes.addAttribute("startProjError", "Project cannot be started untill all the tasks have been assigned.");
+					return "redirect:/project/getProjectInfo/" + pid;
 				}
 			}
-			return new ResponseEntity<String>("Fail", HttpStatus.OK);
+			attributes.addAttribute("accessDenied", "You do not have the permission to start the project.");
+			return "redirect:/project/getProjectInfo/" + pid;
 		} catch (RuntimeException e) {
 			e.printStackTrace();
-			return new ResponseEntity<String>("Fail", HttpStatus.OK);
+			attributes.addAttribute("startProjException", "Exception occured while starting the project");
+			return "redirect:/project/getProjectInfo/" + pid;
 		}
 	}
 
@@ -358,8 +357,9 @@ public class ProjectController {
 		List<Task> taskList = null;
 		try {
 			project = projectService.getProjectById(pid);
-			//String status = projectService.setProjectStatus(project.getStartDate());
-			//project.setStatus(status);
+			// String status =
+			// projectService.setProjectStatus(project.getStartDate());
+			// project.setStatus(status);
 			model.addObject("project", project);
 			taskList = taskService.getTasks(pid);
 			model.addObject("taskList", taskList);

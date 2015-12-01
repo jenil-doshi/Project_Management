@@ -22,9 +22,8 @@
 	href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,400,600'
 	rel='stylesheet'>
 <style type="text/css">
-
 #projTable.td {
-word-spacing: 30px;
+	word-spacing: 30px;
 }
 </style>
 </head>
@@ -139,9 +138,7 @@ word-spacing: 30px;
 									</a></li>
 								</ul></li>
 
-							<li><a href="#"> <i class="menu-icon icon-signout"></i>
-									Logout
-							</a></li>
+							<li><a href="<c:url value="/logout" />">Logout </a></li>
 						</ul>
 
 					</div>
@@ -159,41 +156,47 @@ word-spacing: 30px;
 									<strong>Project Information</strong>
 								</h3>
 							</div>
+							<!-- Update Project-->
 							<c:if test="${param.successfulUpdate!=null}">
-							<div class="alert alert-success">
-							${param.successfulUpdate}
-							</div>
+								<div class="alert alert-success">
+									${param.successfulUpdate}</div>
 							</c:if>
 							<c:if test="${param.error!=null}">
-							<div class="alert alert-danger">
-							${param.error}
-							</div>
+								<div class="alert alert-danger">${param.error}</div>
 							</c:if>
 							<c:if test="${param.ExceptionError!=null}">
-							<div class="alert alert-danger">
-							${param.ExceptionError}
-							</div>
+								<div class="alert alert-danger">${param.ExceptionError}</div>
+							</c:if>
+							<!-- Start Project -->
+							<c:if test="${param.startProjSuccess!=null}">
+								<div class="alert alert-success">${param.startProjSuccess}</div>
+							</c:if>
+							<c:if test="${param.startProjError!=null}">
+								<div class="alert alert-danger">${param.startProjError}</div>
+							</c:if>
+							<c:if test="${param.startProjException!=null}">
+								<div class="alert alert-danger">${param.startProjException}</div>
 							</c:if>
 							<table style="width: 100%;">
 								<tr>
 									<td rowspan="4">
 										<div class="module-body">
-											<table id="projTable" style="width:100%;">
+											<table id="projTable" style="width: 100%;">
 												<tr>
 													<td>ID</td>
-													<td> ${project.pid}</td>
+													<td>${project.pid}</td>
 												</tr>
 												<tr>
-													<td>Name </td>
+													<td>Name</td>
 													<td>${project.name}</td>
 												</tr>
 												<tr>
-													<td>Description </td>
+													<td>Description</td>
 													<td>${project.description}</td>
 												</tr>
 												<tr>
 													<td>Start Date</td>
-													<td> ${project.startDate}</td>
+													<td>${project.startDate}</td>
 												</tr>
 												<tr>
 													<td>End Date</td>
@@ -207,8 +210,17 @@ word-spacing: 30px;
 													<td>Status</td>
 													<td>${project.status}</td>
 												</tr>
+												<sec:authorize access="hasRole('ROLE_ADMIN')">
+													<tr>
+														<td><section>
+																<a class="btn btn-primary"
+																	href="<c:url value="/project/updateProjectFormView/${project.pid}"/>">Update
+																	Project</a>
+															</section></td>
+													</tr>
+												</sec:authorize>
 											</table>
-										
+
 										</div>
 									</td>
 									<td><sec:authorize access="hasRole('ROLE_ADMIN')">
@@ -225,7 +237,7 @@ word-spacing: 30px;
 									<td><sec:authorize access="hasRole('ROLE_ADMIN')">
 											<div class="pull-right ">
 												<a
-													href="<c:url value="/project/getUsersListForAddProject/${pageContext.request.userPrincipal.name}/${project.pid}/${project.name}/${project.owner.firstName}"/>"
+													href="<c:url value="/project/start/${project.pid}/${project.owner.userId}"/>"
 													class="btn btn-primary"
 													style="margin-left: -17%; margin-top: 11%;">Start
 													Project </a>
@@ -255,9 +267,7 @@ word-spacing: 30px;
 										</sec:authorize></td>
 								</tr>
 							</table>
-							<section>
-							<a class="btn btn-primary" href="<c:url value="/project/updateProjectFormView/${project.pid}"/>">Update Project</a>
-							</section>
+
 							<section>
 								<div class="module-body">
 									<p>
@@ -289,7 +299,7 @@ word-spacing: 30px;
 														<td>${task.assignee}</td>
 														<td>${task.taskState}</td>
 
-														<td><a class="btn btn-info"
+														<td><a class="btn btn-primary"
 															href="<c:url value="/project/updateTask/${task.tid}"/>">Update
 																Task</td>
 

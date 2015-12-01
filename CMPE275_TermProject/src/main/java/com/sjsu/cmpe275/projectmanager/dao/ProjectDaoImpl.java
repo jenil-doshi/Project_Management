@@ -146,19 +146,23 @@ public class ProjectDaoImpl implements ProjectDao {
 					if (!(task.getTaskState().equalsIgnoreCase(Constants.TASK_ASSIGNED))
 							|| task.getEstimated_time() == 0) {
 						startProject = false;
+						
 						break;
+						
 					}
 				}
 			} else {
 				startProject = false;
 				System.out.println("No Tasks present in project");
+				
+				
 			}
-
+			
 		} catch (Exception e) {
 			startProject = false;
 			throw new RuntimeException("A Runtime exception has occured");
 		}
-		return startProject;
+		//return startProject;
 	}
 
 	@SuppressWarnings("unchecked")

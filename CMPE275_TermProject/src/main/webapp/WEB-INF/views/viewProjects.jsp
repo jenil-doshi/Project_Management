@@ -154,14 +154,14 @@ width=100%;
 
 						<div class="module">
 							<div class="module-head">
-								<h3>Tables</h3>
+								<h3>List of Projects</h3>
 							</div>
 							<div class="module-body">
-								<p>
-									<strong>List of Projects</strong>
+								<!-- <p>
+									<strong></strong>
 									
 									
-								</p>
+								</p> -->
 								<table class="table">
 								<tr>
 									  <th>#</th>
@@ -188,8 +188,8 @@ width=100%;
 									  <td>${project.endDate}</td>
 									  <td>${project.owner.firstName}</td>
 									  <td>${project.status}</td>
-									  <td><a class="btn btn-info" href="<c:url value="/project/getProjectInfo/${project.pid}"/>">VIEW</td>
-									  <td><a class="btn btn-info" href="<c:url value="/project/addTask/${project.pid}"/>">Add Task</td>
+									  <td><a class="btn btn-primary" href="<c:url value="/project/getProjectInfo/${project.pid}"/>">VIEW</td>
+									  <td><a class="btn btn-primary" href="<c:url value="/project/addTask/${project.pid}"/>">Add Task</td>
 									</tr>
 								  </tbody>
 								  </c:forEach> 

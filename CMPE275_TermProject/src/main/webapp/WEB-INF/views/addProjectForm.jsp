@@ -165,12 +165,15 @@
 
 						<div class="module">
 							<div class="module-head">
-								<h3>Forms</h3>
+								<h3>Add a project</h3>
 							</div>
 							<div class="module-body">
-
-							
-									<c:url value="/project/create/${sessionScope.USER.userId}" var="formUrl"/>
+								<c:url value="/project/create/${sessionScope.USER.userId}" var="formUrl"/>
+								<c:if test="${param.error!=null}">
+								<div class="alert alert-danger">
+									${param.error}
+								</div>
+								</c:if>
 									<form:form action="${formUrl}" commandName="addProjectForm" class="form-horizontal row-fluid">
 										<div class="control-group">
 											<label class="control-label" for="basicinput">Project Name *</label>
