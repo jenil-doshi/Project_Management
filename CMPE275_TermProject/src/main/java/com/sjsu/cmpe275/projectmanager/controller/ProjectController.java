@@ -243,7 +243,8 @@ public class ProjectController {
 					attributes.addAttribute("startProjSuccess", "Project Started");
 					return "redirect:/project/getProjectInfo/" + pid;
 				} else {
-					attributes.addAttribute("startProjError", "Project cannot be started untill all the tasks have been assigned.");
+					attributes.addAttribute("startProjError",
+							"Project cannot be started untill all the tasks have been assigned.");
 					return "redirect:/project/getProjectInfo/" + pid;
 				}
 			}
@@ -256,22 +257,32 @@ public class ProjectController {
 		}
 	}
 
-	@RequestMapping(value = { "/complete/{userId}/{projectId}" }, method = RequestMethod.POST)
-	public @ResponseBody ResponseEntity<Project> completeProject(@PathVariable("userId") int userId,
-			@PathVariable("projectId") int projectId) {
-		Project p = projectService.getProjectById(projectId);
-		if (p == null)
-			return new ResponseEntity<Project>(HttpStatus.NOT_FOUND);
-
-		if (p.getOwner().getUserId() == userId) {
-			if (projectService.completeProjectById(projectId)) {
-				p = projectService.getProjectById(projectId);
+	@RequestMapping(value = { "/complete/{projectId}/{userId}" }, method = RequestMethod.GET)
+	public String completeProject(@PathVariable("userId") int userId, @PathVariable("projectId") int projectId,
+			RedirectAttributes attributes) {
+		try {
+			Project p = projectService.getProjectById(projectId);
+			if (p == null) {
+				attributes.addAttribute("noProject", "No Project found");
+				return "redirect:/project/getProjectInfo/" + projectId;
 			}
-		} else {
-			System.out.println("Project Can only be deleted by Owner");
-		}
 
-		return new ResponseEntity<Project>(p, HttpStatus.OK);
+//			if (p.getOwner().getUserId() == userId) {
+				if (projectService.completeProjectById(projectId)) {
+					attributes.addAttribute("completeProjSuccess", "Project Completed");
+					return "redirect:/project/getProjectInfo/" + projectId;
+					// p = projectService.getProjectById(projectId);
+				}
+				attributes.addAttribute("completeProjError", "Project cannot be completed until the tasks are finished");
+				return "redirect:/project/getProjectInfo/" + projectId;
+
+			//}
+		} catch (Exception e) {
+
+			attributes.addAttribute("completeProjException", "Error occured while completing the project");
+			return "redirect:/project/getProjectInfo/" + projectId;
+
+		}
 	}
 
 	@RequestMapping(value = { "/cancel/{userId}/{projectId}" }, method = RequestMethod.DELETE)

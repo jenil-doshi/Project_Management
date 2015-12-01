@@ -177,6 +177,16 @@
 							<c:if test="${param.startProjException!=null}">
 								<div class="alert alert-danger">${param.startProjException}</div>
 							</c:if>
+							<!-- Complete Project -->
+							<c:if test="${param.completeProjSuccess!=null}">
+								<div class="alert alert-success">${param.completeProjSuccess}</div>
+							</c:if>
+							<c:if test="${param.completeProjError!=null}">
+								<div class="alert alert-danger">${param.completeProjError}</div>
+							</c:if>
+							<c:if test="${param.completeProjException!=null}">
+								<div class="alert alert-danger">${param.completeProjException}</div>
+							</c:if>
 							<table style="width: 100%;">
 								<tr>
 									<td rowspan="4">
@@ -259,7 +269,7 @@
 									<td><sec:authorize access="hasRole('ROLE_ADMIN')">
 											<div class="pull-right ">
 												<a
-													href="<c:url value="/project/getUsersListForAddProject/${pageContext.request.userPrincipal.name}/${project.pid}/${project.name}/${project.owner.firstName}"/>"
+													href="<c:url value="/project/complete/${project.pid}/${project.owner.userId}"/>"
 													class="btn btn-primary"
 													style="margin-left: -17%; margin-top: 11%;">Complete
 													Project </a>
