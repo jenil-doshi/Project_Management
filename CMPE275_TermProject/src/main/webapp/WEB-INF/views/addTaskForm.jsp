@@ -168,7 +168,11 @@
 								<h3>Add Task Information</h3>
 							</div>
 							<div class="module-body">
-
+								<c:if test="${param.error!=null}">
+										<div class="alert alert-danger">
+											<h3>${param.error}</h3>
+										</div>
+									</c:if>
 							
 									<c:url value="/project/task/create/${sessionScope.USER.userId}/${projectId}" var="formUrl"/>
 									<form:form action="${formUrl}" commandName="addTaskForm" class="form-horizontal row-fluid">
@@ -187,14 +191,14 @@
 										</div>
 
 										<div class="control-group">
-											<label class="control-label" for="basicinput">Estimated Time</label>
+											<label class="control-label" for="basicinput">Estimated Units</label>
 											<div class="controls">
 												<form:input path="estimated_time" type="number" id="basicinput" placeholder="Estimated time of the task to complete" class="span8" required="required"/>
 											</div>
 										</div>
 
 										<div class="control-group">
-											<label class="control-label" for="basicinput">Actual Time</label>
+											<label class="control-label" for="basicinput">Actual Units</label>
 											<div class="controls">
 												<form:input path="actual_time" type="number" id="basicinput" placeholder="Actual time of the task" class="span8" />
 											</div>
@@ -203,7 +207,14 @@
 										<div class="control-group">
 											<label class="control-label" for="basicinput">Assignee</label>
 											<div class="controls">
-												<form:input path="assignee" type="number" id="basicinput" placeholder="Assignee of the task" class="span8" />
+												<select name='Assignee'>
+												    <option value="${selected}" selected>${selected}</option>
+												    <c:forEach items="${users}" var="user">
+												        <c:if test="${user.firstName != selected}">
+												            <option value="${user.userId}">${user.firstName}</option>
+												        </c:if>
+												    </c:forEach>
+												</select>
 											</div>
 										</div>
 										

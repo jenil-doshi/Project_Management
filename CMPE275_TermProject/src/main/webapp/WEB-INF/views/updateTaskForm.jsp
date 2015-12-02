@@ -168,6 +168,11 @@
 								<h3>Update Task Information</h3>
 							</div>
 							<div class="module-body">
+							<c:if test="${param.error!=null}">
+										<div class="alert alert-danger">
+											<h3>${param.error}</h3>
+										</div>
+									</c:if>
 
 							
 									<c:url value="/project/task/update/${taskId}/${sessionScope.USER.userId}" var="formUrl"/>

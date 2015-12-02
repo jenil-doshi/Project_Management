@@ -2,7 +2,7 @@
 <%@taglib prefix="sec"
 	uri="http://www.springframework.org/security/tags"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <!DOCTYPE html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -26,16 +26,14 @@
 #projTable.td {
 	word-spacing: 30px;
 }
-.btn-disable
-        {
-        cursor: default;
-        pointer-events: none;
 
-        /*Button disabled - CSS color class*/
-        color: #c0c0c0;
-        background-color: #ffffff;
-
-        }
+.btn-disable {
+	cursor: default;
+	pointer-events: none;
+	/*Button disabled - CSS color class*/
+	color: #c0c0c0;
+	background-color: #ffffff;
+}
 </style>
 </head>
 <body>
@@ -225,96 +223,95 @@
 													<td>Description</td>
 													<td>${project.description}</td>
 												</tr>
-											
+
 												<tr>
 													<td>Start Date</td>
-													<td><fmt:formatDate type="date" value="${project.startDate}" /></td>
+													<td><fmt:formatDate type="date"
+															value="${project.startDate}" /></td>
 												</tr>
 												<tr>
 													<td>End Date</td>
-													<td><fmt:formatDate type="date" value="${project.endDate}" /></td>
+													<td><fmt:formatDate type="date"
+															value="${project.endDate}" /></td>
 												</tr>
 												<tr>
 													<td>Owner</td>
 													<td>${project.owner.firstName}</td>
 												</tr>
 												<tr>
-													
+
 													<td>Status</td>
 													<td id="status">${project.status}</td>
 												</tr>
-												
+
 												<sec:authorize access="hasRole('ROLE_ADMIN')">
 													<tr>
 														<td><section>
-														<div id="hideDivUpdate">
-																<a class="btn btn-primary"
-																	href="<c:url value="/project/updateProjectFormView/${project.pid}"/>">Update
-																	Project</a>
-														</div>
+																<div id="hideDivUpdate">
+																	<a class="btn btn-primary"
+																		href="<c:url value="/project/updateProjectFormView/${project.pid}"/>">Update
+																		Project</a>
+																</div>
 															</section></td>
 													</tr>
 												</sec:authorize>
-												
+
 											</table>
 
 										</div>
 									</td>
-									<td>
-									
-									<sec:authorize access="hasRole('ROLE_ADMIN')">
+									<td><sec:authorize access="hasRole('ROLE_ADMIN')">
 											<div class="pull-right ">
-											<div id="hideDivInvite">
-												<a
-													href="<c:url value="/project/getUsersListForAddProject/${pageContext.request.userPrincipal.name}/${project.pid}/${project.name}/${project.owner.firstName}"/>"
-													class="btn btn-primary"
-													style="margin-left: -17%; margin-top: 11%;">Invite
-													Users </a>
+												<div id="hideDivInvite">
+													<a
+														href="<c:url value="/project/getUsersListForAddProject/${pageContext.request.userPrincipal.name}/${project.pid}/${project.name}/${project.owner.firstName}"/>"
+														class="btn btn-primary"
+														style="margin-left: -17%; margin-top: 11%;">Invite
+														Users </a>
+												</div>
 											</div>
-											</div>
-										</sec:authorize>
-										<!-- </div> --></td>
+										</sec:authorize> <!-- </div> --></td>
 								</tr>
 								<tr>
 									<td><sec:authorize access="hasRole('ROLE_ADMIN')">
 											<div class="pull-right ">
-											<div id="hideDivStart">
-												<a
-													href="<c:url value="/project/start/${project.pid}/${project.owner.userId}"/>"
-													class="btn btn-primary"
-													style="margin-left: -17%; margin-top: 11%;">Start
-													Project </a>
-											</div>
+												<div id="hideDivStart">
+													<a
+														href="<c:url value="/project/start/${project.pid}/${project.owner.userId}"/>"
+														class="btn btn-primary"
+														style="margin-left: -17%; margin-top: 11%;">Start
+														Project </a>
+												</div>
 											</div>
 										</sec:authorize></td>
 								</tr>
 								<tr>
 									<td><sec:authorize access="hasRole('ROLE_ADMIN')">
 											<div class="pull-right ">
-											<div id="hideDivCancel">
-												<a
-													href="<c:url value="/project/cancel/${project.pid}/${project.owner.userId}"/>"
-													class="btn btn-primary"
-													style="margin-left: -17%; margin-top: 11%;">Cancel
-													Project </a>
-											</div>
+												<div id="hideDivCancel">
+													<a
+														href="<c:url value="/project/cancel/${project.pid}/${project.owner.userId}"/>"
+														class="btn btn-primary"
+														style="margin-left: -17%; margin-top: 11%;">Cancel
+														Project </a>
+												</div>
 											</div>
 										</sec:authorize></td>
 								</tr>
 								<tr>
 									<td><sec:authorize access="hasRole('ROLE_ADMIN')">
 											<div class="pull-right ">
-											<div id="hideDivComplete">
-												<a
-													href="<c:url value="/project/complete/${project.pid}/${project.owner.userId}"/>"
-													class="btn btn-primary"
-													style="margin-left: -17%; margin-top: 11%;">Complete
-													Project </a>
-											</div>
+												<div id="hideDivComplete">
+													<a
+														href="<c:url value="/project/complete/${project.pid}/${project.owner.userId}"/>"
+														class="btn btn-primary"
+														style="margin-left: -17%; margin-top: 11%;">Complete
+														Project </a>
+												</div>
 											</div>
 										</sec:authorize></td>
 								</tr>
-								
+
 							</table>
 
 							<section>
@@ -347,17 +344,53 @@
 														<td>${task.actual_time}</td>
 														<td>${task.assignee}</td>
 														<td>${task.taskState}</td>
+													<tr>
+														<c:choose>
+															<c:when
+																test="${(task.taskState=='finished') || (task.taskState=='cancelled')}">
+															</c:when>
+															<c:otherwise>
+																<td></td>
+																<td></td>
+																<td><a class="btn btn-info"
+																	href="<c:url value="/project/updateTask/${task.tid}"/>">Update
+																		Task</td>
 
-														<td>
-														<div id="hideDivTask">
-														
-														<a class="btn btn-primary"
-															href="<c:url value="/project/updateTask/${task.tid}"/>">Update
-																Task
-															</div>	
-																</td>
-							
+																<c:url value="/project/task/start/${task.tid}"
+																	var="formUrl" />
+																<form:form action="${formUrl}"
+																	commandName="startTaskForm"
+																	class="form-horizontal row-fluid">
+																	<td><input type="submit" class="btn btn-info"
+																		value="Start task" /></td>
+																</form:form>
+
+																<c:url
+																	value="/project/task/cancel/${task.tid}/${sessionScope.USER.userId}"
+																	var="formUrl" />
+																<form:form action="${formUrl}"
+																	commandName="cancelTaskForm"
+																	class="form-horizontal row-fluid">
+																	<td><input type="submit" class="btn btn-info"
+																		value="Cancel task" /></td>
+																</form:form>
+
+																<c:url value="/project/task/finish/${task.tid}"
+																	var="formUrl" />
+																<form:form action="${formUrl}"
+																	commandName="finishTaskForm"
+																	class="form-horizontal row-fluid">
+																	<td><input type="submit" class="btn btn-info"
+																		value="Finish task" /></td>
+																</form:form>
+																<td></td>
+																<td></td>
+															</c:otherwise>
+														</c:choose>
 													</tr>
+
+													</tr>
+
 												</tbody>
 											</c:forEach>
 									</table>
@@ -398,17 +431,19 @@
 					$('.dataTables_paginate > a:last-child').append(
 							'<i class="icon-chevron-right shaded"></i>');
 				});
-		$(document).ready(function(){
-			//alert($("#projTable #status").text());
-			if ($.trim($("#projTable #status").text()) == "completed"||$.trim($("#projTable #status").text())=="cancelled") {
-				//alert("hi");
-				$("div#hideDivUpdate").hide();
-				$("div#hideDivInvite").hide();
-				$("div#hideDivStart").hide();
-				$("div#hideDivComplete").hide();
-				$("div#hideDivCancel").hide();
-				$("div#hideDivTask").hide();
-			} 
-		});
+		$(document)
+				.ready(
+						function() {
+							//alert($("#projTable #status").text());
+							if ($.trim($("#projTable #status").text()) == "completed"
+									|| $.trim($("#projTable #status").text()) == "cancelled") {
+								//alert("hi");
+								$("div#hideDivUpdate").hide();
+								$("div#hideDivInvite").hide();
+								$("div#hideDivStart").hide();
+								$("div#hideDivComplete").hide();
+								$("div#hideDivCancel").hide();
+							}
+						});
 	</script>
 </body>

@@ -188,8 +188,15 @@ width=100%;
 									  <td>${project.endDate}</td>
 									  <td>${project.owner.firstName}</td> --%>
 									  <td>${project.status}</td>
-									  <td><a class="btn btn-primary" href="<c:url value="/project/getProjectInfo/${project.pid}"/>">VIEW</td>
-									  <td><a class="btn btn-primary" href="<c:url value="/project/addTask/${project.pid}"/>">Add Task</td>
+									  <td><a class="btn btn-info" href="<c:url value="/project/getProjectInfo/${project.pid}"/>">VIEW</td>
+									  <c:choose>
+									    <c:when test="${(project.status=='finished') || (project.status=='cancelled')}">
+									        
+									    </c:when> 
+									    <c:otherwise>
+											<td><a class="btn btn-info" href="<c:url value="/project/addTask/${project.pid}"/>">Add Task</td>
+									    </c:otherwise>
+									</c:choose>
 									</tr>
 								  </tbody>
 								  </c:forEach> 
