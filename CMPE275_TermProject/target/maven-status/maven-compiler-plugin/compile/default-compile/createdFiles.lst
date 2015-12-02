@@ -18,6 +18,7 @@ com\sjsu\cmpe275\projectmanager\configuration\SpringMvcInitializer.class
 com\sjsu\cmpe275\projectmanager\service\UserService.class
 com\sjsu\cmpe275\projectmanager\configuration\WebSecurityConfig.class
 com\sjsu\cmpe275\projectmanager\configuration\EmailUtility.class
+com\sjsu\cmpe275\projectmanager\controller\LoginController.class
 com\sjsu\cmpe275\projectmanager\dao\UserDAOImpl.class
 com\sjsu\cmpe275\projectmanager\dao\TaskDao.class
 com\sjsu\cmpe275\projectmanager\model\Task.class
