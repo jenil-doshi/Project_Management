@@ -3,8 +3,10 @@ package com.sjsu.cmpe275.projectmanager.controller;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -404,12 +406,38 @@ public class ProjectController {
 		Project project = null;
 		List<Task> taskList = null;
 		try {
+			/*List<User> users = projectService.getUsersList(pid);
+			model.addObject("users", users);*/
+			
 			project = projectService.getProjectById(pid);
-			// String status =
-			// projectService.setProjectStatus(project.getStartDate());
-			// project.setStatus(status);
 			model.addObject("project", project);
 			taskList = taskService.getTasks(pid);
+			
+			Map<Long, String> assigneeMap = new HashMap<Long, String>(taskList.size());
+			
+			for(Task task : taskList){
+				User user = userService.getUser(task.getAssignee());
+				task.setAssigneeName(user.getFirstName()+" "+user.getLastName());
+			}
+			/*for(int i=0; i<taskList.size(); i++){
+				if(taskList.get(i).getAssignee() == null){
+					if(assigneeMap.containsKey((long) taskList.get(i).getTid())){
+					}
+					else
+						assigneeMap.put((long) taskList.get(i).getTid(), "");
+				}
+				else{
+					if(assigneeMap.containsKey((long) taskList.get(i).getTid())){
+					}
+					else{
+						User user = userService.getUser(taskList.get(i).getAssignee());
+						String name = user.getFirstName() + " " + user.getLastName();
+						assigneeMap.put((long) taskList.get(i).getTid(), name);
+					}
+				}
+			}*/
+		
+			model.addObject("assigneeMap", assigneeMap);
 			model.addObject("taskList", taskList);
 			model.setViewName("projectInfo");
 		} catch (Exception e) {

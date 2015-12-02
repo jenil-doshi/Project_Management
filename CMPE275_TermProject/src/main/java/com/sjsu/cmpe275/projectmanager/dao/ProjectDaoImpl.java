@@ -1,5 +1,6 @@
 package com.sjsu.cmpe275.projectmanager.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Query;
@@ -179,13 +180,18 @@ public class ProjectDaoImpl implements ProjectDao {
 	public List<User> getUsersList(int pid) {
 		List<User> usersList = null;
 		try {
+			Query userQuery = null;
 			Query query = sessionFactory.getCurrentSession().createQuery(Queries.GET_USERS_PROJECT_INFO);
 			query.setParameter("pid", pid);
 			query.setParameter("accepted", Constants.INVITATION_ACCEPT);
 			List<Integer> userIdList = query.list();
 			// List uIdsList = Arrays.asList(userIdList);
-			Query userQuery = sessionFactory.getCurrentSession().createQuery(Queries.GET_USERS_LIST)
-					.setParameterList("userIdList", userIdList);
+			if(userIdList.isEmpty())
+				return null;
+			else{
+				userQuery = sessionFactory.getCurrentSession().createQuery(Queries.GET_USERS_LIST)
+						.setParameterList("userIdList", userIdList);
+			}
 			usersList = userQuery.list();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -230,6 +236,7 @@ public class ProjectDaoImpl implements ProjectDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<User> getUsersForAddProject(String username, int pid) {
+		List<User> userReturnList = new ArrayList<User>();
 		List<User> usersList = null;
 		try {
 			Query query = sessionFactory.getCurrentSession().createQuery(Queries.GET_USERS_FROM_USER_ROLES);
@@ -243,11 +250,19 @@ public class ProjectDaoImpl implements ProjectDao {
 				Query statusQuery = sessionFactory.getCurrentSession().createQuery(Queries.GET_INVITATION_STATUS)
 						.setParameter("userId", user.getUserId());
 				if (!statusQuery.list().isEmpty()) {
-					String status = (String) statusQuery.list().get(0);
-					user.setStatus(status);
-				} else {
 
-					user.setStatus("Available");
+					UserProjectInfo userProj = (UserProjectInfo) statusQuery.list().get(0);
+					if (userProj != null) {
+						if (userProj.getPid() == pid) {
+							user.setStatus(userProj.getAcceptanceStatus());
+							userReturnList.add(user);
+						} /*else {
+							usersList.remove(user);
+						}*/
+					}
+				}else{
+					user.setStatus(Constants.AVAILABLE);
+					userReturnList.add(user);
 				}
 
 			}
@@ -257,6 +272,6 @@ public class ProjectDaoImpl implements ProjectDao {
 			e.printStackTrace();
 			throw new RuntimeException("A Runtime Exception has occurred");
 		}
-		return usersList;
+		return userReturnList;
 	}
 }

@@ -9,6 +9,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name = "Task")
@@ -43,9 +44,19 @@ public class Task {
 	@JoinColumn(name="Project",referencedColumnName = "PID")
 	private Project project;
 
+	@Transient
+	private String assigneeName;
 
 	public int getTid() {
 		return tid;
+	}
+
+	public String getAssigneeName() {
+		return assigneeName;
+	}
+
+	public void setAssigneeName(String assigneeName) {
+		this.assigneeName = assigneeName;
 	}
 
 	public Integer getAssignee() {

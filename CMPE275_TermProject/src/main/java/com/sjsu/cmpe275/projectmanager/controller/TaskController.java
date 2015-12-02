@@ -1,11 +1,12 @@
 package com.sjsu.cmpe275.projectmanager.controller;
-import java.util.Collection;
 import java.util.List;
-import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -13,8 +14,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import com.sjsu.cmpe275.projectmanager.configuration.*;
 import com.sjsu.cmpe275.projectmanager.model.*;
 import com.sjsu.cmpe275.projectmanager.service.*;
@@ -44,7 +45,8 @@ public class TaskController {
 		}
 	}
 	@RequestMapping(value = "/addTask/{projectId}", method = RequestMethod.GET)
-	public String addTaskFormView(@PathVariable("projectId") int projectId,	ModelMap model) {
+	public String addTaskFormView(@PathVariable("projectId") int projectId,	ModelMap model, HttpServletRequest request) {
+		request.getSession().setAttribute("USER", getPrincipal());
 		List<User> users = projectService.getUsersList(projectId);
 		model.addAttribute("users", users);
 		model.addAttribute("projectId", projectId);
@@ -52,8 +54,12 @@ public class TaskController {
 		return "addTaskForm";
 	}
 	@RequestMapping(value = "/updateTask/{taskId}", method = RequestMethod.GET)
-	public String addUpdateFormView(@PathVariable("taskId") int taskId,
-			ModelMap model) {
+	public String addUpdateFormView(@PathVariable("taskId") int taskId,ModelMap model, HttpServletRequest request) {
+		request.getSession().setAttribute("USER", getPrincipal());
+		Task task = taskService.getTaskById(taskId);
+		int projectId = task.getProject().getPid();
+		List<User> users = projectService.getUsersList(projectId);
+		model.addAttribute("users", users);
 		model.addAttribute("taskId", taskId);
 		model.addAttribute("updateTaskForm", taskService.getTaskById(taskId));
 		return "updateTaskForm";
@@ -61,8 +67,8 @@ public class TaskController {
 	@RequestMapping(value = { "/task/create/{userId}/{projectId}" }, method = RequestMethod.POST, produces = "application/json")
 	public String createTask(@PathVariable("userId") int userId,
 			@PathVariable("projectId") int projectId,
-			@ModelAttribute("addTaskForm") Task task, ModelMap model,RedirectAttributes attributes) {
-		ModelAndView mv = new ModelAndView();
+			@ModelAttribute("addTaskForm") Task task, ModelMap model,RedirectAttributes attributes, HttpServletRequest request) {
+		request.getSession().setAttribute("USER", getPrincipal());
 		System.out.println("Estimated Time: " + task.getEstimated_time());
 		try {
 			Project project = projectService.getProjectById(projectId);
@@ -125,14 +131,14 @@ public class TaskController {
 			@PathVariable("taskId") int taskId,
 			@PathVariable("userId") int userId, 
 			@ModelAttribute("updateTaskForm") Task task,
-			ModelMap model) {
+			ModelMap model, HttpServletRequest request) {
+		request.getSession().setAttribute("USER", getPrincipal());
 		Task existingTask = null;
 		try {
 			existingTask = taskService.getTaskById(taskId);
 			Project project = projectService.getProjectById(existingTask.getProject().getPid());
 			existingTask.setTid(taskId);
-			String taskState = task.getTaskState();
-			if (taskState == null) {
+			
 				if (task.getTaskName() != null) {
 					existingTask.setTaskName(task.getTaskName());
 				}
@@ -147,22 +153,25 @@ public class TaskController {
 						project.getStatus().equals(Constants.PROJECT_ONGOING)) {
 						if (task.getAssignee() != null) {
 							existingTask.setAssignee(task.getAssignee());
+							existingTask.setTaskState(Constants.TASK_ASSIGNED);
 						}		
+						else
+							existingTask.setTaskState(Constants.TASK_NEW);
 				}
 				if (project.getStatus().equals(Constants.PROJECT_NEW) || 
-						project.getStatus().equals(Constants.PROJECT_PLANNING) ||
-						project.getStatus().equals(Constants.PROJECT_ONGOING)) {
+						project.getStatus().equals(Constants.PROJECT_PLANNING)) {
 					if (task.getEstimated_time() != null) {
 						existingTask.setEstimated_time(task.getEstimated_time());
 					}
-					else{
-						if(project.getStatus().equals(Constants.PROJECT_ONGOING)){
-							model.addAttribute("error", "Estimated Time is mandatory in project ongoing state");
+				}
+				if(project.getStatus().equals(Constants.PROJECT_ONGOING)){
+					if (task.getEstimated_time() != null) {
+						if(task.getEstimated_time().intValue() != existingTask.getEstimated_time().intValue()){
+							model.addAttribute("error", "Estimated Time cannot be changed in project ongoing state");
 							return "redirect:/project/updateTask/"+ taskId;
 						}
 					}
 				}
-			}
 			if(taskService.updateTask(existingTask))
 				return "redirect:/project/getProjectInfo/" + existingTask.getProject().getPid();
 		} catch (RuntimeException e) {
@@ -172,10 +181,11 @@ public class TaskController {
 		return null;
 	}
 	@RequestMapping(value = { "/task/finish/{taskId}" }, method = RequestMethod.POST, produces = "application/json")
-	public String finishTask(@PathVariable("taskId") int taskId, ModelMap model) {
+	public String finishTask(@PathVariable("taskId") int taskId, ModelMap model, HttpServletRequest request) {
+		request.getSession().setAttribute("USER", getPrincipal());
 		
 		Task existingTask = taskService.getTaskById(taskId);
-		existingTask.setTaskState(Constants.TASK_STARTED);
+		//existingTask.setTaskState(Constants.TASK_STARTED);
 		int projectId = existingTask.getProject().getPid();
 		Project project = projectService.getProjectById(projectId);
 		
@@ -184,15 +194,20 @@ public class TaskController {
 						&& existingTask.getTaskState().equals(Constants.TASK_STARTED))) {
 			existingTask.setTaskState(Constants.TASK_FINISHED);
 		}
+		else{
+			model.addAttribute("error", "Task not started yet ");
+			return "redirect:/project/getProjectInfo/" + existingTask.getProject().getPid();
+		}
 		if(taskService.updateTask(existingTask))
 			return "redirect:/project/getProjectInfo/" + existingTask.getProject().getPid();
 		model.addAttribute("error", "Task cannot be finished");
 		return "redirect:/project/getProjectInfo/" + existingTask.getProject().getPid();
 	}
 	@RequestMapping(value = { "/task/start/{taskId}" }, method = RequestMethod.POST, produces = "application/json")
-	public String startTask(@PathVariable("taskId") int taskId,	ModelMap model) {
+	public String startTask(@PathVariable("taskId") int taskId,	ModelMap model, HttpServletRequest request) {
+		request.getSession().setAttribute("USER", getPrincipal());
 		Task existingTask = taskService.getTaskById(taskId);
-		existingTask.setTaskState(Constants.TASK_STARTED);
+		//existingTask.setTaskState(Constants.TASK_STARTED);
 		int projectId = existingTask.getProject().getPid();
 		Project project = projectService.getProjectById(projectId);
 		if (project.getStatus().equalsIgnoreCase(Constants.PROJECT_ONGOING)
@@ -205,10 +220,11 @@ public class TaskController {
 		return "redirect:/project/getProjectInfo/" + existingTask.getProject().getPid();
 	}
 	@RequestMapping(value = { "/task/cancel/{taskId}/{userId}" }, method = RequestMethod.POST, produces = "application/json")
-	public String cancelTask(@PathVariable("taskId") int taskId, @PathVariable int userId, ModelMap model) {
+	public String cancelTask(@PathVariable("taskId") int taskId, @PathVariable int userId, ModelMap model, HttpServletRequest request) {
+		request.getSession().setAttribute("USER", getPrincipal());
 				
 		Task existingTask = taskService.getTaskById(taskId);
-		existingTask.setTaskState(Constants.TASK_STARTED);
+		//existingTask.setTaskState(Constants.TASK_STARTED);
 		int projectId = existingTask.getProject().getPid();
 		Project project = projectService.getProjectById(projectId);
 		int ownerId = project.getOwner().getUserId();
@@ -225,5 +241,19 @@ public class TaskController {
 			return "redirect:/project/getProjectInfo/" + existingTask.getProject().getPid();
 		model.addAttribute("error", "Task cannot be cancelled");
 		return "redirect:/project/getProjectInfo/" + existingTask.getProject().getPid();
+	}
+	public User getPrincipal() {
+		String userName = null;
+		User user = null;
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+		if (principal instanceof UserDetails) {
+			userName = ((UserDetails) principal).getUsername();
+		} else {
+			userName = principal.toString();
+		}
+		user = userService.getUserByUserName(userName);
+
+		return user;
 	}
 }

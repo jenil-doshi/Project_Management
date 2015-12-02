@@ -35,43 +35,7 @@
 				</sec:authorize>
 
 				<div class="nav-collapse collapse navbar-inverse-collapse">
-					<ul class="nav nav-icons">
-						<li class="active"><a href="#">
-							<i class="icon-envelope"></i>
-						</a></li>
-						<li><a href="#">
-							<i class="icon-eye-open"></i>
-						</a></li>
-						<li><a href="#">
-							<i class="icon-bar-chart"></i>
-						</a></li>
-					</ul>
-
-					<form class="navbar-search pull-left input-append" action="#">
-						<input type="text" class="span3">
-						<button class="btn" type="button">
-							<i class="icon-search"></i>
-						</button>
-					</form>
-				
-					<ul class="nav pull-right">
-						<li class="dropdown">
-							<a href="#" class="dropdown-toggle" data-toggle="dropdown">Drops <b class="caret"></b></a>
-							<ul class="dropdown-menu">
-								<li><a href="#">Action</a></li>
-								<li><a href="#">Another action</a></li>
-								<li><a href="#">Something else here</a></li>
-								<li class="divider"></li>
-								<li class="nav-header">Nav header</li>
-								<li><a href="#">Separated link</a></li>
-								<li><a href="#">One more separated link</a></li>
-							</ul>
-						</li>
-						
-						<li><a href="#">
-							Support
-						</a></li>
-					</ul>
+					
 				</div><!-- /.nav-collapse -->
 			</div>
 		</div><!-- /navbar-inner -->
@@ -224,8 +188,6 @@
 	<div class="footer">
 		<div class="container">
 			 
-
-			<b class="copyright">&copy; 2014 Edmin - EGrappler.com </b> All rights reserved.
 		</div>
 	</div>
 

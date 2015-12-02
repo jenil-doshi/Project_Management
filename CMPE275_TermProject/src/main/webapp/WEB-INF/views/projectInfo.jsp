@@ -57,37 +57,7 @@
 				</sec:authorize>
 
 				<div class="nav-collapse collapse navbar-inverse-collapse">
-					<ul class="nav nav-icons">
-						<li class="active"><a href="#"> <i class="icon-envelope"></i>
-						</a></li>
-						<li><a href="#"> <i class="icon-eye-open"></i>
-						</a></li>
-						<li><a href="#"> <i class="icon-bar-chart"></i>
-						</a></li>
-					</ul>
-
-					<form class="navbar-search pull-left input-append" action="#">
-						<input type="text" class="span3">
-						<button class="btn" type="button">
-							<i class="icon-search"></i>
-						</button>
-					</form>
-
-					<ul class="nav pull-right">
-						<li class="dropdown"><a href="#" class="dropdown-toggle"
-							data-toggle="dropdown">Dropdown <b class="caret"></b></a>
-							<ul class="dropdown-menu">
-								<li><a href="#">Item No. 1</a></li>
-
-								<li><a href="#">Don't Click</a></li>
-								<li class="divider"></li>
-								<li class="nav-header">Example Header</li>
-								<li><a href="#">A Separated link</a></li>
-							</ul></li>
-
-						<li><a href="#"> Support </a></li>
-
-					</ul>
+					
 				</div>
 				<!-- /.nav-collapse -->
 			</div>
@@ -330,7 +300,6 @@
 											<th>Actual Units</th>
 											<th>Assignee</th>
 											<th>State</th>
-											<th>Update Task</th>
 										</tr>
 										<thead>
 											<c:forEach items="${taskList}" var="task" varStatus="loop">
@@ -342,7 +311,7 @@
 														<td>${task.description}</td>
 														<td>${task.estimated_time}</td>
 														<td>${task.actual_time}</td>
-														<td>${task.assignee}</td>
+														<td>${task.assigneeName}</td>
 														<td>${task.taskState}</td>
 													<tr>
 														<c:choose>

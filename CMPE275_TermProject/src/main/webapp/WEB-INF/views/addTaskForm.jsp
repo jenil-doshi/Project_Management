@@ -33,43 +33,7 @@
 				</sec:authorize>
 
 				<div class="nav-collapse collapse navbar-inverse-collapse">
-					<ul class="nav nav-icons">
-						<li class="active"><a href="#">
-							<i class="icon-envelope"></i>
-						</a></li>
-						<li><a href="#">
-							<i class="icon-eye-open"></i>
-						</a></li>
-						<li><a href="#">
-							<i class="icon-bar-chart"></i>
-						</a></li>
-					</ul>
-
-					<form class="navbar-search pull-left input-append" action="#">
-						<input type="text" class="span3">
-						<button class="btn" type="button">
-							<i class="icon-search"></i>
-						</button>
-					</form>
-				
-					<ul class="nav pull-right">
-						<li class="dropdown">
-							<a href="#" class="dropdown-toggle" data-toggle="dropdown">Drops <b class="caret"></b></a>
-							<ul class="dropdown-menu">
-								<li><a href="#">Action</a></li>
-								<li><a href="#">Another action</a></li>
-								<li><a href="#">Something else here</a></li>
-								<li class="divider"></li>
-								<li class="nav-header">Nav header</li>
-								<li><a href="#">Separated link</a></li>
-								<li><a href="#">One more separated link</a></li>
-							</ul>
-						</li>
-						
-						<li><a href="#">
-							Support
-						</a></li>
-					</ul>
+					
 				</div><!-- /.nav-collapse -->
 			</div>
 		</div><!-- /navbar-inner -->
@@ -177,7 +141,7 @@
 									<c:url value="/project/task/create/${sessionScope.USER.userId}/${projectId}" var="formUrl"/>
 									<form:form action="${formUrl}" commandName="addTaskForm" class="form-horizontal row-fluid">
 										<div class="control-group">
-											<label class="control-label" for="basicinput">Task Name</label>
+											<label class="control-label" for="basicinput">Task Name *</label>
 											<div class="controls">
 												<form:input path="taskName" type="text" id="basicinput" placeholder="Name of the Task" class="span8" required="required"/>
 											</div>								
@@ -193,7 +157,7 @@
 										<div class="control-group">
 											<label class="control-label" for="basicinput">Estimated Units</label>
 											<div class="controls">
-												<form:input path="estimated_time" type="number" id="basicinput" placeholder="Estimated time of the task to complete" class="span8" required="required"/>
+												<form:input path="estimated_time" type="number" id="basicinput" placeholder="Estimated time of the task to complete" class="span8"/>
 											</div>
 										</div>
 
@@ -211,7 +175,7 @@
 												    <option value="${selected}" selected>${selected}</option>
 												    <c:forEach items="${users}" var="user">
 												        <c:if test="${user.firstName != selected}">
-												            <option value="${user.userId}">${user.firstName}</option>
+												            <option value="${user.userId}">${user.firstName} ${user.lastName}</option>
 												        </c:if>
 												    </c:forEach>
 												</select>
@@ -238,8 +202,6 @@
 	<div class="footer">
 		<div class="container">
 			 
-
-			<b class="copyright">&copy; 2014 Edmin - EGrappler.com </b> All rights reserved.
 		</div>
 	</div>
 
