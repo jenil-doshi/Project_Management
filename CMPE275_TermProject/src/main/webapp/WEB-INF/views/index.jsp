@@ -27,26 +27,35 @@
 </head>
 <body>
 
-	<div class="navbar navbar-fixed-top">
+	<div class="navbar navbar-fixed-top" style="height: 80px;">
 		<div class="navbar-inner">
 			<div class="container">
 				<sec:authorize access="hasRole('ROLE_ADMIN')">
 					<a class="btn btn-navbar" data-toggle="collapse"
 						data-target=".navbar-inverse-collapse"> <i
 						class="icon-reorder shaded"></i></a>
-					<a class="brand" href="index.html">Owner -
+					<a class="brand" href="#">Owner -
 						${sessionScope.USER.firstName} </a>
 				</sec:authorize>
 				<sec:authorize access="hasRole('ROLE_USER')">
 					<a class="btn btn-navbar" data-toggle="collapse"
 						data-target=".navbar-inverse-collapse"> <i
 						class="icon-reorder shaded"></i></a>
-					<a class="brand" href="index.html">Team Member -
+					<a class="brand" href="#">Team Member -
 						${sessionScope.USER.firstName} </a>
 				</sec:authorize>
-				<div class="nav-collapse collapse navbar-inverse-collapse">
-					
-				</div>
+				<!-- <div class="nav-collapse collapse navbar-inverse-collapse"> -->
+				<a class="btn btn-navbar" data-toggle="collapse"
+					data-target=".navbar-inverse-collapse"> <i
+					class="icon-reorder shaded"></i></a><a class="brand" href="#">
+					<div style="width: 100%; margin-left: 120%; margin-top: -3%;">
+						<center style="font-size: 37px;">PRO-MAN</center>
+						<br>
+						<center style="font-size: 16px;">A PROject MANagement
+							Application</center>
+					</div>
+				</a>
+				<!-- 	</div> -->
 				<!-- /.nav-collapse -->
 			</div>
 		</div>
@@ -66,20 +75,24 @@
 							<li><a href="#"><i class="menu-icon icon-inbox"></i>Statistics
 							</a></li>
 							<sec:authorize access="hasRole('ROLE_ADMIN')">
-							<li><a href="<c:url value="/project/addProjectFormView"/>"><i
-									class="menu-icon icon-tasks"></i>Add Project </a></li>
+								<li><a href="<c:url value="/project/addProjectFormView"/>"><i
+										class="menu-icon icon-tasks"></i>Add Project </a></li>
 							</sec:authorize>
-									
+
 							<sec:authorize access="hasRole('ROLE_ADMIN')">
-							<li><a href="<c:url value="/project/viewProjects/${sessionScope.USER.userId}/role_admin"/>">
-							<i class="menu-icon icon-tasks"></i>View Projects </a></li>
+								<li><a
+									href="<c:url value="/project/viewProjects/${sessionScope.USER.userId}/role_admin"/>">
+										<i class="menu-icon icon-tasks"></i>View Projects
+								</a></li>
 							</sec:authorize>
-							
+
 							<sec:authorize access="hasRole('ROLE_USER')">
- 							<li><a href="<c:url value="/project/viewProjects/${sessionScope.USER.userId}/role_user"/>">
-							<i class="menu-icon icon-tasks"></i>View Projects </a></li>
+								<li><a
+									href="<c:url value="/project/viewProjects/${sessionScope.USER.userId}/role_user"/>">
+										<i class="menu-icon icon-tasks"></i>View Projects
+								</a></li>
 							</sec:authorize>
-							
+
 						</ul>
 						<!--/.widget-nav-->
 
@@ -92,17 +105,15 @@
 									class="icon-chevron-down pull-right"></i><i
 									class="icon-chevron-up pull-right"> </i>More Pages </a>
 								<ul id="togglePages" class="collapse unstyled">
-									<li><a href="#"><i
-											class="icon-inbox"></i>Profile </a></li>
-									<li><a href="#"><i
-											class="icon-inbox"></i>All Users </a></li>
+									<li><a href="<c:url value="/project/getProfilePage"/>"><i class="icon-inbox"></i>Profile </a></li>
+									<!-- <li><a href="#"><i class="icon-inbox"></i>All Users </a></li> -->
 								</ul></li>
 							<%-- <c:url value="/login?logout" var="logoutUrl" />
 							<form action="${logoutUrl}" method="post" id="logoutForm">
 								<input type="hidden" name="${_csrf.parameterName}"
 									value="${_csrf.token}" />
 							</form> --%>
-							<li><a href="<c:url value="/logout" />" >Logout </a></li>
+							<li><a href="<c:url value="/logout" />">Logout </a></li>
 						</ul>
 					</div>
 					<!--/.sidebar-->
@@ -111,17 +122,24 @@
 				<div class="span9">
 					<div class="content">
 						<div class="btn-controls">
-							<div class="btn-box-row row-fluid">
-								<a href="#" class="btn-box big span4"><i
-									class=" icon-random"></i><b>65%</b>
-									<p class="text-muted">Growth</p> </a><a href="#"
-									class="btn-box big span4"><i class="icon-user"></i><b>15</b>
-									<p class="text-muted">New Users</p> </a><a href="#"
-									class="btn-box big span4"><i class="icon-money"></i><b>15,152</b>
-									<p class="text-muted">Profit</p> </a>
+							<div class="btn-box-row row-fluid" style="margin-left: 1%;">
+								<a href="#" class="btn-box big span4" style="width: 22%;"><i
+									class=" icon-random"></i><b>65</b><br>
+									<p class="text-muted">Total number of task units finished</p> </a>
+
+								<a href="#" class="btn-box big span4" style="width: 22%;"><i
+									class="icon-random"></i><b>15</b><br>
+									<p class="text-muted">Total number of task units to be
+										finished</p> </a> <a href="#" class="btn-box big span4"
+									style="width: 22%;"><i class="icon-random"></i><b>40</b><br>
+									<p class="text-muted">Total number of task units during the
+										planning phase</p> </a> <a href="#" class="btn-box big span4"
+									style="width: 22%;"><i class="icon-random"></i><b>10</b><br>
+									<p class="text-muted">Total number of task units cancelled
+										so far.</p> </a>
 							</div>
 							<div class="btn-box-row row-fluid">
-								<div class="span8">
+								<!-- <div class="span8">
 									<div class="row-fluid">
 										<div class="span12">
 											<a href="#" class="btn-box small span4"><i
@@ -140,11 +158,12 @@
 												class="icon-sort-down"></i><b>Bounce Rate</b> </a>
 										</div>
 									</div>
-								</div>
-								<ul class="widget widget-usage unstyled span4">
+								</div> -->
+								<ul class="widget widget-usage unstyled span4"
+									style="width: 100%">
 									<li>
 										<p>
-											<strong>Windows 8</strong> <span
+											<strong>Task Units finished</strong> <span
 												class="pull-right small muted">78%</span>
 										</p>
 										<div class="progress tight">
@@ -153,7 +172,8 @@
 									</li>
 									<li>
 										<p>
-											<strong>Mac</strong> <span class="pull-right small muted">56%</span>
+											<strong>Task Units to be finished</strong> <span
+												class="pull-right small muted">56%</span>
 										</p>
 										<div class="progress tight">
 											<div class="bar bar-success" style="width: 56%;"></div>
@@ -161,7 +181,8 @@
 									</li>
 									<li>
 										<p>
-											<strong>Linux</strong> <span class="pull-right small muted">44%</span>
+											<strong>Task units during planning phase</strong> <span
+												class="pull-right small muted">44%</span>
 										</p>
 										<div class="progress tight">
 											<div class="bar bar-warning" style="width: 44%;"></div>
@@ -169,7 +190,8 @@
 									</li>
 									<li>
 										<p>
-											<strong>iPhone</strong> <span class="pull-right small muted">67%</span>
+											<strong>Task units cancelled</strong> <span
+												class="pull-right small muted">67%</span>
 										</p>
 										<div class="progress tight">
 											<div class="bar bar-danger" style="width: 67%;"></div>
@@ -191,7 +213,7 @@
 							</div>
 						</div>
 						<!--/.module-->
-						<div class="module hide">
+						<!-- <div class="module hide">
 							<div class="module-head">
 								<h3>Adjust Budget Range</h3>
 							</div>
@@ -204,10 +226,10 @@
 								<hr />
 								<div class="slider-range"></div>
 							</div>
-						</div>
+						</div> -->
 						<div class="module">
 							<div class="module-head">
-								<h3>DataTables</h3>
+								<h3>Team Members Score board</h3>
 							</div>
 							<div class="module-body table">
 								<table cellpadding="0" cellspacing="0" border="0"
@@ -215,148 +237,150 @@
 									width="100%">
 									<thead>
 										<tr>
-											<th>Rendering engine</th>
-											<th>Browser</th>
+											<th>Team Member Name</th>
+											<!-- <th></th>
 											<th>Platform(s)</th>
-											<th>Engine version</th>
-											<th>CSS grade</th>
+											<th>Engine version</th> -->
+											<th>No of task units completed</th>
+											<th>Score</th>
 										</tr>
 									</thead>
 									<tbody>
 										<tr class="odd gradeX">
-											<td>Trident</td>
-											<td>Internet Explorer 4.0</td>
-											<td>Win 95+</td>
+											<td>John</td>
+											<!-- <td>Internet Explorer 4.0</td>
+											<td>Win 95+</td> -->
 											<td class="center">4</td>
-											<td class="center">X</td>
+											<td class="center">B</td>
 										</tr>
 										<tr class="even gradeC">
 											<td>Trident</td>
-											<td>Internet Explorer 5.0</td>
-											<td>Win 95+</td>
+											<!-- <td>Internet Explorer 5.0</td>
+											<td>Win 95+</td> -->
 											<td class="center">5</td>
 											<td class="center">C</td>
 										</tr>
 										<tr class="odd gradeA">
 											<td>Trident</td>
-											<td>Internet Explorer 5.5</td>
-											<td>Win 95+</td>
+											<!-- 	<td>Internet Explorer 5.5</td>
+											<td>Win 95+</td> -->
 											<td class="center">5.5</td>
 											<td class="center">A</td>
 										</tr>
 										<tr class="even gradeA">
 											<td>Trident</td>
-											<td>Internet Explorer 6</td>
-											<td>Win 98+</td>
+											<!-- <td>Internet Explorer 6</td>
+											<td>Win 98+</td> -->
 											<td class="center">6</td>
 											<td class="center">A</td>
 										</tr>
 										<tr class="odd gradeA">
 											<td>Trident</td>
-											<td>Internet Explorer 7</td>
-											<td>Win XP SP2+</td>
-											<td class="center">7</td>
+											<!-- <td>Internet Explorer 7</td>
+											<td>Win XP SP2+</td> -->
+											<td class="center">20</td>
 											<td class="center">A</td>
 										</tr>
 										<tr class="even gradeA">
 											<td>Trident</td>
-											<td>AOL browser (AOL desktop)</td>
-											<td>Win XP</td>
-											<td class="center">6</td>
+											<!-- <td>AOL browser (AOL desktop)</td>
+											<td>Win XP</td> -->
+											<td class="center">29</td>
 											<td class="center">A</td>
 										</tr>
 										<tr class="gradeA">
 											<td>Gecko</td>
-											<td>Firefox 1.0</td>
-											<td>Win 98+ / OSX.2+</td>
-											<td class="center">1.7</td>
+											<!-- <td>Firefox 1.0</td>
+											<td>Win 98+ / OSX.2+</td> -->
+											<td class="center">50</td>
 											<td class="center">A</td>
 										</tr>
 										<tr class="gradeA">
 											<td>Gecko</td>
-											<td>Firefox 1.5</td>
-											<td>Win 98+ / OSX.2+</td>
+											<!-- <td>Firefox 1.5</td>
+											<td>Win 98+ / OSX.2+</td> -->
+											<td class="center">2</td>
+											<td class="center">A</td>
+										</tr>
+										<tr class="gradeA">
+											<td>Gecko</td>
+											<!-- <td>Firefox 2.0</td>
+											<td>Win 98+ / OSX.2+</td> -->
 											<td class="center">1.8</td>
 											<td class="center">A</td>
 										</tr>
 										<tr class="gradeA">
 											<td>Gecko</td>
-											<td>Firefox 2.0</td>
-											<td>Win 98+ / OSX.2+</td>
-											<td class="center">1.8</td>
-											<td class="center">A</td>
-										</tr>
-										<tr class="gradeA">
-											<td>Gecko</td>
-											<td>Firefox 3.0</td>
-											<td>Win 2k+ / OSX.3+</td>
+											<!-- <td>Firefox 3.0</td>
+											<td>Win 2k+ / OSX.3+</td> -->
 											<td class="center">1.9</td>
 											<td class="center">A</td>
 										</tr>
 										<tr class="gradeA">
 											<td>Gecko</td>
-											<td>Camino 1.0</td>
-											<td>OSX.2+</td>
+											<!-- <td>Camino 1.0</td>
+											<td>OSX.2+</td> -->
 											<td class="center">1.8</td>
 											<td class="center">A</td>
 										</tr>
 										<tr class="gradeA">
 											<td>Gecko</td>
-											<td>Camino 1.5</td>
-											<td>OSX.3+</td>
+											<!-- <td>Camino 1.5</td>
+											<td>OSX.3+</td> -->
 											<td class="center">1.8</td>
-											<td class="center">A</td>
+											<td class="center">C</td>
 										</tr>
 										<tr class="gradeA">
 											<td>Gecko</td>
-											<td>Netscape 7.2</td>
-											<td>Win 95+ / Mac OS 8.6-9.2</td>
+											<!-- <td>Netscape 7.2</td>
+											<td>Win 95+ / Mac OS 8.6-9.2</td> -->
 											<td class="center">1.7</td>
 											<td class="center">A</td>
 										</tr>
 										<tr class="gradeA">
 											<td>Gecko</td>
-											<td>Netscape Browser 8</td>
-											<td>Win 98SE+</td>
+											<!-- <td>Netscape Browser 8</td>
+											<td>Win 98SE+</td> -->
 											<td class="center">1.7</td>
-											<td class="center">A</td>
+											<td class="center">B</td>
 										</tr>
 										<tr class="gradeA">
 											<td>Gecko</td>
-											<td>Netscape Navigator 9</td>
-											<td>Win 98+ / OSX.2+</td>
+											<!-- <td>Netscape Navigator 9</td>
+											<td>Win 98+ / OSX.2+</td> -->
 											<td class="center">1.8</td>
 											<td class="center">A</td>
 										</tr>
 										<tr class="gradeA">
 											<td>Gecko</td>
-											<td>Mozilla 1.0</td>
-											<td>Win 95+ / OSX.1+</td>
+											<!-- <td>Mozilla 1.0</td>
+											<td>Win 95+ / OSX.1+</td> -->
 											<td class="center">1</td>
 											<td class="center">A</td>
 										</tr>
+										<!-- End -->
 										<tr class="gradeA">
 											<td>Gecko</td>
-											<td>Mozilla 1.1</td>
-											<td>Win 95+ / OSX.1+</td>
+											<!-- <td>Mozilla 1.1</td>
+											<td>Win 95+ / OSX.1+</td> -->
 											<td class="center">1.1</td>
 											<td class="center">A</td>
 										</tr>
 										<tr class="gradeA">
 											<td>Gecko</td>
-											<td>Mozilla 1.2</td>
-											<td>Win 95+ / OSX.1+</td>
+											<!-- <td>Mozilla 1.2</td>
+											<td>Win 95+ / OSX.1+</td> -->
 											<td class="center">1.2</td>
-											<td class="center">A</td>
+											<td class="center">B</td>
 										</tr>
 										<tr class="gradeA">
 											<td>Gecko</td>
-											<td>Mozilla 1.3</td>
-											<td>Win 95+ / OSX.1+</td>
+											<!-- <td>Mozilla 1.3</td>
+											<td>Win 95+ / OSX.1+</td> -->
 											<td class="center">1.3</td>
-											<td class="center">A</td>
+											<td class="center">C</td>
 										</tr>
-										<tr class="gradeA">
+										<!-- <tr class="gradeA">
 											<td>Gecko</td>
 											<td>Mozilla 1.4</td>
 											<td>Win 95+ / OSX.1+</td>
@@ -622,15 +646,13 @@
 											<td>-</td>
 											<td class="center">-</td>
 											<td class="center">U</td>
-										</tr>
+										</tr> -->
 									</tbody>
 									<tfoot>
 										<tr>
-											<th>Rendering engine</th>
-											<th>Browser</th>
-											<th>Platform(s)</th>
-											<th>Engine version</th>
-											<th>CSS grade</th>
+											<th>Team Member Name</th>
+											<th>No of task units completed</th>
+											<th>Score</th>
 										</tr>
 									</tfoot>
 								</table>
@@ -647,9 +669,7 @@
 	</div>
 	<!--/.wrapper-->
 	<div class="footer">
-		<div class="container">
-			
-		</div>
+		<div class="container"></div>
 	</div>
 	<script src="<c:url value="/assets/scripts/jquery-1.9.1.min.js"/>"
 		type="text/javascript"></script>

@@ -67,6 +67,13 @@ public class ProjectController {
 	 * Method for fetching project add form
 	 */
 
+	@RequestMapping(value = "/getProfilePage", method = RequestMethod.GET)
+	public String getProfilePage(Map<String, Object> model, HttpServletRequest request) {
+		request.getSession().setAttribute("USER", getPrincipal());
+		//model.put("addProjectForm", new Project());
+		return "userProfile";
+	}
+	
 	@RequestMapping(value = "/addProjectFormView", method = RequestMethod.GET)
 	public String addProjectFormView(Map<String, Object> model, HttpServletRequest request) {
 		request.getSession().setAttribute("USER", getPrincipal());
@@ -269,7 +276,7 @@ public class ProjectController {
 					return "redirect:/project/getProjectInfo/" + pid;
 				} else {
 					attributes.addAttribute("startProjError",
-							"Project cannot be started untill all the tasks have been assigned.");
+							"Project cannot be started untill all the tasks have been assigned./ Estimated Units missing");
 					return "redirect:/project/getProjectInfo/" + pid;
 				}
 			}
@@ -290,6 +297,11 @@ public class ProjectController {
 			Project p = projectService.getProjectById(projectId);
 			if (p == null) {
 				attributes.addAttribute("noProject", "No Project found");
+				return "redirect:/project/getProjectInfo/" + projectId;
+			}
+			
+			if(p.getStatus().equalsIgnoreCase(Constants.PROJECT_CANCELLED)){
+				attributes.addAttribute("completeProjError", "Project is already cancelled.");
 				return "redirect:/project/getProjectInfo/" + projectId;
 			}
 
@@ -321,6 +333,13 @@ public class ProjectController {
 				attributes.addAttribute("noProject", "No Project found");
 				return "redirect:/project/getProjectInfo/" + projectId;
 			}
+			
+
+			if(p.getStatus().equalsIgnoreCase(Constants.PROJECT_COMPLETED)){
+				attributes.addAttribute("cancelProjError", "Project is already completed.");
+				return "redirect:/project/getProjectInfo/" + projectId;
+			}
+			
 			// if (p.getOwner().getUserId() == userId) {
 			if (projectService.cancelProjectById(p)) {
 				attributes.addAttribute("cancelProjSuccess", "Project cancelled");
@@ -416,26 +435,14 @@ public class ProjectController {
 			Map<Long, String> assigneeMap = new HashMap<Long, String>(taskList.size());
 			
 			for(Task task : taskList){
+				if(!(null == task.getAssignee())){
 				User user = userService.getUser(task.getAssignee());
+				if(user!=null){
 				task.setAssigneeName(user.getFirstName()+" "+user.getLastName());
+				}
 			}
-			/*for(int i=0; i<taskList.size(); i++){
-				if(taskList.get(i).getAssignee() == null){
-					if(assigneeMap.containsKey((long) taskList.get(i).getTid())){
-					}
-					else
-						assigneeMap.put((long) taskList.get(i).getTid(), "");
 				}
-				else{
-					if(assigneeMap.containsKey((long) taskList.get(i).getTid())){
-					}
-					else{
-						User user = userService.getUser(taskList.get(i).getAssignee());
-						String name = user.getFirstName() + " " + user.getLastName();
-						assigneeMap.put((long) taskList.get(i).getTid(), name);
-					}
-				}
-			}*/
+			
 		
 			model.addObject("assigneeMap", assigneeMap);
 			model.addObject("taskList", taskList);

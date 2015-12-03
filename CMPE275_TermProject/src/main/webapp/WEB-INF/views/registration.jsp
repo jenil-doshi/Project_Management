@@ -220,6 +220,104 @@ h1 {
 	background-color: #d9edf7;
 	border-color: #bce8f1;
 } */
+.navbar {
+	position: static !important;
+	margin: 0 !important;
+}
+
+.navbar-fixed-top {
+	top: 0;
+}
+
+.navbar-inner {
+	background: #fff;
+	background-image: initial;
+    background-position-x: initial;
+    background-position-y: initial;
+    background-size: initial;
+    background-repeat-x: initial;
+    background-repeat-y: initial;
+    background-attachment: initial;
+    background-origin: initial;
+    background-clip: initial;
+    background-color: rgb(255, 255, 255);
+	border-bottom: 1px solid #bbb;
+	-webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+	-moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+	    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    border-bottom-color: rgb(187, 187, 187);
+}
+
+.container {
+	margin-right: auto;
+	margin-left: auto;
+}
+
+.navbar .btn, .navbar .btn-group {
+	margin-top: 5px;
+}
+
+.btn-navbar {
+	display: none;
+	float: right;
+	padding: 7px 10px;
+	margin-left: 5px;
+	margin-right: 5px;
+	color: #ffffff;
+	text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+	background-color: #ededed;
+	background-image: -moz-linear-gradient(top, #f2f2f2, #e5e5e5);
+	background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#f2f2f2),
+		to(#e5e5e5));
+	background-image: -webkit-linear-gradient(top, #f2f2f2, #e5e5e5);
+	background-image: -o-linear-gradient(top, #f2f2f2, #e5e5e5);
+	background-image: linear-gradient(to bottom, #f2f2f2, #e5e5e5);
+	background-repeat: repeat-x;
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fff2f2f2',
+		endColorstr='#ffe5e5e5', GradientType=0);
+	border-color: #e5e5e5 #e5e5e5 #bfbfbf;
+	border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+	filter: progid:DXImageTransform.Microsoft.gradient(enabled= false);
+	-webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, .1), 0 1px 0
+		rgba(255, 255, 255, .075);
+	-moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, .1), 0 1px 0
+		rgba(255, 255, 255, .075);
+	box-shadow: inset 0 1px 0 rgba(255, 255, 255, .1), 0 1px 0
+		rgba(255, 255, 255, .075);
+}
+
+.btn {
+	margin-bottom: 0;
+	font-weight: 400;
+	text-align: center;
+	vertical-align: middle;
+	cursor: pointer;
+	background-image: none;
+	border: 1px solid transparent;
+	white-space: nowrap;
+	padding: 4px 10px;
+	font-size: 13px;
+	line-height: 1.42857;
+	border-radius: 4px;
+	-webkit-user-select: none;
+}
+.navbar .brand {
+    float: left;
+    display: block;
+    padding: 10px 20px 10px;
+    margin-left: -20px;
+    font-size: 20px;
+    font-weight: 200;
+    color: #777777;
+    text-shadow: 0 1px 0 #ffffff;
+    color: #333;
+    font-weight: bold;
+    font-size: 20px;
+    margin-right: 20px;
+    padding: 20px;
+}
 </style>
 <%-- <link type="text/css"
 	href="${pageContext.request.contextPath}/assets/bootstrap/css/bootstrap.min.css"
@@ -239,19 +337,36 @@ h1 {
 </head>
 <body>
 
+<!-- 	<div class="navbar navbar-fixed-top">
+		<div class="navbar-inner">
+			<div class="container">
+				<a class="btn btn-navbar" data-toggle="collapse"
+					data-target=".navbar-inverse-collapse"> <i
+					class="icon-reorder shaded"></i>
+				</a> <a class="brand" href="#"> PRO-MAN - A Project Management Tool
+				</a>
+
+				<div class="nav-collapse collapse navbar-inverse-collapse">
+
+					
+				</div>
+				/.nav-collapse
+			</div>
+		</div>
+		/navbar-inner
+	</div> -->
 
 
 	<div class="form">
 
 		<!-- <ul class="tab-group"> -->
-			<button type="button" class="button button-block">Sign Up</button>
-			<!-- <li class="tab"><a href="#login">Log In</a></li> -->
+		<button type="button" class="button button-block">Sign Up</button>
+		<!-- <li class="tab"><a href="#login">Log In</a></li> -->
 		<!-- </ul> -->
 
 		<div class="tab-content">
 			<div id="signup">
-				<br>
-				<br>
+				<br> <br>
 				<c:if test="${param.error!=null}">
 					<div class="alert alert-danger">
 						<h1>Registration Failed</h1>

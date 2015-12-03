@@ -6,7 +6,7 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Add a Project</title>
+	<title>Update a Project</title>
 	<link type="text/css" href="<c:url value="/assets/bootstrap/css/bootstrap.min.css"/>" rel="stylesheet">
     <link type="text/css" href="<c:url value="/assets/bootstrap/css/bootstrap-responsive.min.css"/>" rel="stylesheet">
     <link type="text/css" href="<c:url value="/assets/css/theme.css"/>" rel="stylesheet">
@@ -15,6 +15,11 @@
 	href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
 	<link type="text/css" href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,400,600' rel='stylesheet'>
 </head>
+<style>
+.required{
+      color:red;
+}
+</style>
 <body>
 <div class="navbar navbar-fixed-top">
 		<div class="navbar-inner">
@@ -71,7 +76,7 @@
 							
 							<li>
 								<a href="<c:url value="/project/addProjectFormView"/>"><i
-									class="menu-icon icon-tasks"></i>Add Project </a>
+									class="menu-icon icon-tasks"></i>Add a Project</a>
 							</li>
 							<sec:authorize access="hasRole('ROLE_ADMIN')">
 							<li><a href="<c:url value="/project/viewProjects/${sessionScope.USER.userId}/role_admin"/>">
@@ -131,7 +136,7 @@
 
 						<div class="module">
 							<div class="module-head">
-								<h3>Forms</h3>
+								<h1>Update a Project</h1>
 							</div>
 							<div class="module-body">
 
@@ -141,28 +146,28 @@
 									<c:url value="/project/update/${sessionScope.USER.userId}/${pid}" var="formUrl"/>
 									<form:form action="${formUrl}" commandName="updateProjectForm" class="form-horizontal row-fluid">
 										<div class="control-group">
-											<label class="control-label" for="basicinput">Project Name *</label>
+											<label class="control-label" for="basicinput"><h4>Project Name<span class="required">*</span></h4></label>
 											<div class="controls">
 												<form:input path="name" type="text" id="basicinput" placeholder="Name of the Project" class="span8" required="required"/>
 											</div>								
 										</div>
 
 										<div class="control-group">
-											<label class="control-label" for="basicinput">Project Description</label>
+											<label class="control-label" for="basicinput"><h4>Project Description</h4></label>
 											<div class="controls">
 												<form:textarea path="description" class="span8" rows="5"/>
 											</div>											
 										</div>
 
 										<div class="control-group">
-											<label class="control-label" for="basicinput">Start Date *</label>
+											<label class="control-label" for="basicinput"><h4>Start Date <span class="required">*</span></h4></label>
 											<div class="controls">
 												<form:input path="startDate" id="startDate" placeholder="When will the project Start?" class="span8" required="required"/>
 											</div>
 										</div>
 
 										<div class="control-group">
-											<label class="control-label" for="basicinput">End Date *</label>
+											<label class="control-label" for="basicinput"><h4>End Date <span class="required">*</span></h4></label>
 											<div class="controls">
 												<form:input path="endDate" id="endDate" placeholder="When will the project end." class="span8" required="required"/>
 											</div>

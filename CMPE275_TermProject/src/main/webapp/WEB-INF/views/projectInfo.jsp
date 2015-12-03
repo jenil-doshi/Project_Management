@@ -56,9 +56,7 @@
 						${sessionScope.USER.firstName} </a>
 				</sec:authorize>
 
-				<div class="nav-collapse collapse navbar-inverse-collapse">
-					
-				</div>
+				<div class="nav-collapse collapse navbar-inverse-collapse"></div>
 				<!-- /.nav-collapse -->
 			</div>
 		</div>
@@ -111,10 +109,11 @@
 									class="icon-chevron-up pull-right"></i> More Pages
 							</a>
 								<ul id="togglePages" class="collapse unstyled">
-									<li><a href="#"> <i class="icon-inbox"></i> Profile
+									<li><a href="<c:url value="/project/getProfilePage"/>">
+											<i class="icon-inbox"></i> Profile
 									</a></li>
-									<li><a href="#"> <i class="icon-inbox"></i> All Users
-									</a></li>
+									<!-- <li><a href="#"> <i class="icon-inbox"></i> All Users
+									</a></li> -->
 								</ul></li>
 
 							<li><a href="<c:url value="/logout" />">Logout </a></li>
@@ -130,12 +129,16 @@
 					<div class="content">
 
 						<div class="module">
-							<div class="module-head">
+							<div class="module-head" style="height: 29px;">
 								<h3>
-									<strong>Project Information</strong>
+									<strong><h1>Project Information</h1></strong>
 								</h3>
 							</div>
 							<!-- Update Project-->
+							<c:if test="${param.finishTaskError!=null}">
+								<div class="alert alert-danger">
+									${param.finishTaskError}</div>
+							</c:if>
 							<c:if test="${param.successfulUpdate!=null}">
 								<div class="alert alert-success">
 									${param.successfulUpdate}</div>
@@ -180,42 +183,63 @@
 								<tr>
 									<td rowspan="4">
 										<div class="module-body">
-											<table id="projTable" style="width: 100%;">
-												<tr>
-													<td>ID</td>
+											<table id="projTable" style="
+												width: 100%; font-family: sans-serif; font-size: inherit;/* font-weight: 600; */font-size: 15px;">
+												<tr style="height:25px">
+													<td>ID:</td>
 													<td>${project.pid}</td>
 												</tr>
-												<tr>
-													<td>Name</td>
+												<tr style="height:25px">
+													<td>Name:</td>
 													<td>${project.name}</td>
 												</tr>
-												<tr>
-													<td>Description</td>
+												<tr style="height:25px">
+													<td>Description:</td>
 													<td>${project.description}</td>
 												</tr>
 
-												<tr>
-													<td>Start Date</td>
+												<tr style="height:25px">
+													<td>Start Date:</td>
 													<td><fmt:formatDate type="date"
 															value="${project.startDate}" /></td>
 												</tr>
-												<tr>
-													<td>End Date</td>
+												<tr style="height:25px">
+													<td>End Date:</td>
 													<td><fmt:formatDate type="date"
 															value="${project.endDate}" /></td>
 												</tr>
-												<tr>
-													<td>Owner</td>
+												<tr style="height:25px">
+													<td>Owner:</td>
 													<td>${project.owner.firstName}</td>
 												</tr>
-												<tr>
+												<tr style="height:25px">
 
-													<td>Status</td>
-													<td id="status">${project.status}</td>
+													<td>Status:</td>
+													<%-- <td id="status">${project.status}</td> --%>
+													<c:choose>
+														<c:when test="${project.status == 'planning'}">
+														<td id="status" style="color:orange;text-transform: uppercase;font-weight: bolder;">${project.status}</td>
+														</c:when>
+														<c:when test="${project.status == 'new'}">
+														<td id="status" style="color:blue;text-transform: uppercase;font-weight: bolder;">${project.status}</td>
+														</c:when>
+														<c:when test="${project.status == 'ongoing'}">
+														<td id="status" style="color:black;text-transform: uppercase;font-weight: bolder;">${project.status}</td>
+														</c:when>
+														<c:when test="${project.status == 'completed'}">
+														<td id="status" style="color:green;text-transform: uppercase;font-weight: bolder;">${project.status}</td>
+														</c:when>
+														<c:when test="${project.status == 'cancelled'}">
+														<td id="status" style="color:red;text-transform: uppercase;font-weight: bolder;">${project.status}</td>
+														</c:when>
+														<c:otherwise>
+														<td id="status" style="color:black;text-transform: uppercase;font-weight: bolder;">${project.status}</td>
+														</c:otherwise>
+													</c:choose>
 												</tr>
 
 												<sec:authorize access="hasRole('ROLE_ADMIN')">
-													<tr>
+													<tr style="height:50px">
 														<td><section>
 																<div id="hideDivUpdate">
 																	<a class="btn btn-primary"
@@ -228,19 +252,19 @@
 
 											</table>
 
-										</div>
-									</td>
-									<td><sec:authorize access="hasRole('ROLE_ADMIN')">
-											<div class="pull-right ">
-												<div id="hideDivInvite">
-													<a
-														href="<c:url value="/project/getUsersListForAddProject/${pageContext.request.userPrincipal.name}/${project.pid}/${project.name}/${project.owner.firstName}"/>"
-														class="btn btn-primary"
-														style="margin-left: -17%; margin-top: 11%;">Invite
-														Users </a>
-												</div>
+								</div>
+								</td>
+								<td><sec:authorize access="hasRole('ROLE_ADMIN')">
+										<div class="pull-right ">
+											<div id="hideDivInvite">
+												<a
+													href="<c:url value="/project/getUsersListForAddProject/${pageContext.request.userPrincipal.name}/${project.pid}/${project.name}/${project.owner.firstName}"/>"
+													class="btn btn-primary"
+													style="margin-left: -17%; margin-top: 11%;">Invite
+													Users </a>
 											</div>
-										</sec:authorize> <!-- </div> --></td>
+										</div>
+									</sec:authorize> <!-- </div> --></td>
 								</tr>
 								<tr>
 									<td><sec:authorize access="hasRole('ROLE_ADMIN')">
@@ -292,7 +316,7 @@
 									</p>
 									<table class="table">
 										<tr>
-											<th>#</th>
+											<!-- <th>#</th> -->
 											<th>ID</th>
 											<th>Name</th>
 											<th>Description</th>
@@ -305,14 +329,34 @@
 											<c:forEach items="${taskList}" var="task" varStatus="loop">
 												<tbody>
 													<tr>
-														<td>${loop.index+1}</td>
+														<%-- <td>${loop.index+1}</td> --%>
 														<td>${task.tid}</td>
 														<td>${task.taskName}</td>
 														<td>${task.description}</td>
 														<td>${task.estimated_time}</td>
 														<td>${task.actual_time}</td>
-														<td>${task.assigneeName}</td>
-														<td>${task.taskState}</td>
+														<td style="text-transform: uppercase;">${task.assigneeName}</td>
+														<%-- <td>${task.taskState}</td> --%>
+														<c:choose>
+														<c:when test="${task.taskState == 'new'}">
+														<td style="color:blue;text-transform: uppercase;font-weight: bolder;">${task.taskState}</td>
+														</c:when>
+														<c:when test="${task.taskState == 'assigned'}">
+														<td style="color:orange;text-transform: uppercase;font-weight: bolder;">${task.taskState}</td>
+														</c:when>
+														<c:when test="${task.taskState == 'started'}">
+														<td style="color:black;text-transform: uppercase;font-weight: bolder;">${task.taskState}</td>
+														</c:when>
+														<c:when test="${task.taskState == 'finished'}">
+														<td style="color:green;text-transform: uppercase;font-weight: bolder;">${task.taskState}</td>
+														</c:when>
+														<c:when test="${task.taskState == 'cancelled'}">
+														<td style="color:red;text-transform: uppercase;font-weight: bolder;">${task.taskState}</td>
+														</c:when>
+														<c:otherwise>
+														<td style="color:black;text-transform: uppercase;font-weight: bolder;">${task.taskState}</td>
+														</c:otherwise>
+													</c:choose>
 													<tr>
 														<c:choose>
 															<c:when
@@ -321,7 +365,7 @@
 															<c:otherwise>
 																<td></td>
 																<td></td>
-																<td><a class="btn btn-info"
+																<td><a class="btn btn-primary"
 																	href="<c:url value="/project/updateTask/${task.tid}"/>">Update
 																		Task</td>
 
@@ -330,26 +374,27 @@
 																<form:form action="${formUrl}"
 																	commandName="startTaskForm"
 																	class="form-horizontal row-fluid">
-																	<td><input type="submit" class="btn btn-info"
+																	<td><input type="submit" class="btn btn-primary"
 																		value="Start task" /></td>
 																</form:form>
 
-																<c:url
-																	value="/project/task/cancel/${task.tid}/${sessionScope.USER.userId}"
-																	var="formUrl" />
-																<form:form action="${formUrl}"
-																	commandName="cancelTaskForm"
-																	class="form-horizontal row-fluid">
-																	<td><input type="submit" class="btn btn-info"
-																		value="Cancel task" /></td>
-																</form:form>
-
+																<sec:authorize access="hasRole('ROLE_ADMIN')">
+																	<c:url
+																		value="/project/task/cancel/${task.tid}/${sessionScope.USER.userId}"
+																		var="formUrl" />
+																	<form:form action="${formUrl}"
+																		commandName="cancelTaskForm"
+																		class="form-horizontal row-fluid">
+																		<td><input type="submit" class="btn btn-primary"
+																			value="Cancel task" /></td>
+																	</form:form>
+																</sec:authorize>
 																<c:url value="/project/task/finish/${task.tid}"
 																	var="formUrl" />
 																<form:form action="${formUrl}"
 																	commandName="finishTaskForm"
 																	class="form-horizontal row-fluid">
-																	<td><input type="submit" class="btn btn-info"
+																	<td><input type="submit" class="btn btn-primary"
 																		value="Finish task" /></td>
 																</form:form>
 																<td></td>

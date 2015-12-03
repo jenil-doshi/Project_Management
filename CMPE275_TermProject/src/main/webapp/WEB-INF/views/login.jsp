@@ -53,7 +53,7 @@
 				<a class="btn btn-navbar" data-toggle="collapse"
 					data-target=".navbar-inverse-collapse"> <i
 					class="icon-reorder shaded"></i>
-				</a> <a class="brand" href="index.html"> Edmin </a>
+				</a> <a class="brand" href="#"> PRO-MAN - A Project Management Tool </a>
 
 				<div class="nav-collapse collapse navbar-inverse-collapse">
 
@@ -63,7 +63,7 @@
 
 
 
-						<li><a href="#"> Forgot your password? </a></li>
+						<!-- <li><a href="#"> Forgot your password? </a></li> -->
 					</ul>
 				</div>
 				<!-- /.nav-collapse -->

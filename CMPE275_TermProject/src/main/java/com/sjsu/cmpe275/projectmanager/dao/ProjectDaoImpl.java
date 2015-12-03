@@ -26,8 +26,9 @@ public class ProjectDaoImpl implements ProjectDao {
 
 	@Autowired
 	private SessionFactory sessionFactory;
-	
-	@Autowired TaskDao taskDao;
+
+	@Autowired
+	TaskDao taskDao;
 
 	@Transactional
 	@Override
@@ -77,7 +78,7 @@ public class ProjectDaoImpl implements ProjectDao {
 	@Override
 	public Project getProjectById(int Id) {
 		Project project = (Project) sessionFactory.getCurrentSession().get(Project.class, Id);
-		User user = (User)sessionFactory.getCurrentSession().get(User.class, project.getOwner().getUserId());
+		User user = (User) sessionFactory.getCurrentSession().get(User.class, project.getOwner().getUserId());
 		project.setOwner(user);
 		return project;
 	}
@@ -127,8 +128,8 @@ public class ProjectDaoImpl implements ProjectDao {
 				project.setStatus(Constants.PROJECT_CANCELLED);
 				sessionFactory.getCurrentSession().update(project);
 				List<Task> taskList = taskDao.getTasks(project.getPid());
-				if(taskList!=null&&(!taskList.isEmpty())){
-					for(Task task : taskList){
+				if (taskList != null && (!taskList.isEmpty())) {
+					for (Task task : taskList) {
 						task.setTaskState(Constants.TASK_CANCELLED);
 						sessionFactory.getCurrentSession().update(task);
 					}
@@ -146,6 +147,10 @@ public class ProjectDaoImpl implements ProjectDao {
 	@Override
 	public boolean getTasksForProject(int pid) {
 		boolean startProject = true;
+		List<String> stateList = new ArrayList<String>();
+		stateList.add(Constants.TASK_ASSIGNED);
+		stateList.add(Constants.TASK_CANCELLED);
+
 		try {
 			Query query = sessionFactory.getCurrentSession().createQuery(Queries.GET_TASKS_FOR_PROJECT);
 			Project project = getProjectById(pid);
@@ -153,19 +158,18 @@ public class ProjectDaoImpl implements ProjectDao {
 			List<Task> tasksList = query.list();
 			if (tasksList != null) {
 				for (Task task : tasksList) {
-					if (!(task.getTaskState().equalsIgnoreCase(Constants.TASK_ASSIGNED))
-							|| task.getEstimated_time() == 0) {
+					if (!(stateList.contains(task.getTaskState()))
+							|| (task.getEstimated_time() == null || task.getEstimated_time() == 0)) {
 						startProject = false;
-						
+
 						break;
-						
+
 					}
 				}
 			} else {
 				startProject = false;
 				System.out.println("No Tasks present in project");
-				
-				
+
 			}
 
 		} catch (Exception e) {
@@ -186,13 +190,31 @@ public class ProjectDaoImpl implements ProjectDao {
 			query.setParameter("accepted", Constants.INVITATION_ACCEPT);
 			List<Integer> userIdList = query.list();
 			// List uIdsList = Arrays.asList(userIdList);
-			if(userIdList.isEmpty())
+			if (userIdList.isEmpty())
 				return null;
-			else{
+			else {
+				
+				Project project = getProjectById(pid);
+				Query queryTaskList = sessionFactory.getCurrentSession().createQuery(Queries.GET_TASKS_FOR_PROJECT)
+						.setParameter("project", project);
+				List<Task> taskList = queryTaskList.list();
+				if(!taskList.isEmpty()||taskList!=null){
+					
+					for(Task task: taskList){
+						Integer assignee = task.getAssignee();
+						if(userIdList.contains(assignee)){
+							userIdList.remove(assignee);
+						}
+					}
+				}
+
+				if((!userIdList.isEmpty())&&userIdList!=null){
 				userQuery = sessionFactory.getCurrentSession().createQuery(Queries.GET_USERS_LIST)
 						.setParameterList("userIdList", userIdList);
+				usersList = userQuery.list();
+				}
 			}
-			usersList = userQuery.list();
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new RuntimeException("A Runtime Exception has occurred");
@@ -256,11 +278,11 @@ public class ProjectDaoImpl implements ProjectDao {
 						if (userProj.getPid() == pid) {
 							user.setStatus(userProj.getAcceptanceStatus());
 							userReturnList.add(user);
-						} /*else {
-							usersList.remove(user);
-						}*/
+						} /*
+							 * else { usersList.remove(user); }
+							 */
 					}
-				}else{
+				} else {
 					user.setStatus(Constants.AVAILABLE);
 					userReturnList.add(user);
 				}

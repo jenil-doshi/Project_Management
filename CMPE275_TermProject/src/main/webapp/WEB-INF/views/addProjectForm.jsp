@@ -25,6 +25,11 @@
 	href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,400,600'
 	rel='stylesheet'>
 </head>
+<style>
+.required{
+      color:red;
+}
+</style>
 <body>
 	<div class="navbar navbar-fixed-top">
 		<div class="navbar-inner">
@@ -101,10 +106,10 @@
 							</a>
 								<ul id="togglePages" class="collapse unstyled">
 
-									<li><a href="#"> <i class="icon-inbox"></i> Profile
+									<li><a href="<c:url value="/project/getProfilePage"/>"> <i class="icon-inbox"></i> Profile
 									</a></li>
-									<li><a href="#"> <i class="icon-inbox"></i> All Users
-									</a></li>
+									<!-- <li><a href="#"> <i class="icon-inbox"></i> All Users
+									</a></li> -->
 
 
 								</ul></li>
@@ -126,7 +131,7 @@
 
 						<div class="module">
 							<div class="module-head">
-								<h3>Add a project</h3>
+								<h1>Add a project</h1>
 							</div>
 							<div class="module-body">
 								<c:url value="/project/create/${sessionScope.USER.userId}"
@@ -137,8 +142,8 @@
 								<form:form action="${formUrl}" commandName="addProjectForm" id="addForm"
 									class="form-horizontal row-fluid">
 									<div class="control-group">
-										<label class="control-label" for="basicinput">Project
-											Name *</label>
+										<label class="control-label" for="basicinput"><h4>Project
+											Name <span class="required">*</span></h4></label>
 										<div class="controls">
 											<form:input path="name" type="text" id="basicinput"
 												placeholder="Name of the Project" class="span8"
@@ -147,8 +152,8 @@
 									</div>
 
 									<div class="control-group">
-										<label class="control-label" for="basicinput">Project
-											Description</label>
+										<label class="control-label" for="basicinput"><h4>Project
+											Description</h4></label>
 										<div class="controls">
 											<form:textarea path="description" class="span8" rows="5" />
 										</div>
@@ -158,8 +163,8 @@
 									
 
 									<div class="control-group">
-										<label class="control-label" for="basicinput">Start
-											Date *</label>
+										<label class="control-label" for="basicinput"><h4>Start
+											Date <span class="required">*</span></h4></label>
 										<div class="controls">
 
 											<form:input path="startDate" id="startDate" 
@@ -170,8 +175,8 @@
 
 
 									<div class="control-group">
-										<label class="control-label" for="basicinput">End Date
-											*</label>
+										<label class="control-label" for="basicinput"><h4>End Date
+											<span class="required">*</span><h4></h4></label>
 										<div class="controls">
 											<form:input path="endDate" id="endDate"
 												placeholder="When will the project end." class="span8"
@@ -182,7 +187,7 @@
 
 									<div class="control-group">
 										<div class="controls">
-											<input type="submit" class="btn" />
+											<input type="submit" class="btn btn-primary btn-lg" value="Create"/>
 										</div>
 									</div>
 								</form:form>

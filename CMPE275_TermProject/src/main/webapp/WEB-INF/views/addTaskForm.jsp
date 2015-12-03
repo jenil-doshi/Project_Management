@@ -13,6 +13,11 @@
     <link type="text/css" href="<c:url value="/assets/images/icons/css/font-awesome.css"/>" rel="stylesheet">
 	<link type="text/css" href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,400,600' rel='stylesheet'>
 </head>
+<style>
+.required{
+      color:red;
+}
+</style>
 <body>
 <div class="navbar navbar-fixed-top">
 		<div class="navbar-inner">
@@ -94,17 +99,17 @@
 								<ul id="togglePages" class="collapse unstyled">
 									
 									<li>
-										<a href="#">
+										<a href="<c:url value="/project/getProfilePage"/>">
 											<i class="icon-inbox"></i>
 											Profile
 										</a>
 									</li>
-									<li>
+									<!-- <li>
 										<a href="#">
 											<i class="icon-inbox"></i>
 											All Users
 										</a>
-									</li>
+									</li> -->
 									
 									
 								</ul>
@@ -129,7 +134,7 @@
 
 						<div class="module">
 							<div class="module-head">
-								<h3>Add Task Information</h3>
+								<h1>Add Task Information</h1>
 							</div>
 							<div class="module-body">
 								<c:if test="${param.error!=null}">
@@ -141,35 +146,35 @@
 									<c:url value="/project/task/create/${sessionScope.USER.userId}/${projectId}" var="formUrl"/>
 									<form:form action="${formUrl}" commandName="addTaskForm" class="form-horizontal row-fluid">
 										<div class="control-group">
-											<label class="control-label" for="basicinput">Task Name *</label>
+											<label class="control-label" for="basicinput"><h4>Task Name<span class="required">*</span></h4></label>
 											<div class="controls">
 												<form:input path="taskName" type="text" id="basicinput" placeholder="Name of the Task" class="span8" required="required"/>
 											</div>								
 										</div>
 
 										<div class="control-group">
-											<label class="control-label" for="basicinput">Task Description</label>
+											<label class="control-label" for="basicinput"><h4>Task Description</h4></label>
 											<div class="controls">
 												<form:textarea path="description" class="span8" rows="5"/>
 											</div>											
 										</div>
 
 										<div class="control-group">
-											<label class="control-label" for="basicinput">Estimated Units</label>
+											<label class="control-label" for="basicinput"><h4>Estimated Units</h4></label>
 											<div class="controls">
 												<form:input path="estimated_time" type="number" id="basicinput" placeholder="Estimated time of the task to complete" class="span8"/>
 											</div>
 										</div>
 
 										<div class="control-group">
-											<label class="control-label" for="basicinput">Actual Units</label>
+											<label class="control-label" for="basicinput"><h4>Actual Units</h4></label>
 											<div class="controls">
 												<form:input path="actual_time" type="number" id="basicinput" placeholder="Actual time of the task" class="span8" />
 											</div>
 										</div>
 										
 										<div class="control-group">
-											<label class="control-label" for="basicinput">Assignee</label>
+											<label class="control-label" for="basicinput"><h4>Assignee</h4></label>
 											<div class="controls">
 												<select name='Assignee'>
 												    <option value="${selected}" selected>${selected}</option>
@@ -184,7 +189,7 @@
 										
 										<div class="control-group">
 											<div class="controls">
-												<input type="submit" class="btn"/>
+												<input type="submit" class="btn btn-primary btn-lg" value="Create"/>
 											</div>
 										</div>
 									</form:form>

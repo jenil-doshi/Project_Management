@@ -138,7 +138,7 @@
                                                 </h3>
                                                 <p>
                                                     <small class="muted">${user.email}</small></p>
-                                                    <small class="muted">${user.status}</small></p>
+                                                    <b><small class="muted">Status: ${user.status}</small></p></b>
                                                       
                                                 <div class="media-option btn-group shaded-icon">
                                                     <button class="btn btn-small">
