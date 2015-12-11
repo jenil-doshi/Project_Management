@@ -1,7 +1,5 @@
 package com.sjsu.cmpe275.projectmanager.model;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -40,70 +38,71 @@ public class Project {
 	@JoinColumn(name = "Owner", referencedColumnName = "UID")
 	private User owner;
 
-	//@Column(name = "StartDate")
-	//private Date dbStartDate;
-	//@Column(name = "EndDate")
-	//private Date dbEndDate;
-
-	//@Transient
 	@Column(name = "StartDate")
 	private Date startDate;
 
-	//@Transient
 	@Column(name = "EndDate")
 	private Date endDate;
 
-	// @JsonSerialize(using = FormatDate.class)
+	@Transient
+	private int taskUnitsTobeFinished;
+	@Transient
+	private int taskUnitsFinished;
+	@Transient
+	private int taskUnitsAtPlanningPhase;
+	@Transient
+	private int taskUnitsCancelled;
+
+	public int getTaskUnitsTobeFinished() {
+		return taskUnitsTobeFinished;
+	}
+
+	public void setTaskUnitsTobeFinished(int taskUnitsTobeFinished) {
+		this.taskUnitsTobeFinished = taskUnitsTobeFinished;
+	}
+
+	public int getTaskUnitsFinished() {
+		return taskUnitsFinished;
+	}
+
+	public void setTaskUnitsFinished(int taskUnitsFinished) {
+		this.taskUnitsFinished = taskUnitsFinished;
+	}
+
+	public int getTaskUnitsAtPlanningPhase() {
+		return taskUnitsAtPlanningPhase;
+	}
+
+	public void setTaskUnitsAtPlanningPhase(int taskUnitsAtPlanningPhase) {
+		this.taskUnitsAtPlanningPhase = taskUnitsAtPlanningPhase;
+	}
+
+	public int getTaskUnitsCancelled() {
+		return taskUnitsCancelled;
+	}
+
+	public void setTaskUnitsCancelled(int taskUnitsCancelled) {
+		this.taskUnitsCancelled = taskUnitsCancelled;
+	}
+
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM/dd/yyyy")
 	public Date getStartDate() {
-//		SimpleDateFormat date = new SimpleDateFormat("MM-dd-yyyy");
-//		startDate = date.format(getDbStartDate());
 		return startDate;
 	}
 
 	public void setStartDate(Date startDate) {
 		this.startDate = startDate;
-//		SimpleDateFormat date = new SimpleDateFormat("MM-dd-yyyy");
-//		try {
-//			setDbStartDate(date.parse(this.startDate));
-//		} catch (ParseException e) {
-//
-//			e.printStackTrace();
-//		}
 	}
-
-//	public Date getDbStartDate() {
-//		return dbStartDate;
-//	}
-//
-//	public void setDbStartDate(Date dbStartDate) {
-//		this.dbStartDate = dbStartDate;
-//	}
-//
-//	public Date getDbEndDate() {
-//		return dbEndDate;
-//	}
-//
-//	public void setDbEndDate(Date dbEndDate) {
-//		this.dbEndDate = dbEndDate;
-//	}
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM/dd/yyyy")
 	public Date getEndDate() {
-//		SimpleDateFormat date = new SimpleDateFormat("MM-dd-yyyy");
-//		endDate = date.format(getDbEndDate());
+
 		return endDate;
 	}
 
 	public void setEndDate(Date endDate) {
 		this.endDate = endDate;
-//		SimpleDateFormat date = new SimpleDateFormat("MM-dd-yyyy");
-//		try {
-//			setDbEndDate(date.parse(this.endDate));
-//		} catch (ParseException e) {
-//
-//			e.printStackTrace();
-//		}
+
 	}
 
 	public User getOwner() {

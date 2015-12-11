@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Query;
-import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -114,7 +113,6 @@ public class ProjectDaoImpl implements ProjectDao {
 	}
 
 	///////////////////////////////// Project_Cancel////////////////////////////////////////
-	@SuppressWarnings("unchecked")
 	@Transactional
 	@Override
 	public boolean cancelProjectById(Project project) {

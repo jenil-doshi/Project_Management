@@ -1,38 +1,25 @@
 package com.sjsu.cmpe275.projectmanager.controller;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -43,6 +30,7 @@ import com.sjsu.cmpe275.projectmanager.model.Task;
 import com.sjsu.cmpe275.projectmanager.model.User;
 import com.sjsu.cmpe275.projectmanager.model.UserRoles;
 import com.sjsu.cmpe275.projectmanager.service.ProjectService;
+import com.sjsu.cmpe275.projectmanager.service.ReportService;
 import com.sjsu.cmpe275.projectmanager.service.TaskService;
 import com.sjsu.cmpe275.projectmanager.service.UserService;
 
@@ -63,6 +51,9 @@ public class ProjectController {
 	@Autowired
 	TaskService taskService;
 
+	@Autowired
+	private ReportService reportService;
+
 	/**
 	 * Method for fetching project add form
 	 */
@@ -70,10 +61,10 @@ public class ProjectController {
 	@RequestMapping(value = "/getProfilePage", method = RequestMethod.GET)
 	public String getProfilePage(Map<String, Object> model, HttpServletRequest request) {
 		request.getSession().setAttribute("USER", getPrincipal());
-		//model.put("addProjectForm", new Project());
+		// model.put("addProjectForm", new Project());
 		return "userProfile";
 	}
-	
+
 	@RequestMapping(value = "/addProjectFormView", method = RequestMethod.GET)
 	public String addProjectFormView(Map<String, Object> model, HttpServletRequest request) {
 		request.getSession().setAttribute("USER", getPrincipal());
@@ -175,10 +166,10 @@ public class ProjectController {
 				if (proj.getStatus().equals(Constants.PROJECT_NEW)) {
 					if (proj.getStartDate() != null) {
 						proj.setStartDate(project.getStartDate());
-						String status  = projectService.getProjectStatus(project.getStartDate(), project.getEndDate());
-						if(status.equalsIgnoreCase(Constants.PROJECT_COMPLETED)){
+						String status = projectService.getProjectStatus(project.getStartDate(), project.getEndDate());
+						if (status.equalsIgnoreCase(Constants.PROJECT_COMPLETED)) {
 							attributes.addAttribute("error", "End date has to be a future date.");
-							return "redirect:/project/updateProjectFormView/"+ pid;
+							return "redirect:/project/updateProjectFormView/" + pid;
 						}
 						proj.setStatus(status);
 					}
@@ -299,8 +290,8 @@ public class ProjectController {
 				attributes.addAttribute("noProject", "No Project found");
 				return "redirect:/project/getProjectInfo/" + projectId;
 			}
-			
-			if(p.getStatus().equalsIgnoreCase(Constants.PROJECT_CANCELLED)){
+
+			if (p.getStatus().equalsIgnoreCase(Constants.PROJECT_CANCELLED)) {
 				attributes.addAttribute("completeProjError", "Project is already cancelled.");
 				return "redirect:/project/getProjectInfo/" + projectId;
 			}
@@ -333,13 +324,12 @@ public class ProjectController {
 				attributes.addAttribute("noProject", "No Project found");
 				return "redirect:/project/getProjectInfo/" + projectId;
 			}
-			
 
-			if(p.getStatus().equalsIgnoreCase(Constants.PROJECT_COMPLETED)){
+			if (p.getStatus().equalsIgnoreCase(Constants.PROJECT_COMPLETED)) {
 				attributes.addAttribute("cancelProjError", "Project is already completed.");
 				return "redirect:/project/getProjectInfo/" + projectId;
 			}
-			
+
 			// if (p.getOwner().getUserId() == userId) {
 			if (projectService.cancelProjectById(p)) {
 				attributes.addAttribute("cancelProjSuccess", "Project cancelled");
@@ -425,25 +415,26 @@ public class ProjectController {
 		Project project = null;
 		List<Task> taskList = null;
 		try {
-			/*List<User> users = projectService.getUsersList(pid);
-			model.addObject("users", users);*/
-			
+			/*
+			 * List<User> users = projectService.getUsersList(pid);
+			 * model.addObject("users", users);
+			 */
+
 			project = projectService.getProjectById(pid);
 			model.addObject("project", project);
 			taskList = taskService.getTasks(pid);
-			
+
 			Map<Long, String> assigneeMap = new HashMap<Long, String>(taskList.size());
-			
-			for(Task task : taskList){
-				if(!(null == task.getAssignee())){
-				User user = userService.getUser(task.getAssignee());
-				if(user!=null){
-				task.setAssigneeName(user.getFirstName()+" "+user.getLastName());
+
+			for (Task task : taskList) {
+				if (!(null == task.getAssignee())) {
+					User user = userService.getUser(task.getAssignee());
+					if (user != null) {
+						task.setAssigneeName(user.getFirstName() + " " + user.getLastName());
+					}
 				}
 			}
-				}
-			
-		
+
 			model.addObject("assigneeMap", assigneeMap);
 			model.addObject("taskList", taskList);
 			model.setViewName("projectInfo");
@@ -457,4 +448,17 @@ public class ProjectController {
 		return model;
 	}
 
+	@RequestMapping(value = "/report/{pid}", method = RequestMethod.GET)
+	public @ResponseBody Project getReport(@PathVariable int pid) {
+		ModelAndView model = new ModelAndView();
+		try {
+
+			//model.setViewName("index");
+			//model.addObject("report", reportService.getReport(pid));
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return reportService.getReport(pid);
+	}
 }

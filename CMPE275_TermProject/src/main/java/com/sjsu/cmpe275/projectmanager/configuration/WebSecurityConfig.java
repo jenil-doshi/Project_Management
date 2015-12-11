@@ -10,7 +10,6 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
-@SuppressWarnings("deprecation")
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
@@ -33,7 +32,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		// .logout().permitAll().and().csrf().disable();
 
 		http.authorizeRequests().antMatchers("/getRegForm","/register").permitAll();
-		http.authorizeRequests().antMatchers("/","/home","/project/**","/task**","/user**").access("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')").and()
+		http.authorizeRequests().antMatchers("/","/home","/project**","/task**","/user**").access("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')").and()
 				.formLogin().loginPage("/login").failureUrl("/login?error").usernameParameter("username")
 				.passwordParameter("password").and()
 				.exceptionHandling().accessDeniedPage("/403").and().csrf();

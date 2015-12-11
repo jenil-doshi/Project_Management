@@ -7,7 +7,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -17,31 +16,34 @@ public class Task {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name="TID")
+	@Column(name = "TID")
 	private int tid;
-	
-	@Column(name="TaskName")
+
+	@Column(name = "TaskName")
 	private String taskName;
-	
-	@Column(name="Description")
+
+	@Column(name = "Description")
 	private String description;
-	
-	@Column(name="State")
+
+	@Column(name = "State")
 	private String taskState;
-	
-	@Column(name="EstimatedUnits")
+
+	@Column(name = "EstimatedUnits")
 	private Integer estimated_time;
-	
-	@Column(name="ActualTime")
+
+	@Column(name = "ActualTime")
 	private Integer actual_time;
-	
-	/*@OneToOne
-	@JoinColumn(name="Assignee", referencedColumnName = "UID")*/
-	@Column(name="Assignee")
+
+	/*
+	 * @OneToOne
+	 * 
+	 * @JoinColumn(name="Assignee", referencedColumnName = "UID")
+	 */
+	@Column(name = "Assignee")
 	private Integer assignee;
-	
+
 	@ManyToOne
-	@JoinColumn(name="Project",referencedColumnName = "PID")
+	@JoinColumn(name = "Project", referencedColumnName = "PID")
 	private Project project;
 
 	@Transient
@@ -102,7 +104,7 @@ public class Task {
 	public void setTaskState(String taskState) {
 		this.taskState = taskState;
 	}
-	
+
 	public Integer getEstimated_time() {
 		return estimated_time;
 	}

@@ -1,25 +1,17 @@
 package com.sjsu.cmpe275.projectmanager.dao;
 
-import com.sjsu.cmpe275.projectmanager.configuration.Constants;
-import com.sjsu.cmpe275.projectmanager.configuration.Queries;
-import com.sjsu.cmpe275.projectmanager.exception.EntityNotFound;
-import com.sjsu.cmpe275.projectmanager.model.User;
-import com.sjsu.cmpe275.projectmanager.model.UserProjectInfo;
-import com.sjsu.cmpe275.projectmanager.model.UserRoles;
-import com.sjsu.cmpe275.projectmanager.model.Users;
-
 import org.hibernate.Query;
-import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Queue;
+import com.sjsu.cmpe275.projectmanager.configuration.Queries;
+import com.sjsu.cmpe275.projectmanager.exception.EntityNotFound;
+import com.sjsu.cmpe275.projectmanager.model.User;
+import com.sjsu.cmpe275.projectmanager.model.UserRoles;
+import com.sjsu.cmpe275.projectmanager.model.Users;
 
 @Repository("UserDAO")
-@Transactional
 
 public class UserDAOImpl extends AbstractDAO<Integer, User> implements UserDAO {
 

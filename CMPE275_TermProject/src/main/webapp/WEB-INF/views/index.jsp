@@ -105,7 +105,8 @@
 									class="icon-chevron-down pull-right"></i><i
 									class="icon-chevron-up pull-right"> </i>More Pages </a>
 								<ul id="togglePages" class="collapse unstyled">
-									<li><a href="<c:url value="/project/getProfilePage"/>"><i class="icon-inbox"></i>Profile </a></li>
+									<li><a href="<c:url value="/project/getProfilePage"/>"><i
+											class="icon-inbox"></i>Profile </a></li>
 									<!-- <li><a href="#"><i class="icon-inbox"></i>All Users </a></li> -->
 								</ul></li>
 							<%-- <c:url value="/login?logout" var="logoutUrl" />
@@ -119,22 +120,36 @@
 					<!--/.sidebar-->
 				</div>
 				<!--/.span3-->
+				<div class="module-head"
+					style="margin-left: 28.3%; margin-right: 2.3%; background-color: #2d2b32;">
+					<b style="color: white; font-size: initial">Project:</b>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<select>
+						<c:forEach var="project" items="${projectList}">
+							<option value=${project.pid}>${project.name}</option>
+						</c:forEach>
+					</select>
+				</div>
 				<div class="span9">
 					<div class="content">
 						<div class="btn-controls">
 							<div class="btn-box-row row-fluid" style="margin-left: 1%;">
-								<a href="#" class="btn-box big span4" style="width: 22%;"><i
-									class=" icon-random"></i><b>65</b><br>
+								<a href="#" class="btn-box big span4" style="width: 22%;"><b
+									id="finished">${report.taskUnitsFinished}</b><br />
+								<i class=" icon-random"></i><br>
 									<p class="text-muted">Total number of task units finished</p> </a>
 
-								<a href="#" class="btn-box big span4" style="width: 22%;"><i
-									class="icon-random"></i><b>15</b><br>
+								<a href="#" class="btn-box big span4" style="width: 22%;"> <b
+									id="toBefinished">${report.taskUnitsTobeFinished}</b></br/>
+								<i class="icon-random"></i><br>
 									<p class="text-muted">Total number of task units to be
-										finished</p> </a> <a href="#" class="btn-box big span4"
-									style="width: 22%;"><i class="icon-random"></i><b>40</b><br>
+										finished</p>
+								</a> <a href="#" class="btn-box big span4" style="width: 22%;"><b
+									id="planningPhase">${report.taskUnitsAtPlanningPhase}</b><br />
+								<i class="icon-random"></i><br>
 									<p class="text-muted">Total number of task units during the
 										planning phase</p> </a> <a href="#" class="btn-box big span4"
-									style="width: 22%;"><i class="icon-random"></i><b>10</b><br>
+									style="width: 22%;"><b id="cancelled">${report.taskUnitsCancelled}</b><br />
+								<i class="icon-random"></i><br>
 									<p class="text-muted">Total number of task units cancelled
 										so far.</p> </a>
 							</div>
@@ -203,7 +218,7 @@
 						<!--/#btn-controls-->
 						<div class="module">
 							<div class="module-head">
-								<h3>Profit Chart</h3>
+								<!-- <h3>Profit Chart</h3> -->
 							</div>
 							<div class="module-body">
 								<div class="chart inline-legend grid">
@@ -688,5 +703,18 @@
 		type="text/javascript"></script>
 	<script src="<c:url value="/assets/scripts/common.js"/>"
 		type="text/javascript"></script>
+	<script>
+		$('select').on('change', function() {
+			//alert(this.value); // or $(this).val()
+			$.getJSON("project/report/" + this.value, function(data) {
+				/* alert("Data: " + data + "\nStatus: " + status);
+				 */
+				$("#finished").text(data.taskUnitsFinished);
+				$("#toBefinished").text(data.taskUnitsTobeFinished);
+				$("#planningPhase").text(data.taskUnitsAtPlanningPhase);
+				$("#cancelled").text(data.taskUnitsCancelled);
+			});
+		});
+	</script>
 
 </body>
