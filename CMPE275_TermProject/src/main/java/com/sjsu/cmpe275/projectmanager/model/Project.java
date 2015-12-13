@@ -52,6 +52,41 @@ public class Project {
 	private int taskUnitsAtPlanningPhase;
 	@Transient
 	private int taskUnitsCancelled;
+	@Transient
+	private double percentTaskUnitsFinished;
+	@Transient
+	private double percentTaskUnitsTobeFinished;
+	@Transient
+	private double percentTaskUnitsCancelled;
+	
+	
+	
+	public double getPercentTaskUnitsFinished() {
+		return percentTaskUnitsFinished;
+	}
+
+	public void setPercentTaskUnitsFinished(double percentTaskUnitsFinished) {
+		
+		this.percentTaskUnitsFinished = percentTaskUnitsFinished;
+	}
+
+	public double getPercentTaskUnitsTobeFinished() {
+		return percentTaskUnitsTobeFinished;
+	}
+
+	public void setPercentTaskUnitsTobeFinished(double percentTaskUnitsTobeFinished) {
+		this.percentTaskUnitsTobeFinished = percentTaskUnitsTobeFinished;
+	}
+
+	public double getPercentTaskUnitsCancelled() {
+		return percentTaskUnitsCancelled;
+	}
+
+	public void setPercentTaskUnitsCancelled(double percentTaskUnitsCancelled) {
+		this.percentTaskUnitsCancelled = percentTaskUnitsCancelled;
+	}
+
+
 
 	public int getTaskUnitsTobeFinished() {
 		return taskUnitsTobeFinished;

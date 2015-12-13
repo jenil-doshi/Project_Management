@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.sjsu.cmpe275.projectmanager.configuration.CommonUtilites;
 import com.sjsu.cmpe275.projectmanager.configuration.Constants;
 import com.sjsu.cmpe275.projectmanager.model.Project;
 import com.sjsu.cmpe275.projectmanager.model.Task;
@@ -46,7 +47,7 @@ public class LoginController {
 
 	@Autowired
 	ReportService reportService;
-	
+
 	@Autowired
 	TaskService taskService;
 
@@ -88,60 +89,6 @@ public class LoginController {
 
 	}
 
-	@RequestMapping(value = { "/", "/home" }, method = RequestMethod.GET)
-	public String defaultPage(HttpServletRequest request, Model model) {
-		// System.out.println("User is: " + getPrincipal());
-		try {
-			User user = getPrincipal();
-			String role = null;
-			request.getSession().setAttribute("USER", user);
-			Collection<GrantedAuthority> authorities = (Collection<GrantedAuthority>) SecurityContextHolder.getContext()
-					.getAuthentication().getAuthorities();
-			for (GrantedAuthority authority : authorities) {
-				if (authority.getAuthority().equalsIgnoreCase(Constants.ROLE_ADMIN)) {
-					role = "role_admin";
-					break;
-				} else if (authority.getAuthority().equalsIgnoreCase(Constants.ROLE_USER)) {
-					role = "role_user";
-					break;
-				}
-			}
-			
-				
-			List<Project> projectList = projectService.getProjectsForUser(user.getUserId(), role);
-			
-			List<Task> taskList = null;
-			String grade = null;
-			taskList = taskService.getTasks(projectList.get(0).getPid());
-			for(int i=0; i<taskList.size(); i++){
-				int assignee = taskList.get(i).getAssignee();
-				User user1 = userService.getUser(assignee);
-				taskList.get(i).setAssigneeName(user1.getFirstName()+" "+user1.getLastName());
-				int estimatedUnits = taskList.get(i).getEstimated_time().intValue();
-				int actualUnits = taskList.get(i).getActual_time().intValue();
-				int difference = estimatedUnits - actualUnits;
-				
-				if(difference < 0)
-					grade = "B";
-				else
-					grade = "A";
-				
-				taskList.get(i).setGrade(grade);
-			}
-			
-			model.addAttribute("taskList", taskList);	
-			model.addAttribute("report", reportService.getReport(projectList.get(0).getPid()));
-			model.addAttribute("projectList", projectList);
-			
-		} catch (Exception e) {
-
-			e.printStackTrace();
-		}
-		// model.addAttribute("user", getPrincipal());
-		return "index";
-
-	}
-
 	public User getPrincipal() {
 		String userName = null;
 		User user = null;
@@ -155,6 +102,50 @@ public class LoginController {
 		user = userService.getUserByUserName(userName);
 
 		return user;
+	}
+
+	@RequestMapping(value = { "/", "/home" }, method = RequestMethod.GET)
+	public String defaultPage(HttpServletRequest request, Model model) {
+		// System.out.println("User is: " + getPrincipal());
+		try {
+			User user = getPrincipal();
+
+			String role = null;
+			request.getSession().setAttribute("USER", user);
+			role = CommonUtilites.getRole();
+
+			List<Project> projectList = projectService.getProjectsForUser(user.getUserId(), role);
+
+			List<Task> taskList = null;
+			String grade = null;
+			taskList = taskService.getTasks(projectList.get(0).getPid());
+			for (int i = 0; i < taskList.size(); i++) {
+				int assignee = taskList.get(i).getAssignee();
+				User user1 = userService.getUser(assignee);
+				taskList.get(i).setAssigneeName(user1.getFirstName() + " " + user1.getLastName());
+				int estimatedUnits = taskList.get(i).getEstimated_time().intValue();
+				int actualUnits = taskList.get(i).getActual_time().intValue();
+				int difference = estimatedUnits - actualUnits;
+
+				if (difference < 0)
+					grade = "B";
+				else
+					grade = "A";
+
+				taskList.get(i).setGrade(grade);
+			}
+
+			model.addAttribute("taskList", taskList);
+			model.addAttribute("report", reportService.getReport(projectList.get(0).getPid()));
+			model.addAttribute("projectList", projectList);
+
+		} catch (Exception e) {
+
+			e.printStackTrace();
+		}
+		// model.addAttribute("user", getPrincipal());
+		return "index";
+
 	}
 
 	@RequestMapping(value = "/admin**", method = RequestMethod.GET)

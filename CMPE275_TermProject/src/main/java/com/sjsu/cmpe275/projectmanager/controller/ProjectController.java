@@ -28,9 +28,6 @@ import com.sjsu.cmpe275.projectmanager.configuration.*;
 import com.sjsu.cmpe275.projectmanager.model.*;
 import com.sjsu.cmpe275.projectmanager.service.*;
 
-
-
-
 @Controller
 @ComponentScan(basePackages = "com.sjsu.cmpe275.projectmanager.service")
 @RequestMapping("/project")
@@ -447,42 +444,34 @@ public class ProjectController {
 
 	@RequestMapping(value = "/report/{pid}", method = RequestMethod.GET)
 	public @ResponseBody Project getReport(@PathVariable int pid) {
-		
-		//ModelAndView model = new ModelAndView();
-		try {
 
-			//model.setViewName("index");
-			//model.addObject("report", reportService.getReport(pid));
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 		return reportService.getReport(pid);
 	}
-	
+
 	@RequestMapping(value = "getScoreCard/{pid}", method = RequestMethod.GET)
-	public @ResponseBody List<Task> getScoreCard(@PathVariable("pid") int pid, HttpServletRequest request, ModelMap model) {
+	public @ResponseBody List<Task> getScoreCard(@PathVariable("pid") int pid, HttpServletRequest request,
+			ModelMap model) {
 		request.getSession().setAttribute("USER", getPrincipal());
 		List<Task> taskList = null;
 		String grade = null;
 		try {
 			taskList = taskService.getTasks(pid);
-			for(int i=0; i<taskList.size(); i++){
+			for (int i = 0; i < taskList.size(); i++) {
 				int assignee = taskList.get(i).getAssignee();
 				User user = userService.getUser(assignee);
-				taskList.get(i).setAssigneeName(user.getFirstName()+" "+user.getLastName());
+				taskList.get(i).setAssigneeName(user.getFirstName() + " " + user.getLastName());
 				int estimatedUnits = taskList.get(i).getEstimated_time().intValue();
 				int actualUnits = taskList.get(i).getActual_time().intValue();
 				int difference = estimatedUnits - actualUnits;
-				
-				if(difference < 0)
+
+				if (difference < 0)
 					grade = "B";
 				else
 					grade = "A";
-				
+
 				taskList.get(i).setGrade(grade);
 			}
-			//model.addAttribute("TaskList", taskList);
+			// model.addAttribute("TaskList", taskList);
 			return taskList;
 		} catch (RuntimeException e) {
 			e.printStackTrace();

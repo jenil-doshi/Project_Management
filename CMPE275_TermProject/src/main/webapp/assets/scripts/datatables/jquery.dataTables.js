@@ -164,11 +164,11 @@
 		/* Backwards compatibility - if there is no sEmptyTable given, then use the same as
 		 * sZeroRecords - assuming that is given.
 		 */
-		if ( !oLanguage.sEmptyTable && oLanguage.sZeroRecords &&
-			oDefaults.sEmptyTable === "No data available in table" )
-		{
-			_fnMap( oLanguage, oLanguage, 'sZeroRecords', 'sEmptyTable' );
-		}
+//		if ( !oLanguage.sEmptyTable && oLanguage.sZeroRecords &&
+//			oDefaults.sEmptyTable === "No data available in table" )
+//		{
+//			_fnMap( oLanguage, oLanguage, 'sZeroRecords', 'sEmptyTable' );
+//		}
 	
 		/* Likewise with loading records */
 		if ( !oLanguage.sLoadingRecords && oLanguage.sZeroRecords &&

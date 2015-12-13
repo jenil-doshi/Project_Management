@@ -134,82 +134,60 @@
 						<div class="btn-controls">
 							<div class="btn-box-row row-fluid" style="margin-left: 1%;">
 								<a href="#" class="btn-box big span4" style="width: 22%;"><b
-									id="finished">${report.taskUnitsFinished}</b><br />
-								<i class=" icon-random"></i><br>
+									id="finished">${report.taskUnitsFinished}</b><br /> <i
+									class=" icon-random"></i><br>
 									<p class="text-muted">Total number of task units finished</p> </a>
 
 								<a href="#" class="btn-box big span4" style="width: 22%;"> <b
-									id="toBefinished">${report.taskUnitsTobeFinished}</b></br/>
-								<i class="icon-random"></i><br>
+									id="toBefinished">${report.taskUnitsTobeFinished}</b></br/> <i
+									class="icon-random"></i><br>
 									<p class="text-muted">Total number of task units to be
 										finished</p>
 								</a> <a href="#" class="btn-box big span4" style="width: 22%;"><b
 									id="planningPhase">${report.taskUnitsAtPlanningPhase}</b><br />
-								<i class="icon-random"></i><br>
+									<i class="icon-random"></i><br>
 									<p class="text-muted">Total number of task units during the
 										planning phase</p> </a> <a href="#" class="btn-box big span4"
 									style="width: 22%;"><b id="cancelled">${report.taskUnitsCancelled}</b><br />
-								<i class="icon-random"></i><br>
+									<i class="icon-random"></i><br>
 									<p class="text-muted">Total number of task units cancelled
 										so far.</p> </a>
 							</div>
 							<div class="btn-box-row row-fluid">
-								<!-- <div class="span8">
-									<div class="row-fluid">
-										<div class="span12">
-											<a href="#" class="btn-box small span4"><i
-												class="icon-envelope"></i><b>Messages</b> </a><a href="#"
-												class="btn-box small span4"><i class="icon-group"></i><b>Clients</b>
-											</a><a href="#" class="btn-box small span4"><i
-												class="icon-exchange"></i><b>Expenses</b> </a>
-										</div>
-									</div>
-									<div class="row-fluid">
-										<div class="span12">
-											<a href="#" class="btn-box small span4"><i
-												class="icon-save"></i><b>Total Sales</b> </a><a href="#"
-												class="btn-box small span4"><i class="icon-bullhorn"></i><b>Social
-													Feed</b> </a><a href="#" class="btn-box small span4"><i
-												class="icon-sort-down"></i><b>Bounce Rate</b> </a>
-										</div>
-									</div>
-								</div> -->
+
 								<ul class="widget widget-usage unstyled span4"
 									style="width: 100%">
 									<li>
 										<p>
 											<strong>Task Units finished</strong> <span
-												class="pull-right small muted">78%</span>
+												class="pull-right small muted" id="percentFinished">${report.percentTaskUnitsFinished}
+												%</span>
 										</p>
 										<div class="progress tight">
-											<div class="bar" style="width: 78%;"></div>
+											<div class="bar" id="barFinished"
+												style="width:${report.percentTaskUnitsFinished}%"></div>
 										</div>
 									</li>
 									<li>
 										<p>
 											<strong>Task Units to be finished</strong> <span
-												class="pull-right small muted">56%</span>
+												class="pull-right small muted" id="percentTobeFinished">${report.percentTaskUnitsTobeFinished}
+												%</span>
 										</p>
 										<div class="progress tight">
-											<div class="bar bar-success" style="width: 56%;"></div>
-										</div>
-									</li>
-									<li>
-										<p>
-											<strong>Task units during planning phase</strong> <span
-												class="pull-right small muted">44%</span>
-										</p>
-										<div class="progress tight">
-											<div class="bar bar-warning" style="width: 44%;"></div>
+											<div class="bar bar-success" id="barTobeFinished"
+												style="width:${report.percentTaskUnitsTobeFinished}%"></div>
 										</div>
 									</li>
 									<li>
 										<p>
 											<strong>Task units cancelled</strong> <span
-												class="pull-right small muted">67%</span>
+												class="pull-right small muted" id="percentCancelled">${report.percentTaskUnitsCancelled}
+												%</span>
 										</p>
 										<div class="progress tight">
-											<div class="bar bar-danger" style="width: 67%;"></div>
+											<div class="bar bar-danger" id="barCancelled"
+												style="width:${report.percentTaskUnitsCancelled}%"></div>
 										</div>
 									</li>
 								</ul>
@@ -315,6 +293,36 @@
 				$("#toBefinished").text(data.taskUnitsTobeFinished);
 				$("#planningPhase").text(data.taskUnitsAtPlanningPhase);
 				$("#cancelled").text(data.taskUnitsCancelled);
+				
+				var percentTobeFinished = (isNaN(percentTobeFinished = ((data.taskUnitsTobeFinished) / (data.taskUnitsAtPlanningPhase)) * 100) ? 0
+						: percentTobeFinished);
+				var percentfinished = (isNaN(percentfinished = ((data.taskUnitsFinished) / (data.taskUnitsAtPlanningPhase)) * 100) ? 0
+						: percentfinished);
+				var percentcancelled = (isNaN(percentcancelled = ((data.taskUnitsCancelled) / (data.taskUnitsAtPlanningPhase)) * 100) ? 0
+						: percentcancelled);
+
+				$("#percentFinished").text(
+						percentfinished.toPrecision(1) + " %");
+				$("#barFinished").width(
+						percentfinished
+								.toPrecision(1)
+								+ "%");
+				//alert(percentTobeFinished);
+				$("#percentTobeFinished").text(
+						percentTobeFinished.toPrecision(1)
+								+ " %");
+				$("#barTobeFinished").width(
+						percentTobeFinished
+								.toPrecision(1)
+								+ "%");
+				$("#percentCancelled")
+						.text(
+								percentcancelled.toPrecision(1)
+										+ " %");
+				$("#barCancelled").width(
+						percentcancelled
+								.toPrecision(1)
+								+ "%");
 			});
 			
 			$.getJSON("project/getScoreCard/" + this.value, function(data) {
