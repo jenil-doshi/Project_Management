@@ -29,7 +29,7 @@ import com.sjsu.cmpe275.projectmanager.model.*;
 import com.sjsu.cmpe275.projectmanager.service.*;
 
 @Controller
-@ComponentScan(basePackages = "com.sjsu.cmpe275.projectmanager.service")
+@ComponentScan({ "com.sjsu.cmpe275.projectmanager.aop", "com.sjsu.cmpe275.projectmanager.service" })
 @RequestMapping("/project")
 public class ProjectController {
 	// test
@@ -84,17 +84,7 @@ public class ProjectController {
 
 		try {
 
-			Collection<GrantedAuthority> authorities = (Collection<GrantedAuthority>) SecurityContextHolder.getContext()
-					.getAuthentication().getAuthorities();
-			for (GrantedAuthority authority : authorities) {
-				if (authority.getAuthority().equalsIgnoreCase(Constants.ROLE_ADMIN)) {
-					role = "role_admin";
-					break;
-				} else if (authority.getAuthority().equalsIgnoreCase(Constants.ROLE_USER)) {
-					role = "role_user";
-					break;
-				}
-			}
+			role = CommonUtilites.getRole();
 
 			user.setUserId(userId);
 			project.setOwner(user);
