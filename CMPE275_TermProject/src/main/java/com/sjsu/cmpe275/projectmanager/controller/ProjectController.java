@@ -15,6 +15,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,16 +24,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.sjsu.cmpe275.projectmanager.configuration.Constants;
-import com.sjsu.cmpe275.projectmanager.configuration.EmailUtility;
-import com.sjsu.cmpe275.projectmanager.model.Project;
-import com.sjsu.cmpe275.projectmanager.model.Task;
-import com.sjsu.cmpe275.projectmanager.model.User;
-import com.sjsu.cmpe275.projectmanager.model.UserRoles;
-import com.sjsu.cmpe275.projectmanager.service.ProjectService;
-import com.sjsu.cmpe275.projectmanager.service.ReportService;
-import com.sjsu.cmpe275.projectmanager.service.TaskService;
-import com.sjsu.cmpe275.projectmanager.service.UserService;
+import com.sjsu.cmpe275.projectmanager.configuration.*;
+import com.sjsu.cmpe275.projectmanager.model.*;
+import com.sjsu.cmpe275.projectmanager.service.*;
+
+
+
 
 @Controller
 @ComponentScan(basePackages = "com.sjsu.cmpe275.projectmanager.service")
@@ -450,7 +447,8 @@ public class ProjectController {
 
 	@RequestMapping(value = "/report/{pid}", method = RequestMethod.GET)
 	public @ResponseBody Project getReport(@PathVariable int pid) {
-		ModelAndView model = new ModelAndView();
+		
+		//ModelAndView model = new ModelAndView();
 		try {
 
 			//model.setViewName("index");
@@ -460,5 +458,35 @@ public class ProjectController {
 			e.printStackTrace();
 		}
 		return reportService.getReport(pid);
+	}
+	
+	@RequestMapping(value = "getScoreCard/{pid}", method = RequestMethod.GET)
+	public @ResponseBody List<Task> getScoreCard(@PathVariable("pid") int pid, HttpServletRequest request, ModelMap model) {
+		request.getSession().setAttribute("USER", getPrincipal());
+		List<Task> taskList = null;
+		String grade = null;
+		try {
+			taskList = taskService.getTasks(pid);
+			for(int i=0; i<taskList.size(); i++){
+				int assignee = taskList.get(i).getAssignee();
+				User user = userService.getUser(assignee);
+				taskList.get(i).setAssigneeName(user.getFirstName()+" "+user.getLastName());
+				int estimatedUnits = taskList.get(i).getEstimated_time().intValue();
+				int actualUnits = taskList.get(i).getActual_time().intValue();
+				int difference = estimatedUnits - actualUnits;
+				
+				if(difference < 0)
+					grade = "B";
+				else
+					grade = "A";
+				
+				taskList.get(i).setGrade(grade);
+			}
+			//model.addAttribute("TaskList", taskList);
+			return taskList;
+		} catch (RuntimeException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 }

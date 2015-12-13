@@ -49,6 +49,9 @@ public class Task {
 	@Transient
 	private String assigneeName;
 
+	@Transient
+	private String grade;
+
 	public int getTid() {
 		return tid;
 	}
@@ -119,5 +122,13 @@ public class Task {
 
 	public void setActual_time(Integer actual_time) {
 		this.actual_time = actual_time;
+	}
+	
+	public String getGrade() {
+		return grade;
+	}
+
+	public void setGrade(String grade) {
+		this.grade = grade;
 	}
 }

@@ -25,11 +25,13 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.sjsu.cmpe275.projectmanager.configuration.Constants;
 import com.sjsu.cmpe275.projectmanager.model.Project;
+import com.sjsu.cmpe275.projectmanager.model.Task;
 import com.sjsu.cmpe275.projectmanager.model.User;
 import com.sjsu.cmpe275.projectmanager.model.UserRoles;
 import com.sjsu.cmpe275.projectmanager.model.Users;
 import com.sjsu.cmpe275.projectmanager.service.ProjectService;
 import com.sjsu.cmpe275.projectmanager.service.ReportService;
+import com.sjsu.cmpe275.projectmanager.service.TaskService;
 import com.sjsu.cmpe275.projectmanager.service.UserService;
 
 @Controller
@@ -44,6 +46,9 @@ public class LoginController {
 
 	@Autowired
 	ReportService reportService;
+	
+	@Autowired
+	TaskService taskService;
 
 	@RequestMapping(value = { "/create" }, method = RequestMethod.POST, produces = "application/json")
 	public String createUser(@ModelAttribute("regForm") User user, RedirectAttributes attributes) {
@@ -101,11 +106,33 @@ public class LoginController {
 					break;
 				}
 			}
+			
+				
 			List<Project> projectList = projectService.getProjectsForUser(user.getUserId(), role);
-
+			
+			List<Task> taskList = null;
+			String grade = null;
+			taskList = taskService.getTasks(projectList.get(0).getPid());
+			for(int i=0; i<taskList.size(); i++){
+				int assignee = taskList.get(i).getAssignee();
+				User user1 = userService.getUser(assignee);
+				taskList.get(i).setAssigneeName(user1.getFirstName()+" "+user1.getLastName());
+				int estimatedUnits = taskList.get(i).getEstimated_time().intValue();
+				int actualUnits = taskList.get(i).getActual_time().intValue();
+				int difference = estimatedUnits - actualUnits;
+				
+				if(difference < 0)
+					grade = "B";
+				else
+					grade = "A";
+				
+				taskList.get(i).setGrade(grade);
+			}
+			
+			model.addAttribute("taskList", taskList);	
 			model.addAttribute("report", reportService.getReport(projectList.get(0).getPid()));
 			model.addAttribute("projectList", projectList);
-
+			
 		} catch (Exception e) {
 
 			e.printStackTrace();
