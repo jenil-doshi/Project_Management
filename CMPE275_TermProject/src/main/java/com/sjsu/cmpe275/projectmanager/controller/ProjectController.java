@@ -445,15 +445,19 @@ public class ProjectController {
 		List<Task> taskList = null;
 		String grade = null;
 		try {
+			int actualUnits;
 			taskList = taskService.getTasks(pid);
 			for (int i = 0; i < taskList.size(); i++) {
 				int assignee = taskList.get(i).getAssignee();
 				User user = userService.getUser(assignee);
 				taskList.get(i).setAssigneeName(user.getFirstName() + " " + user.getLastName());
 				int estimatedUnits = taskList.get(i).getEstimated_time().intValue();
-				int actualUnits = taskList.get(i).getActual_time().intValue();
+				if(taskList.get(i).getActual_time() == null)
+					actualUnits = 0;
+				else
+					actualUnits = taskList.get(i).getActual_time().intValue();
 				int difference = estimatedUnits - actualUnits;
-
+				taskList.get(i).setDifference(difference);
 				if (difference < 0)
 					grade = "B";
 				else

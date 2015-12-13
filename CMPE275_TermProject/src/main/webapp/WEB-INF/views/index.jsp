@@ -194,14 +194,14 @@
 							</div>
 						</div>
 						<!--/#btn-controls-->
-						<!-- <div class="module">
+						<div class="module">
 							<div class="module-head">
 								<h3>Profit Chart</h3>
 							</div>
 							<div class="module-body">
-								
-								</div>
-							</div> -->
+								<div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+							</div>
+						</div>
 						</div>
 						<!--/.module-->
 						<!-- <div class="module hide">
@@ -266,8 +266,8 @@
 		<div class="container"></div>
 	</div>
 	  
-	<script src="<c:url value="/assets/scripts/jquery-1.9.1.min.js"/>"
-		type="text/javascript"></script>
+	<%-- <script src="<c:url value="/assets/scripts/jquery-1.9.1.min.js"/>"
+		type="text/javascript"></script> --%>
 	<script
 		src="<c:url value="/assets/scripts/jquery-ui-1.10.1.custom.min.js"/>"
 		type="text/javascript"></script>
@@ -283,9 +283,17 @@
 		type="text/javascript"></script>
 	<script src="<c:url value="/assets/scripts/common.js"/>"
 		type="text/javascript"></script>
-		<script src="https://code.highcharts.com/highcharts.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="https://code.highcharts.com/highcharts.js"></script>
 <script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script>
+	
+	</script>
 	<script>
+		$( document ).ready(function() {
+		  var data = eval('('+'${jsonTaskList}'+')');
+		  taskList(data);
+		});
 		$('select').on('change', function() {
 			
 			$.getJSON("project/report/" + this.value, function(data) {
@@ -344,7 +352,45 @@
 							$('<td>').text(data[i].grade)
 					).appendTo('#tbody');		
 				}
+				taskList(data);
+				
 			});
 		});
+		function taskList(data){
+			var task1;
+			var task2;
+			var task3;
+			var difference1;
+			var difference2;
+			var difference3;
+			task1 = data[0].taskName;
+			difference1 = data[0].difference;
+			task2 = data[1].taskName;
+			difference2 = data[1].difference;
+			task3 = data[2].taskName;
+			difference3 = data[2].difference;
+
+			$(function () {
+			    $('#container').highcharts({
+			        chart: {
+			            type: 'column'
+			        },
+			        title: {
+			            text: 'Project Vs Task Ratings'
+			        },
+			        xAxis: {
+			            categories: [task1, task2, task3]
+			        },
+			        credits: {
+			            enabled: false
+			        },
+			        series: [{
+			            name: 'Tasks',
+			            data: [difference1, difference2, difference3]
+			        }]
+			    });
+			});	
+	}
 	</script>
+	
 </body>

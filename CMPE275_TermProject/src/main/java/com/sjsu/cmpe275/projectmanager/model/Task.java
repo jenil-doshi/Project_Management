@@ -51,6 +51,18 @@ public class Task {
 
 	@Transient
 	private String grade;
+	
+	@Transient
+	private int difference;
+
+	
+	public int getDifference() {
+		return difference;
+	}
+
+	public void setDifference(int difference) {
+		this.difference = difference;
+	}
 
 	public int getTid() {
 		return tid;
