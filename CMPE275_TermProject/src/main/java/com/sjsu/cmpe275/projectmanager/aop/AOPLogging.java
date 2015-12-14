@@ -102,5 +102,60 @@ public class AOPLogging {
 			log.info("AOPLogging:Exception: Cancel Project");
 		}
 	}
+	
+	@AfterReturning("execution(* com.sjsu.cmpe275.projectmanager.controller.TaskController.createTask(..))")
+	public void createTask(JoinPoint jp) throws Throwable {
+		try {
+			int userId = (int) jp.getArgs()[0];
+			int pid = (int)jp.getArgs()[1];
+			log.info("USER with id:" + userId + " creates a Task in project: "+pid);
+		} catch (Exception e) {
+			log.info("AOPLogging:Exception: Create Task");
+		}
+	}
+
+	@AfterReturning("execution(* com.sjsu.cmpe275.projectmanager.controller.TaskController.updateTask(..))")
+	public void updateTask(JoinPoint jp) throws Throwable {
+		try {
+			int taskId = (int) jp.getArgs()[0];
+			int userId = (int) jp.getArgs()[1];
+		
+			log.info("USER with id:" + userId + " updates a Task with Task ID " + taskId);
+		} catch (Exception e) {
+			log.info("AOPLogging:Exception: Update Task");
+		}
+	}
+	
+
+	@AfterReturning("execution(* com.sjsu.cmpe275.projectmanager.controller.TaskController.startTask(..))")
+	public void startTask(JoinPoint jp) throws Throwable {
+		try{
+		int taskId = (int) jp.getArgs()[0];
+		log.info("Task started with Task ID " + taskId);
+		}catch(Exception e){
+			log.info("AOPLogging:Exception: Start Task");
+		}
+	}
+
+	@AfterReturning("execution(* com.sjsu.cmpe275.projectmanager.controller.TaskController.finishTask(..))")
+	public void finishTask(JoinPoint jp) throws Throwable {
+		try{
+		int taskId = (int) jp.getArgs()[0];
+		log.info("Task completed with a Task ID " + taskId);
+		}catch(Exception e){
+			log.info("AOPLogging:Exception: Complete Task");
+		}
+	}
+	
+	@AfterReturning("execution(* com.sjsu.cmpe275.projectmanager.controller.TaskController.cancelTask(..))")
+	public void cancelTask(JoinPoint jp) throws Throwable {
+		try{
+		int taskId = (int) jp.getArgs()[0];
+		int userId = (int) jp.getArgs()[1];
+		log.info("USER with id:" + userId + " cancels a Task with Task ID " + taskId);
+		}catch(Exception e){
+			log.info("AOPLogging:Exception: Cancel Task");
+		}
+	}
 
 }

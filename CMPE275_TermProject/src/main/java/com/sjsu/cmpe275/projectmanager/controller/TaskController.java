@@ -104,8 +104,7 @@ public class TaskController {
 						} else {
 							setTaskValues(project, projectId, userId, task);
 						}
-					}
-					else{
+					} else {
 						setTaskValues(project, projectId, userId, task);
 					}
 				} else {
@@ -159,16 +158,6 @@ public class TaskController {
 			if (task.getActual_time() != null) {
 				existingTask.setActual_time(task.getActual_time());
 			}
-			// if (project.getStatus().equals(Constants.PROJECT_NEW) ||
-			// project.getStatus().equals(Constants.PROJECT_PLANNING) ||
-			// project.getStatus().equals(Constants.PROJECT_ONGOING)) {
-			// if (task.getAssignee() != null) {
-			// existingTask.setAssignee(task.getAssignee());
-			// existingTask.setTaskState(Constants.TASK_ASSIGNED);
-			// }
-			// else
-			// existingTask.setTaskState(Constants.TASK_NEW);
-			// }
 
 			if (project.getStatus().equals(Constants.PROJECT_NEW)
 					|| project.getStatus().equals(Constants.PROJECT_PLANNING)
@@ -179,15 +168,14 @@ public class TaskController {
 						existingTask.setTaskState(Constants.TASK_ASSIGNED);
 					}
 					if (project.getStatus().equals(Constants.PROJECT_ONGOING)) {
-						//existingTask.setTaskState(Constants.TASK_STARTED);
+
 					}
 					if (project.getStatus().equals(Constants.PROJECT_PLANNING)) {
 						existingTask.setTaskState(Constants.TASK_ASSIGNED);
 					}
 
-				} 
-//				else{
-//					existingTask.setTaskState(Constants.TASK_NEW);}
+				}
+
 			}
 			if (project.getStatus().equals(Constants.PROJECT_NEW)
 					|| project.getStatus().equals(Constants.PROJECT_PLANNING)) {

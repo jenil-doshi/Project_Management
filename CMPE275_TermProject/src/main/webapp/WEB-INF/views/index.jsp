@@ -68,12 +68,7 @@
 				<div class="span3">
 					<div class="sidebar">
 						<ul class="widget widget-menu unstyled">
-							<li class="active"><a href="#"><i
-									class="menu-icon icon-dashboard"></i>Dashboard </a></li>
-							<li><a href="#"><i class="menu-icon icon-bullhorn"></i>Calendar
-							</a></li>
-							<li><a href="#"><i class="menu-icon icon-inbox"></i>Statistics
-							</a></li>
+							
 							<sec:authorize access="hasRole('ROLE_ADMIN')">
 								<li><a href="<c:url value="/project/addProjectFormView"/>"><i
 										class="menu-icon icon-tasks"></i>Add Project </a></li>
@@ -92,6 +87,19 @@
 										<i class="menu-icon icon-tasks"></i>View Projects
 								</a></li>
 							</sec:authorize>
+							<sec:authorize access="hasRole('ROLE_ADMIN')">
+								<li><a
+									href="<c:url value="/task/viewTasks/${sessionScope.USER.userId}/role_admin"/>">
+										<i class="menu-icon icon-tasks"></i>View Tasks
+								</a></li>
+							</sec:authorize>
+							<sec:authorize access="hasRole('ROLE_USER')">
+								<li><a
+									href="<c:url value="/task/viewTasks/${sessionScope.USER.userId}/role_user"/>">
+										<i class="menu-icon icon-tasks"></i>View Tasks
+								</a></li>
+							</sec:authorize>
+							
 
 						</ul>
 						<!--/.widget-nav-->
