@@ -1,6 +1,8 @@
 package com.sjsu.cmpe275.projectmanager.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -9,6 +11,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -272,6 +275,51 @@ public class TaskController {
 			return "redirect:/project/getProjectInfo/" + existingTask.getProject().getPid();
 		model.addAttribute("error", "Task cannot be cancelled");
 		return "redirect:/project/getProjectInfo/" + existingTask.getProject().getPid();
+	}
+
+	@RequestMapping("/viewTasks/{userId}/{role}")
+	public String getTasks(@PathVariable int userId, @PathVariable String role, Model model) {
+		List<Project> projectList = null;
+		List<Task> taskList = null;
+		try {
+			projectList = projectService.getProjectsForUser(userId, role);
+			if (projectList != null && !projectList.isEmpty()) {
+				taskList = taskService.getTasks(projectList.get(0).getPid());
+				Map<Long, String> assigneeMap = new HashMap<Long, String>(taskList.size());
+
+				for (Task task : taskList) {
+					if (!(null == task.getAssignee())) {
+						User user = userService.getUser(task.getAssignee());
+						if (user != null) {
+							task.setAssigneeName(user.getFirstName() + " " + user.getLastName());
+						}
+					}
+				}
+			}
+			model.addAttribute("projectList", projectList);
+			model.addAttribute("taskList", taskList);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "viewTasks";
+	}
+
+	@RequestMapping("/getTasks/{pid}")
+	public @ResponseBody List<Task> getTasksList(@PathVariable int pid) {
+		List<Task> taskList = taskService.getTasks(pid);
+
+		Map<Long, String> assigneeMap = new HashMap<Long, String>(taskList.size());
+
+		for (Task task : taskList) {
+			if (!(null == task.getAssignee())) {
+				User user = userService.getUser(task.getAssignee());
+				if (user != null) {
+					task.setAssigneeName(user.getFirstName() + " " + user.getLastName());
+				}
+			}
+		}
+		return taskList;
+
 	}
 
 	public User getPrincipal() {

@@ -89,13 +89,13 @@
 							</sec:authorize>
 							<sec:authorize access="hasRole('ROLE_ADMIN')">
 								<li><a
-									href="<c:url value="/task/viewTasks/${sessionScope.USER.userId}/role_admin"/>">
+									href="<c:url value="/project/viewTasks/${sessionScope.USER.userId}/role_admin"/>">
 										<i class="menu-icon icon-tasks"></i>View Tasks
 								</a></li>
 							</sec:authorize>
 							<sec:authorize access="hasRole('ROLE_USER')">
 								<li><a
-									href="<c:url value="/task/viewTasks/${sessionScope.USER.userId}/role_user"/>">
+									href="<c:url value="/project/viewTasks/${sessionScope.USER.userId}/role_user"/>">
 										<i class="menu-icon icon-tasks"></i>View Tasks
 								</a></li>
 							</sec:authorize>
@@ -368,15 +368,23 @@
 			var task1;
 			var task2;
 			var task3;
+			var task4;
+			var task5;
 			var difference1;
 			var difference2;
 			var difference3;
+			var difference4;
+			var difference5;
 			task1 = data[0].taskName;
 			difference1 = data[0].difference;
 			task2 = data[1].taskName;
 			difference2 = data[1].difference;
 			task3 = data[2].taskName;
 			difference3 = data[2].difference;
+			task4 = data[3].taskName;
+			difference3 = data[3].difference;
+			task5 = data[4].taskName;
+			difference3 = data[4].difference;
 
 			$(function () {
 			    $('#container').highcharts({
@@ -387,14 +395,14 @@
 			            text: 'Project Vs Task Ratings'
 			        },
 			        xAxis: {
-			            categories: [task1, task2, task3]
+			            categories: [task1, task2, task3,task4,task5]
 			        },
 			        credits: {
 			            enabled: false
 			        },
 			        series: [{
 			            name: 'Tasks',
-			            data: [difference1, difference2, difference3]
+			            data: [difference1, difference2, difference3,difference4,difference5]
 			        }]
 			    });
 			});	

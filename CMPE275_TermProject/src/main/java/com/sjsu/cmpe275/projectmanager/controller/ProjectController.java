@@ -1,6 +1,5 @@
 package com.sjsu.cmpe275.projectmanager.controller;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -24,9 +22,17 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.sjsu.cmpe275.projectmanager.configuration.*;
-import com.sjsu.cmpe275.projectmanager.model.*;
-import com.sjsu.cmpe275.projectmanager.service.*;
+import com.sjsu.cmpe275.projectmanager.configuration.CommonUtilites;
+import com.sjsu.cmpe275.projectmanager.configuration.Constants;
+import com.sjsu.cmpe275.projectmanager.configuration.EmailUtility;
+import com.sjsu.cmpe275.projectmanager.model.Project;
+import com.sjsu.cmpe275.projectmanager.model.Task;
+import com.sjsu.cmpe275.projectmanager.model.User;
+import com.sjsu.cmpe275.projectmanager.model.UserRoles;
+import com.sjsu.cmpe275.projectmanager.service.ProjectService;
+import com.sjsu.cmpe275.projectmanager.service.ReportService;
+import com.sjsu.cmpe275.projectmanager.service.TaskService;
+import com.sjsu.cmpe275.projectmanager.service.UserService;
 
 @Controller
 @ComponentScan({ "com.sjsu.cmpe275.projectmanager.aop", "com.sjsu.cmpe275.projectmanager.service" })
