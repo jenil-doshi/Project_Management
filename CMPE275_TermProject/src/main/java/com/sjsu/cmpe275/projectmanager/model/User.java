@@ -12,7 +12,7 @@ import javax.persistence.Transient;
 
 
 @Entity
-@Table(name = "User")
+@Table(name = "user")
 
 public class User {
 

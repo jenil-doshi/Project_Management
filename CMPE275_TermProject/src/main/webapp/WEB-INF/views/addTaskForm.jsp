@@ -59,18 +59,7 @@
 									Dashboard
 								</a>
 							</li>
-							<li>
-								<a href="#">
-									<i class="menu-icon icon-bullhorn"></i>
-									Calendar
-								</a>
-							</li>
-							<li>
-								<a href="#">
-									<i class="menu-icon icon-inbox"></i>
-									Statistics
-								</a>
-							</li>
+							
 							
 							<li>
 								<a href="<c:url value="/project/addProjectFormView"/>"><i
@@ -84,6 +73,18 @@
 							<sec:authorize access="hasRole('ROLE_USER')">
  							<li><a href="<c:url value="/project/viewProjects/${sessionScope.USER.userId}/role_user"/>">
 							<i class="menu-icon icon-tasks"></i>View Projects </a></li>
+							</sec:authorize>
+							<sec:authorize access="hasRole('ROLE_ADMIN')">
+								<li><a
+									href="<c:url value="/project/viewTasks/${sessionScope.USER.userId}/role_admin"/>">
+										<i class="menu-icon icon-tasks"></i>View Tasks
+								</a></li>
+							</sec:authorize>
+							<sec:authorize access="hasRole('ROLE_USER')">
+								<li><a
+									href="<c:url value="/project/viewTasks/${sessionScope.USER.userId}/role_user"/>">
+										<i class="menu-icon icon-tasks"></i>View Tasks
+								</a></li>
 							</sec:authorize>
 						</ul><!--/.widget-nav-->
 

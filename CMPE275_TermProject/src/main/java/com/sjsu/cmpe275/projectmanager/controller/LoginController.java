@@ -119,31 +119,49 @@ public class LoginController {
 
 			List<Task> taskList = null;
 			String grade = null;
-			int actualUnits;
-			taskList = taskService.getTasks(projectList.get(0).getPid());
-			for (int i = 0; i < taskList.size(); i++) {
-				int assignee = taskList.get(i).getAssignee();
-				User user1 = userService.getUser(assignee);
-				taskList.get(i).setAssigneeName(user1.getFirstName() + " " + user1.getLastName());
-				int estimatedUnits = taskList.get(i).getEstimated_time().intValue();
-				if(taskList.get(i).getActual_time() == null)
-					actualUnits = 0;
-				else
-					actualUnits = taskList.get(i).getActual_time().intValue();
-				int difference = estimatedUnits - actualUnits;
-				taskList.get(i).setDifference(difference);
-				if (difference < 0)
-					grade = "B";
-				else
-					grade = "A";
+			Project projectReport = null;
+			int actualUnits,estimatedUnits;
+			int assignee = 0;
+			if(projectList!=null&&!(projectList.isEmpty())){
+				taskList = taskService.getTasks(projectList.get(0).getPid());
+				for (int i = 0; i < taskList.size(); i++) {
+					if(taskList.get(i).getAssignee() == null){
+						taskList.get(i).setAssigneeName("");
+					}
+					else{
+						assignee = taskList.get(i).getAssignee();
+						User user1 = userService.getUser(assignee);
+						taskList.get(i).setAssigneeName(user1.getFirstName() + " " + user1.getLastName());
+					}
+					
+					if(taskList.get(i).getEstimated_time() == null){
+						estimatedUnits = 0;
+					}else{
+						estimatedUnits = taskList.get(i).getEstimated_time().intValue();
+					}
+					 
+					if (taskList.get(i).getActual_time() == null)
+						actualUnits = 0;
+					else
+						actualUnits = taskList.get(i).getActual_time().intValue();
+					int difference = estimatedUnits - actualUnits;
+					taskList.get(i).setDifference(difference);
+					if (difference < 0)
+						grade = "B";
+					else
+						grade = "A";
 
-				taskList.get(i).setGrade(grade);
+					taskList.get(i).setGrade(grade);
+				}
+			projectReport=	reportService.getReport(projectList.get(0).getPid());
+				
 			}
-			String jsonTaskList = new Gson().toJson(taskList );
+			
+			String jsonTaskList = new Gson().toJson(taskList);
 			System.out.println(jsonTaskList);
 			model.addAttribute("jsonTaskList", jsonTaskList);
 			model.addAttribute("taskList", taskList);
-			model.addAttribute("report", reportService.getReport(projectList.get(0).getPid()));
+			model.addAttribute("report", projectReport);
 			model.addAttribute("projectList", projectList);
 
 		} catch (Exception e) {

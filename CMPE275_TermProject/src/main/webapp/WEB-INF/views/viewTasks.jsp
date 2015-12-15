@@ -68,10 +68,7 @@ table, th, td {width =100%;
 							<li class="active"><a href="<c:url value="/home"/>"> <i
 									class="menu-icon icon-dashboard"></i> Dashboard
 							</a></li>
-							<li><a href="#"><i class="menu-icon icon-bullhorn"></i>Calendar
-							</a></li>
-							<li><a href="#"><i class="menu-icon icon-inbox"></i>Statistics
-							</a></li>
+							
 
 							<sec:authorize access="hasRole('ROLE_ADMIN')">
 								<li><a href="<c:url value="/project/addProjectFormView"/>"><i
@@ -162,9 +159,9 @@ table, th, td {width =100%;
 										<th><h4>Assignee</h4></th>
 									</tr>
 									</thead>
-									<thead>
+									<thead id="thead">
 										<c:forEach items="${taskList}" var="task" varStatus="loop">
-											<tbody>
+											<tbody id="tbody">
 												<tr>
 
 													<td><center>${task.tid}</center></td>
@@ -255,28 +252,27 @@ table, th, td {width =100%;
 								//alert(ctx);
 								$.getJSON(ctx+"/project/getTasks/" + this.value
 										, function(data) {
-									alert(data);
+									//alert(data);
 									$("#projTable tr").remove();
 									$('<tr>').append(
-											$('<th>').text("Task ID"),
-											$('<th>').text("Task Name"),
-											$('<th>').text("Estimated Units"),
-											$('<th>').text("Actual Units"),
-											$('<th>').text("Description"),
-											$('<th>').text("State"),
-											$('<th>').text("Assignee")
+											$('<th><h4>').text("Task ID"),
+											$('<th><h4>').text("Task Name"),
+											$('<th><h4>').text("Estimated Units"),
+											$('<th><h4>').text("Actual Units"),
+											$('<th><h4>').text("Description"),
+											$('<th><h4>').text("State"),
+											$('<th><h4>').text("Assignee")
 									).appendTo('#thead');
 									for(var i in data){
-										alert("iterating")
+										//alert("iterating")
 										$('<tr>').append(
-												alert(data[i].tid),
-												$('<td>').text(data[i].taskName)
-												/* $('<td>').text(data[i].taskName),
+												$('<td>').text(data[i].tid),
+												$('<td>').text(data[i].taskName),
 												$('<td>').text(data[i].estimated_time),
 												$('<td>').text(data[i].actual_time),
 												$('<td>').text(data[i].description),
 												$('<td>').text(data[i].state),
-												$('<td>').text(data[i].assigneName) */
+												$('<td>').text(data[i].assigneName)
 										).appendTo('#tbody');		
 									}
 									

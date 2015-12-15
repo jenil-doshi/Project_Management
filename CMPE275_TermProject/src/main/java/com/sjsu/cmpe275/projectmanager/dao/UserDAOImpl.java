@@ -4,6 +4,7 @@ import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.sjsu.cmpe275.projectmanager.configuration.Queries;
 import com.sjsu.cmpe275.projectmanager.exception.EntityNotFound;
@@ -12,7 +13,7 @@ import com.sjsu.cmpe275.projectmanager.model.UserRoles;
 import com.sjsu.cmpe275.projectmanager.model.Users;
 
 @Repository("UserDAO")
-
+@Transactional
 public class UserDAOImpl extends AbstractDAO<Integer, User> implements UserDAO {
 
 	@Autowired
@@ -22,6 +23,7 @@ public class UserDAOImpl extends AbstractDAO<Integer, User> implements UserDAO {
 
 		boolean status = false;
 		try {
+			
 			session.getCurrentSession().persist(user);
 			session.getCurrentSession().persist(users);
 			session.getCurrentSession().persist(roles);

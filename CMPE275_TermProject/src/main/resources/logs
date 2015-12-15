@@ -1,5 +1,5 @@
 Root WebApplicationContext: initialization started
-Refreshing Root WebApplicationContext: startup date [Mon Dec 14 10:42:15 PST 2015]; root of context hierarchy
+Refreshing Root WebApplicationContext: startup date [Mon Dec 14 14:50:42 PST 2015]; root of context hierarchy
 Registering annotated classes: [class com.sjsu.cmpe275.projectmanager.configuration.AppConfig]
 Loaded JDBC driver: com.mysql.jdbc.Driver
 HCANN000001: Hibernate Commons Annotations {4.0.5.Final}
@@ -12,17 +12,22 @@ HHH000039: Composite-id class does not override hashCode(): com.sjsu.cmpe275.pro
 HHH000399: Using default transaction strategy (direct JDBC transactions)
 HHH000397: Using ASTQueryTranslatorFactory
 HV000001: Hibernate Validator 5.1.3.Final
-Using DataSource [org.springframework.jdbc.datasource.DriverManagerDataSource@36c53015] of Hibernate SessionFactory for HibernateTransactionManager
+Using DataSource [org.springframework.jdbc.datasource.DriverManagerDataSource@10bf3073] of Hibernate SessionFactory for HibernateTransactionManager
 Creating filter chain: Ant [pattern='/assets/**'], []
 Creating filter chain: Ant [pattern='/web-inf/views/**'], []
-Creating filter chain: org.springframework.security.web.util.matcher.AnyRequestMatcher@1, [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@9083a57, org.springframework.security.web.context.SecurityContextPersistenceFilter@427d3e3a, org.springframework.security.web.header.HeaderWriterFilter@356e0213, org.springframework.security.web.csrf.CsrfFilter@32c857c1, org.springframework.security.web.authentication.logout.LogoutFilter@1d1a373, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@31decc12, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@8f7b922, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@28736ef2, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@7b2e2a62, org.springframework.security.web.session.SessionManagementFilter@4a15a6b1, org.springframework.security.web.access.ExceptionTranslationFilter@6f6c3466, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@122ae013]
-Mapped "{[/create],methods=[POST],params=[],headers=[],consumes=[],produces=[application/json],custom=[]}" onto public java.lang.String com.sjsu.cmpe275.projectmanager.controller.LoginController.createUser(com.sjsu.cmpe275.projectmanager.model.User,org.springframework.web.servlet.mvc.support.RedirectAttributes)
+Creating filter chain: org.springframework.security.web.util.matcher.AnyRequestMatcher@1, [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@6e9b75fe, org.springframework.security.web.context.SecurityContextPersistenceFilter@7951501f, org.springframework.security.web.header.HeaderWriterFilter@31439858, org.springframework.security.web.csrf.CsrfFilter@603be318, org.springframework.security.web.authentication.logout.LogoutFilter@500a85ae, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@26eda6ff, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@1b92a902, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@1aa809e7, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@205faf6d, org.springframework.security.web.session.SessionManagementFilter@11314195, org.springframework.security.web.access.ExceptionTranslationFilter@687a248f, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@45008c67]
 Mapped "{[/ || /home],methods=[GET],params=[],headers=[],consumes=[],produces=[],custom=[]}" onto public java.lang.String com.sjsu.cmpe275.projectmanager.controller.LoginController.defaultPage(javax.servlet.http.HttpServletRequest,org.springframework.ui.Model)
 Mapped "{[/admin**],methods=[GET],params=[],headers=[],consumes=[],produces=[],custom=[]}" onto public org.springframework.web.servlet.ModelAndView com.sjsu.cmpe275.projectmanager.controller.LoginController.adminPage()
 Mapped "{[/logout],methods=[GET],params=[],headers=[],consumes=[],produces=[],custom=[]}" onto public java.lang.String com.sjsu.cmpe275.projectmanager.controller.LoginController.logoutPage(javax.servlet.http.HttpServletRequest,javax.servlet.http.HttpServletResponse)
 Mapped "{[/403],methods=[GET],params=[],headers=[],consumes=[],produces=[],custom=[]}" onto public org.springframework.web.servlet.ModelAndView com.sjsu.cmpe275.projectmanager.controller.LoginController.accesssDenied()
 Mapped "{[/getRegForm],methods=[GET],params=[],headers=[],consumes=[],produces=[],custom=[]}" onto public java.lang.String com.sjsu.cmpe275.projectmanager.controller.LoginController.getRegForm(java.util.Map<java.lang.String, java.lang.Object>)
+Mapped "{[/create],methods=[POST],params=[],headers=[],consumes=[],produces=[application/json],custom=[]}" onto public java.lang.String com.sjsu.cmpe275.projectmanager.controller.LoginController.createUser(com.sjsu.cmpe275.projectmanager.model.User,org.springframework.web.servlet.mvc.support.RedirectAttributes)
 Mapped "{[/login],methods=[GET],params=[],headers=[],consumes=[],produces=[],custom=[]}" onto public java.lang.String com.sjsu.cmpe275.projectmanager.controller.LoginController.loginPage()
+Mapped "{[/project/create/{userId}],methods=[POST],params=[],headers=[],consumes=[],produces=[application/json || */*],custom=[]}" onto public java.lang.String com.sjsu.cmpe275.projectmanager.controller.ProjectController.createProject(int,com.sjsu.cmpe275.projectmanager.model.Project,org.springframework.web.servlet.mvc.support.RedirectAttributes,javax.servlet.http.HttpServletRequest,org.springframework.web.servlet.mvc.support.RedirectAttributes)
+Mapped "{[/project/update/{userId}/{pid}],methods=[POST],params=[],headers=[],consumes=[],produces=[application/json],custom=[]}" onto public java.lang.String com.sjsu.cmpe275.projectmanager.controller.ProjectController.updateProject(int,int,com.sjsu.cmpe275.projectmanager.model.Project,org.springframework.web.servlet.mvc.support.RedirectAttributes,javax.servlet.http.HttpServletRequest)
+Mapped "{[/project/start/{pid}/{userId}],methods=[GET],params=[],headers=[],consumes=[],produces=[],custom=[]}" onto public java.lang.String com.sjsu.cmpe275.projectmanager.controller.ProjectController.startProject(int,int,org.springframework.web.servlet.mvc.support.RedirectAttributes,javax.servlet.http.HttpServletRequest)
+Mapped "{[/project/complete/{projectId}/{userId}],methods=[GET],params=[],headers=[],consumes=[],produces=[],custom=[]}" onto public java.lang.String com.sjsu.cmpe275.projectmanager.controller.ProjectController.completeProject(int,int,org.springframework.web.servlet.mvc.support.RedirectAttributes,javax.servlet.http.HttpServletRequest)
+Mapped "{[/project/cancel/{projectId}/{userId}],methods=[GET],params=[],headers=[],consumes=[],produces=[],custom=[]}" onto public java.lang.String com.sjsu.cmpe275.projectmanager.controller.ProjectController.cancelProject(int,int,org.springframework.web.servlet.mvc.support.RedirectAttributes,javax.servlet.http.HttpServletRequest)
 Mapped "{[/project/report/{pid}],methods=[GET],params=[],headers=[],consumes=[],produces=[],custom=[]}" onto public com.sjsu.cmpe275.projectmanager.model.Project com.sjsu.cmpe275.projectmanager.controller.ProjectController.getReport(int)
 Mapped "{[/project/getProfilePage],methods=[GET],params=[],headers=[],consumes=[],produces=[],custom=[]}" onto public java.lang.String com.sjsu.cmpe275.projectmanager.controller.ProjectController.getProfilePage(java.util.Map<java.lang.String, java.lang.Object>,javax.servlet.http.HttpServletRequest)
 Mapped "{[/project/addProjectFormView],methods=[GET],params=[],headers=[],consumes=[],produces=[],custom=[]}" onto public java.lang.String com.sjsu.cmpe275.projectmanager.controller.ProjectController.addProjectFormView(java.util.Map<java.lang.String, java.lang.Object>,javax.servlet.http.HttpServletRequest)
@@ -34,21 +39,16 @@ Mapped "{[/project/viewProjects/{userId}/{role}],methods=[GET],params=[],headers
 Mapped "{[/project/getUsersListForAddProject/{username}/{pid}/{pname}/{owner}],methods=[GET],params=[],headers=[],consumes=[],produces=[],custom=[]}" onto public org.springframework.web.servlet.ModelAndView com.sjsu.cmpe275.projectmanager.controller.ProjectController.getUsersListForAddProject(java.lang.String,int,java.lang.String,java.lang.String,javax.servlet.http.HttpServletRequest)
 Mapped "{[/project/getProjectInfo/{pid}],methods=[GET],params=[],headers=[],consumes=[],produces=[],custom=[]}" onto public org.springframework.web.servlet.ModelAndView com.sjsu.cmpe275.projectmanager.controller.ProjectController.getProjectInfo(int,javax.servlet.http.HttpServletRequest)
 Mapped "{[/project/getScoreCard/{pid}],methods=[GET],params=[],headers=[],consumes=[],produces=[],custom=[]}" onto public java.util.List<com.sjsu.cmpe275.projectmanager.model.Task> com.sjsu.cmpe275.projectmanager.controller.ProjectController.getScoreCard(int,javax.servlet.http.HttpServletRequest,org.springframework.ui.ModelMap)
-Mapped "{[/project/create/{userId}],methods=[POST],params=[],headers=[],consumes=[],produces=[application/json || */*],custom=[]}" onto public java.lang.String com.sjsu.cmpe275.projectmanager.controller.ProjectController.createProject(int,com.sjsu.cmpe275.projectmanager.model.Project,org.springframework.web.servlet.mvc.support.RedirectAttributes,javax.servlet.http.HttpServletRequest,org.springframework.web.servlet.mvc.support.RedirectAttributes)
-Mapped "{[/project/update/{userId}/{pid}],methods=[POST],params=[],headers=[],consumes=[],produces=[application/json],custom=[]}" onto public java.lang.String com.sjsu.cmpe275.projectmanager.controller.ProjectController.updateProject(int,int,com.sjsu.cmpe275.projectmanager.model.Project,org.springframework.web.servlet.mvc.support.RedirectAttributes,javax.servlet.http.HttpServletRequest)
-Mapped "{[/project/start/{pid}/{userId}],methods=[GET],params=[],headers=[],consumes=[],produces=[],custom=[]}" onto public java.lang.String com.sjsu.cmpe275.projectmanager.controller.ProjectController.startProject(int,int,org.springframework.web.servlet.mvc.support.RedirectAttributes,javax.servlet.http.HttpServletRequest)
-Mapped "{[/project/complete/{projectId}/{userId}],methods=[GET],params=[],headers=[],consumes=[],produces=[],custom=[]}" onto public java.lang.String com.sjsu.cmpe275.projectmanager.controller.ProjectController.completeProject(int,int,org.springframework.web.servlet.mvc.support.RedirectAttributes,javax.servlet.http.HttpServletRequest)
-Mapped "{[/project/cancel/{projectId}/{userId}],methods=[GET],params=[],headers=[],consumes=[],produces=[],custom=[]}" onto public java.lang.String com.sjsu.cmpe275.projectmanager.controller.ProjectController.cancelProject(int,int,org.springframework.web.servlet.mvc.support.RedirectAttributes,javax.servlet.http.HttpServletRequest)
-Mapped "{[/project/tasks/{projectId}],methods=[GET],params=[],headers=[],consumes=[],produces=[application/json],custom=[]}" onto public java.util.List<com.sjsu.cmpe275.projectmanager.model.Task> com.sjsu.cmpe275.projectmanager.controller.TaskController.getTasks(int)
-Mapped "{[/project/viewTasks/{userId}/{role}],methods=[],params=[],headers=[],consumes=[],produces=[],custom=[]}" onto public java.lang.String com.sjsu.cmpe275.projectmanager.controller.TaskController.getTasks(int,java.lang.String,org.springframework.ui.Model)
-Mapped "{[/project/getTasks/{pid}],methods=[],params=[],headers=[],consumes=[],produces=[],custom=[]}" onto public java.util.List<com.sjsu.cmpe275.projectmanager.model.Task> com.sjsu.cmpe275.projectmanager.controller.TaskController.getTasksList(int)
 Mapped "{[/project/task/create/{userId}/{projectId}],methods=[POST],params=[],headers=[],consumes=[],produces=[application/json],custom=[]}" onto public java.lang.String com.sjsu.cmpe275.projectmanager.controller.TaskController.createTask(int,int,com.sjsu.cmpe275.projectmanager.model.Task,org.springframework.ui.ModelMap,org.springframework.web.servlet.mvc.support.RedirectAttributes,javax.servlet.http.HttpServletRequest)
 Mapped "{[/project/task/update/{taskId}/{userId}],methods=[POST],params=[],headers=[],consumes=[],produces=[application/json],custom=[]}" onto public java.lang.String com.sjsu.cmpe275.projectmanager.controller.TaskController.updateTask(int,int,com.sjsu.cmpe275.projectmanager.model.Task,org.springframework.ui.ModelMap,javax.servlet.http.HttpServletRequest)
 Mapped "{[/project/task/start/{taskId}],methods=[POST],params=[],headers=[],consumes=[],produces=[application/json],custom=[]}" onto public java.lang.String com.sjsu.cmpe275.projectmanager.controller.TaskController.startTask(int,org.springframework.ui.ModelMap,javax.servlet.http.HttpServletRequest)
 Mapped "{[/project/task/finish/{taskId}],methods=[POST],params=[],headers=[],consumes=[],produces=[application/json],custom=[]}" onto public java.lang.String com.sjsu.cmpe275.projectmanager.controller.TaskController.finishTask(int,org.springframework.ui.ModelMap,javax.servlet.http.HttpServletRequest)
 Mapped "{[/project/task/cancel/{taskId}/{userId}],methods=[POST],params=[],headers=[],consumes=[],produces=[application/json],custom=[]}" onto public java.lang.String com.sjsu.cmpe275.projectmanager.controller.TaskController.cancelTask(int,int,org.springframework.ui.ModelMap,javax.servlet.http.HttpServletRequest)
+Mapped "{[/project/viewTasks/{userId}/{role}],methods=[],params=[],headers=[],consumes=[],produces=[],custom=[]}" onto public java.lang.String com.sjsu.cmpe275.projectmanager.controller.TaskController.getTasks(int,java.lang.String,org.springframework.ui.Model)
+Mapped "{[/project/tasks/{projectId}],methods=[GET],params=[],headers=[],consumes=[],produces=[application/json],custom=[]}" onto public java.util.List<com.sjsu.cmpe275.projectmanager.model.Task> com.sjsu.cmpe275.projectmanager.controller.TaskController.getTasks(int)
 Mapped "{[/project/addTask/{projectId}],methods=[GET],params=[],headers=[],consumes=[],produces=[],custom=[]}" onto public java.lang.String com.sjsu.cmpe275.projectmanager.controller.TaskController.addTaskFormView(int,org.springframework.ui.ModelMap,javax.servlet.http.HttpServletRequest)
 Mapped "{[/project/updateTask/{taskId}],methods=[GET],params=[],headers=[],consumes=[],produces=[],custom=[]}" onto public java.lang.String com.sjsu.cmpe275.projectmanager.controller.TaskController.addUpdateFormView(int,org.springframework.ui.ModelMap,javax.servlet.http.HttpServletRequest)
+Mapped "{[/project/getTasks/{pid}],methods=[],params=[],headers=[],consumes=[],produces=[],custom=[]}" onto public java.util.List<com.sjsu.cmpe275.projectmanager.model.Task> com.sjsu.cmpe275.projectmanager.controller.TaskController.getTasksList(int)
 Mapped "{[/user/{id}],methods=[GET],params=[],headers=[],consumes=[],produces=[application/json],custom=[]}" onto public org.springframework.http.ResponseEntity<com.sjsu.cmpe275.projectmanager.model.User> com.sjsu.cmpe275.projectmanager.controller.UserController.getPersonHTML(int,org.springframework.ui.ModelMap) throws com.sjsu.cmpe275.projectmanager.exception.EntityNotFound
 Mapped "{[/user/update/{id}],methods=[POST],params=[],headers=[],consumes=[],produces=[application/json],custom=[]}" onto public com.sjsu.cmpe275.projectmanager.model.User com.sjsu.cmpe275.projectmanager.controller.UserController.updateUser(int,com.sjsu.cmpe275.projectmanager.model.User)
 Mapped "{[/user/{id}],methods=[DELETE],params=[],headers=[],consumes=[],produces=[application/json],custom=[]}" onto public org.springframework.http.ResponseEntity<com.sjsu.cmpe275.projectmanager.model.User> com.sjsu.cmpe275.projectmanager.controller.UserController.deletePerson(int) throws com.sjsu.cmpe275.projectmanager.exception.EntityNotFound
@@ -57,60 +57,23 @@ Mapped URL path [/login] onto handler of type [class org.springframework.web.ser
 Root mapping to handler of type [class org.springframework.web.servlet.mvc.ParameterizableViewController]
 Mapped URL path [/assets/**] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
 Mapped URL path [/WEB-INF/views/**] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
-Looking for @ControllerAdvice: Root WebApplicationContext: startup date [Mon Dec 14 10:42:15 PST 2015]; root of context hierarchy
-Root WebApplicationContext: initialization completed in 4585 ms
+Looking for @ControllerAdvice: Root WebApplicationContext: startup date [Mon Dec 14 14:50:42 PST 2015]; root of context hierarchy
+Root WebApplicationContext: initialization completed in 3800 ms
 FrameworkServlet 'dispatcher': initialization started
-Refreshing WebApplicationContext for namespace 'dispatcher-servlet': startup date [Mon Dec 14 10:42:19 PST 2015]; parent: Root WebApplicationContext
-FrameworkServlet 'dispatcher': initialization completed in 174 ms
-Exiting API method: getTasks()
-No mapping found for HTTP request with URI [/CMPE275_TermProject/project/viewTasks/40/project/getTasks/44] in DispatcherServlet with name 'dispatcher'
-No mapping found for HTTP request with URI [/CMPE275_TermProject/project/viewTasks/40/project/getTasks/42] in DispatcherServlet with name 'dispatcher'
-Exiting API method: loginPage()
+Refreshing WebApplicationContext for namespace 'dispatcher-servlet': startup date [Mon Dec 14 14:50:46 PST 2015]; parent: Root WebApplicationContext
+FrameworkServlet 'dispatcher': initialization completed in 47 ms
+Exiting API method: defaultPage()
+Entering API method: getUserProjects()
+Exiting API method: getUserProjects()
+Exiting API method: addTaskFormView()
+Exiting API method: createTask()
+USER with id:44 creates a Task in project: 65
+Entering API method: getProjectInfo()
+Exiting API method: getProjectInfo()
 Exiting API method: defaultPage()
 Exiting API method: getTasks()
-No mapping found for HTTP request with URI [/CMPE275_TermProject/project/viewTasks/40/project/getTasks/43] in DispatcherServlet with name 'dispatcher'
+Entering API method: getUserProjects()
+Exiting API method: getUserProjects()
 Exiting API method: getTasks()
-No mapping found for HTTP request with URI [/CMPE275_TermProject/project/viewTasks/40/project/getTasks/43] in DispatcherServlet with name 'dispatcher'
-Exiting API method: getTasks()
-No mapping found for HTTP request with URI [/CMPE275_TermProject/project/viewTasks/40/project/getTasks/44] in DispatcherServlet with name 'dispatcher'
-Exiting API method: defaultPage()
-Exiting API method: getTasks()
-No mapping found for HTTP request with URI [/CMPE275_TermProject/project/viewTasks/40/project/getTasks/43] in DispatcherServlet with name 'dispatcher'
-Exiting API method: defaultPage()
-Exiting API method: getTasks()
-Exiting API method: defaultPage()
-Entering API method: getScoreCard()
-Entering API method: getReport()
-Exiting API method: getReport()
-Exiting API method: getScoreCard()
-Entering API method: getReport()
-Entering API method: getScoreCard()
-Exiting API method: getReport()
-Exiting API method: getScoreCard()
-Exiting API method: getTasks()
-Exiting API method: getTasks()
-Exiting API method: getTasksList()
-Exiting API method: getTasks()
-Exiting API method: getTasksList()
-Exiting API method: defaultPage()
-Exiting API method: getTasks()
-No mapping found for HTTP request with URI [/CMPE275_TermProject/project/viewTasks/40/localhost/project/getTasks/44] in DispatcherServlet with name 'dispatcher'
-Exiting API method: getTasks()
-Exiting API method: getTasks()
-Exiting API method: getTasks()
-Exiting API method: getTasks()
-Exiting API method: getTasksList()
-Exiting API method: getTasksList()
-Exiting API method: getTasksList()
-Exiting API method: getTasksList()
-Exiting API method: getTasks()
-Exiting API method: getTasksList()
-Exiting API method: getTasksList()
-Exiting API method: getTasksList()
-Exiting API method: getTasksList()
-Exiting API method: getTasks()
-Exiting API method: getTasksList()
-Exiting API method: getTasksList()
-Exiting API method: getTasks()
-Exiting API method: getTasksList()
-Exiting API method: getTasksList()
+Closing WebApplicationContext for namespace 'dispatcher-servlet': startup date [Mon Dec 14 14:50:46 PST 2015]; parent: Root WebApplicationContext
+Closing Root WebApplicationContext: startup date [Mon Dec 14 14:50:42 PST 2015]; root of context hierarchy

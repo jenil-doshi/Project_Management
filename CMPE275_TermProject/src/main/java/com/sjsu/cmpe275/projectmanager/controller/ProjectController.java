@@ -450,15 +450,21 @@ public class ProjectController {
 		request.getSession().setAttribute("USER", getPrincipal());
 		List<Task> taskList = null;
 		String grade = null;
+		int assignee;
 		try {
 			int actualUnits;
 			taskList = taskService.getTasks(pid);
 			for (int i = 0; i < taskList.size(); i++) {
-				int assignee = taskList.get(i).getAssignee();
-				User user = userService.getUser(assignee);
-				taskList.get(i).setAssigneeName(user.getFirstName() + " " + user.getLastName());
+				if (taskList.get(i).getAssignee() == null) {
+					taskList.get(i).setAssigneeName("");
+				} else {
+					assignee = taskList.get(i).getAssignee();
+					User user1 = userService.getUser(assignee);
+					taskList.get(i).setAssigneeName(user1.getFirstName() + " " + user1.getLastName());
+				}
+
 				int estimatedUnits = taskList.get(i).getEstimated_time().intValue();
-				if(taskList.get(i).getActual_time() == null)
+				if (taskList.get(i).getActual_time() == null)
 					actualUnits = 0;
 				else
 					actualUnits = taskList.get(i).getActual_time().intValue();

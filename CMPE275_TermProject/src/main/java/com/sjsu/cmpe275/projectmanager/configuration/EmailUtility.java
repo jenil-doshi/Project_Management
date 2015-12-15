@@ -37,9 +37,9 @@ public class EmailUtility {
 
 		String body = "Dear User," + "\n\n This is an inivitation from Project Manager: " + projectOwner
 				+ " to join Project: " + projectName + " \n\n Please click on the link below to accept the invitation."
-				+ "\n\n http://localhost:8080/CMPE275_TermProject/project/invitationStatus/accept/" + uid + "/"
+				+ "\n\n http://cmpe275-env.elasticbeanstalk.com/project/invitationStatus/accept/" + uid + "/"
 				+ recipientId + "/" + projectId + "\n\nTo reject the invitation click on the link below."
-				+ "\n\n http://localhost:8080/CMPE275_TermProject/project/invitationStatus/reject/" + uid + "/"
+				+ "\n\n http://cmpe275-env.elasticbeanstalk.com/project/invitationStatus/reject/" + uid + "/"
 				+ recipientId + "/" + projectId + "\n\n Regards, " + "\n\n " + projectOwner + "\n\n Project Manager";
 
 		Session session = Session.getInstance(props, new javax.mail.Authenticator() {

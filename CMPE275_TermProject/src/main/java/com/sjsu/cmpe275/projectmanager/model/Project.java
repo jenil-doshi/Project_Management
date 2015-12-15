@@ -17,7 +17,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 @JsonAutoDetect
 @Entity
-@Table(name = "Project")
+@Table(name = "project")
 public class Project {
 
 	@Id

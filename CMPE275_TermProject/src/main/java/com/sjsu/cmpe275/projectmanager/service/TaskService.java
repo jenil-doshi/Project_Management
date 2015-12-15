@@ -19,25 +19,31 @@ public class TaskService {
 	TaskDao taskDao;
 
 	public boolean createTask(Task task) throws RuntimeException {
+		if (task.getEstimated_time() == null) {
+			task.setEstimated_time(0);
+		}
+		if (task.getActual_time() == null) {
+			task.setActual_time(0);
+		}
+		
 		return taskDao.createTask(task);
 	}
 
 	public Task getTaskById(Integer id) {
 		return taskDao.getTaskById(id);
 	}
-	
+
 	public boolean updateTask(Task task) throws RuntimeException {
 		return taskDao.updateTask(task);
 	}
-	
-	//////////Task_Finish....../////////////
+
+	////////// Task_Finish....../////////////
 	/*
-		public boolean finishTask(Task task) throws RuntimeException {
-		return taskDao.updateTask(task);
-	}
-	
-	*/
-	
+	 * public boolean finishTask(Task task) throws RuntimeException { return
+	 * taskDao.updateTask(task); }
+	 * 
+	 */
+
 	public List<Task> getTasks(int projectId) {
 		return taskDao.getTasks(projectId);
 	}

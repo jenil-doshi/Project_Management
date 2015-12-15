@@ -382,9 +382,9 @@
 			task3 = data[2].taskName;
 			difference3 = data[2].difference;
 			task4 = data[3].taskName;
-			difference3 = data[3].difference;
+			difference4 = data[3].difference;
 			task5 = data[4].taskName;
-			difference3 = data[4].difference;
+			difference5 = data[4].difference;
 
 			$(function () {
 			    $('#container').highcharts({
