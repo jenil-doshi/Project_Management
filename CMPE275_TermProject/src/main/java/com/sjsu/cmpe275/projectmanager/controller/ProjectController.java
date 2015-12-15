@@ -470,7 +470,9 @@ public class ProjectController {
 					actualUnits = taskList.get(i).getActual_time().intValue();
 				int difference = estimatedUnits - actualUnits;
 				taskList.get(i).setDifference(difference);
-				if (difference < 0)
+				if(taskList.get(i).getTaskState().equals(Constants.TASK_CANCELLED))
+					grade = "Task Cancelled";
+				else if (difference < 0)
 					grade = "B";
 				else
 					grade = "A";

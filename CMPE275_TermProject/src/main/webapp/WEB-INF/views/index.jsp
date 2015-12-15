@@ -240,6 +240,7 @@
 											<th>Task Name</th>
 											<th>Estimated units</th>
 											<th>Actual units</th>
+											<th>Task State</th>
 											<th>Rating</th>
 										</tr>
 									</thead>
@@ -252,6 +253,7 @@
 															<td>${task.taskName}</td>
 															<td>${task.estimated_time}</td>
 															<td>${task.actual_time}</td>
+															<td>${task.taskState}</td>
 															<td>${task.grade}</td>
 														</tr>
 													</tbody> 
@@ -348,6 +350,7 @@
 						$('<th>').text("Task Name"),
 						$('<th>').text("Estimated_time"),
 						$('<th>').text("Actual_time"),
+						$('<th>').text("Task State"),
 						$('<th>').text("Ratings")
 				).appendTo('#thead');
 				for(var i in data){
@@ -357,6 +360,7 @@
 							$('<td>').text(data[i].taskName),
 							$('<td>').text(data[i].estimated_time),
 							$('<td>').text(data[i].actual_time),
+							$('<td>').text(data[i].taskState),
 							$('<td>').text(data[i].grade)
 					).appendTo('#tbody');		
 				}
